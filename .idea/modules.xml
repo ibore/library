@@ -3,8 +3,11 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://D:\Android\AndroidStudioProjects\ibore\library\app\app.iml" filepath="D:\Android\AndroidStudioProjects\ibore\library\app\app.iml" />
       <module fileurl="file://$PROJECT_DIR$/lib/lib.iml" filepath="$PROJECT_DIR$/lib/lib.iml" />
-      <module fileurl="file://$PROJECT_DIR$/library.iml" filepath="$PROJECT_DIR$/library.iml" />
+      <module fileurl="file://D:\Android\AndroidStudioProjects\ibore\library\lib\lib.iml" filepath="D:\Android\AndroidStudioProjects\ibore\library\lib\lib.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/library.iml" filepath="$PROJECT_DIR$/.idea/library.iml" />
+      <module fileurl="file://D:\Android\AndroidStudioProjects\ibore\library\library.iml" filepath="D:\Android\AndroidStudioProjects\ibore\library\library.iml" />
     </modules>
   </component>
 </project>

@@ -3,13 +3,23 @@ package me.ibore.library
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.widget.TextView
-import me.ibore.lib.IBaseActivity
+import me.ibore.lib.base.IBaseActivity
 
 class MainActivity : IBaseActivity() {
-    override fun onBindView(): `fun` {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
+    override fun getLayoutId(): Int {
+        return R.layout.activity_main
     }
 
+    override fun onBindView(savedInstanceState: Bundle?) {
+        mTextMessage = findViewById(R.id.message) as TextView
+        val navigation = findViewById(R.id.navigation) as BottomNavigationView
+        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
+    }
+
+    override fun onBindData() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
     private var mTextMessage: TextView? = null
 
@@ -31,12 +41,4 @@ class MainActivity : IBaseActivity() {
         false
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-
-        mTextMessage = findViewById(R.id.message) as TextView
-        val navigation = findViewById(R.id.navigation) as BottomNavigationView
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
-    }
 }
