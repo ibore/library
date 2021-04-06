@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="me.ibore">
+
+    <application >
+
+        <provider
+            android:name="me.ibore.utils.XUtils$XFileProvider"
+            android:authorities="${applicationId}.XFileProvider"
+            android:exported="false"
+            android:grantUriPermissions="true"
+            android:multiprocess="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/dev_app_provider_paths" />
+        </provider>
+
+    </application>
+
+
+</manifest>

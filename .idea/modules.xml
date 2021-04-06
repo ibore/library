@@ -2,12 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://D:\Android\AndroidStudioProjects\ibore\library\app\app.iml" filepath="D:\Android\AndroidStudioProjects\ibore\library\app\app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/lib/lib.iml" filepath="$PROJECT_DIR$/lib/lib.iml" />
-      <module fileurl="file://D:\Android\AndroidStudioProjects\ibore\library\lib\lib.iml" filepath="D:\Android\AndroidStudioProjects\ibore\library\lib\lib.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/library.iml" filepath="$PROJECT_DIR$/.idea/library.iml" />
-      <module fileurl="file://D:\Android\AndroidStudioProjects\ibore\library\library.iml" filepath="D:\Android\AndroidStudioProjects\ibore\library\library.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/Library.iml" filepath="$PROJECT_DIR$/.idea/Library.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Library.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Library.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/library/Library.library.iml" filepath="$PROJECT_DIR$/.idea/modules/library/Library.library.iml" />
     </modules>
   </component>
 </project>
