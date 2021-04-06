@@ -9,7 +9,7 @@ import me.ibore.widget.RootLayout
 
 abstract class XActivity<VB : ViewBinding> : AppCompatActivity(), XView {
 
-    protected lateinit var binding: VB
+    protected lateinit var mBinding: VB
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,7 +36,7 @@ abstract class XActivity<VB : ViewBinding> : AppCompatActivity(), XView {
                         RootLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT, RootLayout.ERROR))
             }
         }*/
-        return binding.root
+        return mBinding.root
     }
 
     override fun onDestroy() {
@@ -56,19 +56,19 @@ abstract class XActivity<VB : ViewBinding> : AppCompatActivity(), XView {
     }
 
     override fun showLoading() {
-        (binding.root as RootLayout?)?.showLoading()
+        (mBinding.root as RootLayout?)?.showLoading()
     }
 
     override fun showContent() {
-        (binding.root as RootLayout?)?.showContent()
+        (mBinding.root as RootLayout?)?.showContent()
     }
 
     override fun showEmpty() {
-        (binding.root as RootLayout?)?.showEmpty()
+        (mBinding.root as RootLayout?)?.showEmpty()
     }
 
     override fun showError() {
-        (binding.root as RootLayout?)?.showError()
+        (mBinding.root as RootLayout?)?.showError()
     }
 
 }
