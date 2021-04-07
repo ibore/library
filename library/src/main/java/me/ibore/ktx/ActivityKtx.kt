@@ -1,4 +1,8 @@
 package me.ibore.ktx
 
-class ActivityKtx {
+import me.ibore.utils.LogUtils
+
+
+fun Any.logD(message: String) {
+    LogUtils.d(this.javaClass.simpleName, message)
 }

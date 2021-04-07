@@ -1,17 +1,22 @@
 package me.ibore.base
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewbinding.ViewBinding
+import me.ibore.ktx.logD
 import me.ibore.widget.RootLayout
 
 abstract class XActivity<VB : ViewBinding> : AppCompatActivity(), XView {
 
+    protected val TAG: String = javaClass.simpleName
     protected lateinit var mBinding: VB
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        Log.d(TAG, "onCreate: ")
+        logD("ddddddddddd")
         super.onCreate(savedInstanceState)
         setContentView(onInflaterView(null))
         onBindView(intent.extras, savedInstanceState)
