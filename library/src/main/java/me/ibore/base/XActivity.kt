@@ -7,40 +7,28 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewbinding.ViewBinding
 import me.ibore.ktx.logD
+import me.ibore.utils.BindingUtils
 import me.ibore.widget.RootLayout
 
-abstract class XActivity<VB : ViewBinding> : AppCompatActivity(), XView {
+abstract class XActivity<VB : ViewBinding> : AppCompatActivity(), XView<VB> {
 
     protected val TAG: String = javaClass.simpleName
-    protected lateinit var mBinding: VB
+
+    protected val mBinding: VB by lazy(mode = LazyThreadSafetyMode.NONE) {
+        BindingUtils.reflexViewBinding(javaClass, layoutInflater)
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        Log.d(TAG, "onCreate: ")
-        logD("ddddddddddd")
+        logD("onCreate: ")
         super.onCreate(savedInstanceState)
         setContentView(onInflaterView(null))
-        onBindView(intent.extras, savedInstanceState)
+        mBinding.onBindView(intent.extras, savedInstanceState)
         onBindConfig()
         onBindData()
     }
 
     override fun onInflaterView(container: ViewGroup?): View {
-        //binding = ViewBindingUtils.inflate<VB>(this, layoutInflater, container)!!
-        /*if (binding.root is RootLayout) {
-            val root = binding.root as RootLayout
-            if (!root.hasLayoutType(RootLayout.LOADING)) {
-                root.addView(layoutInflater.inflate(R.layout.load_loading, root, false),
-                        RootLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT, RootLayout.LOADING))
-            }
-            if (!root.hasLayoutType(RootLayout.EMPTY)) {
-                root.addView(layoutInflater.inflate(R.layout.load_empty, root, false),
-                        RootLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT, RootLayout.EMPTY))
-            }
-            if (!root.hasLayoutType(RootLayout.ERROR)) {
-                root.addView(layoutInflater.inflate(R.layout.load_error, root, false),
-                        RootLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT, RootLayout.ERROR))
-            }
-        }*/
         return mBinding.root
     }
 

@@ -4,5 +4,5 @@ import me.ibore.utils.LogUtils
 
 
 fun Any.logD(message: String) {
-    LogUtils.d(this.javaClass.simpleName, message)
+    LogUtils.dTag(this.javaClass.simpleName, message)
 }

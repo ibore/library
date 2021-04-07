@@ -3,12 +3,13 @@ package me.ibore.base
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
+import androidx.viewbinding.ViewBinding
 
-interface XView {
+interface XView<VB : ViewBinding> {
 
     fun onInflaterView(container: ViewGroup?): View
 
-    fun onBindView(bundle: Bundle?, savedInstanceState: Bundle?)
+    fun VB.onBindView(bundle: Bundle?, savedInstanceState: Bundle?)
 
     fun onBindData()
 

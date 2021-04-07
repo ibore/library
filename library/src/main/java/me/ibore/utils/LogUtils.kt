@@ -18,7 +18,7 @@ object LogUtils {
     /**
      * 是否打印日志 线上 (release) = false, 开发 (debug) = true
      */
-    private var sPrintLog = false
+    private var sPrintLog = true
 
     // 默认 DEFAULT_TAG
     private val DEFAULT_TAG = LogUtils::class.java.simpleName
