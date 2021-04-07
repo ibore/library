@@ -1,4 +1,16 @@
 package me.ibore.base.mvvm
 
-class XMvvmActivity {
+import androidx.lifecycle.ViewModel
+import androidx.viewbinding.ViewBinding
+import me.ibore.base.XActivity
+import me.ibore.utils.BindingUtils
+
+abstract class XMvvmActivity<VB : ViewBinding, VM : ViewModel> : XActivity<VB>() {
+
+    protected val mViewModel: VM by lazy(mode = LazyThreadSafetyMode.NONE) {
+        BindingUtils.reflexViewModel(javaClass, this)
+    }
+
+
+
 }

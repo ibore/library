@@ -22,14 +22,10 @@ abstract class XActivity<VB : ViewBinding> : AppCompatActivity(), XView<VB> {
     override fun onCreate(savedInstanceState: Bundle?) {
         logD("onCreate: ")
         super.onCreate(savedInstanceState)
-        setContentView(onInflaterView(null))
+        setContentView(mBinding.root)
         mBinding.onBindView(intent.extras, savedInstanceState)
         onBindConfig()
         onBindData()
-    }
-
-    override fun onInflaterView(container: ViewGroup?): View {
-        return mBinding.root
     }
 
     override fun onDestroy() {

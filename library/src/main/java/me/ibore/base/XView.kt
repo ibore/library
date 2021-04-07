@@ -7,8 +7,6 @@ import androidx.viewbinding.ViewBinding
 
 interface XView<VB : ViewBinding> {
 
-    fun onInflaterView(container: ViewGroup?): View
-
     fun VB.onBindView(bundle: Bundle?, savedInstanceState: Bundle?)
 
     fun onBindData()
