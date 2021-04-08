@@ -1,11 +1,10 @@
 package me.ibore.base.mvp
 
-import me.ibore.base.XActivity
+import androidx.viewbinding.ViewBinding
+import me.ibore.base.XView
 
-interface XMvpView<P : XMvpPresenter<*>> {
+interface XMvpView<VB : ViewBinding> : XView<VB> {
 
-    fun getXActivity(): XActivity<*>
 
-    fun P.onBindData()
 
 }

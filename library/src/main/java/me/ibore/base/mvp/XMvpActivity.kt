@@ -1,17 +1,24 @@
 package me.ibore.base.mvp
 
-import android.os.Bundle
 import androidx.viewbinding.ViewBinding
 import me.ibore.base.XActivity
+import me.ibore.utils.BindingUtils
 
 abstract class XMvpActivity<VB : ViewBinding, P : XMvpPresenter<*>> : XActivity<VB>(),
-    XMvpView<P> {
+    XMvpView<VB> {
 
-    override fun VB.onBindView(bundle: Bundle?, savedInstanceState: Bundle?) {
-
+    protected val mPresenter: P by lazy(mode = LazyThreadSafetyMode.NONE) {
+        BindingUtils.reflexPresenter(javaClass)
     }
 
-    override fun P.onBindData() {
-
+    override fun onBindConfig() {
+        super.onBindConfig()
+        mPresenter.onAttach(this)
     }
+
+    override fun onUnBindConfig() {
+        super.onUnBindConfig()
+        mPresenter.onDetach()
+    }
+
 }

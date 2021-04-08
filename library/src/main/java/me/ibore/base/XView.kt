@@ -13,6 +13,10 @@ interface XView<VB : ViewBinding> {
 
     fun getXActivity(): XActivity<*>
 
+    fun onBindConfig()
+
+    fun onUnBindConfig()
+
     fun showLoading()
 
     fun showContent()

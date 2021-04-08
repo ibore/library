@@ -22,4 +22,25 @@
         </attr>
     </declare-styleable>
 
+    <!-- 标题视图 -->
+    <declare-styleable name="TitleBar">
+        <attr name="tbShadowHeight" format="dimension" />
+        <attr name="tbShadowBackground" format="reference" />
+        <attr name="tbStatusBar" format="boolean" />
+        <attr name="tbTitleText" format="string" />
+        <attr name="tbSubTitleText" format="string" />
+    </declare-styleable>
+
+    <declare-styleable name="TitleBar_Layout">
+        <attr name="layout_titleBackPress" format="boolean" />
+        <attr name="layout_titleType">
+            <enum name="none" value="0" />
+            <enum name="title" value="1" />
+            <enum name="subTitle" value="2" />
+            <enum name="center" value="3" />
+            <enum name="start" value="4" />
+            <enum name="end" value="5" />
+        </attr>
+    </declare-styleable>
+
 </resources>

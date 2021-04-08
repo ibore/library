@@ -18,13 +18,11 @@ abstract class XActivity<VB : ViewBinding> : AppCompatActivity(), XView<VB> {
         BindingUtils.reflexViewBinding(javaClass, layoutInflater)
     }
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
-        logD("onCreate: ")
         super.onCreate(savedInstanceState)
         setContentView(mBinding.root)
-        mBinding.onBindView(intent.extras, savedInstanceState)
         onBindConfig()
+        mBinding.onBindView(intent.extras, savedInstanceState)
         onBindData()
     }
 
@@ -35,12 +33,12 @@ abstract class XActivity<VB : ViewBinding> : AppCompatActivity(), XView<VB> {
 
     override fun getXActivity(): XActivity<VB> = this
 
-    open fun onBindConfig() {
+    override fun onBindConfig() {
 //        BarUtils.setStatusBarColor(this, Color.TRANSPARENT, true)
 //        BarUtils.setStatusBarLightMode(this, true)
     }
 
-    open fun onUnBindConfig() {
+    override fun onUnBindConfig() {
         //DisposablesUtils.clear(this)
     }
 

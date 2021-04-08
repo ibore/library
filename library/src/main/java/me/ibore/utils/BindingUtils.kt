@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.viewbinding.ViewBinding
+import me.ibore.base.mvp.XMvpPresenter
 import java.lang.reflect.InvocationTargetException
 import java.lang.reflect.ParameterizedType
 import java.util.*
@@ -116,6 +117,35 @@ object BindingUtils {
                 }
             }
             return reflexViewModel<VM>(aClass.superclass, owner)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        throw RuntimeException("ViewModel初始化失败")
+    }
+
+    /**
+     * 反射获取Presenter
+     *
+     * @param <VM>   Presenter实现类
+     * @param aClass 当前class
+     * @return Presenter实例
+    </VM> */
+    fun <P : XMvpPresenter<*>> reflexPresenter(aClass: Class<*>): P {
+        try {
+            val actualTypeArguments =
+                (Objects.requireNonNull(aClass.genericSuperclass) as ParameterizedType).actualTypeArguments
+            for (i in actualTypeArguments.indices) {
+                val tClass: Class<Any>
+                try {
+                    tClass = actualTypeArguments[i] as Class<Any>
+                } catch (e: Exception) {
+                    continue
+                }
+                if (ViewModel::class.java.isAssignableFrom(tClass)) {
+                    return tClass as P
+                }
+            }
+            return reflexPresenter<P>(aClass.superclass)
         } catch (e: Exception) {
             e.printStackTrace()
         }
