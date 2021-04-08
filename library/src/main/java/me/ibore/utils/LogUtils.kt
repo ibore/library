@@ -12,21 +12,25 @@ import javax.xml.transform.stream.StreamResult
 import javax.xml.transform.stream.StreamSource
 
 object LogUtils {
+
     // JSON 格式内容缩进
     private const val JSON_INDENT = 4
 
     /**
      * 是否打印日志 线上 (release) = false, 开发 (debug) = true
      */
+    @JvmStatic
     private var sPrintLog = true
 
     // 默认 DEFAULT_TAG
+    @JvmStatic
     private val DEFAULT_TAG = LogUtils::class.java.simpleName
 
     // ===========
     // = 通知输出 =
     // ===========
     // 默认日志输出接口
+    @JvmStatic
     private var sPrint: Print = object : Print {
         override fun printLog(logType: Int, tag: String?, message: String?) {
             // 防止 null 处理
@@ -43,6 +47,7 @@ object LogUtils {
         }
     }
 
+    @JvmStatic
     fun setPrintLog(printLog :Boolean) {
         this.sPrintLog = printLog
     }
@@ -51,6 +56,7 @@ object LogUtils {
      * 设置日志输出接口
      * @param print 日志输出接口
      */
+    @JvmStatic
     fun setPrint(print: Print) {
         sPrint = print
     }
@@ -62,6 +68,7 @@ object LogUtils {
      * @param tag     打印 Tag
      * @param message 日志信息
      */
+    @JvmStatic
     private fun printLog(logType: Int, tag: String, message: String) {
         sPrint.printLog(logType, tag, message)
     }
@@ -72,6 +79,7 @@ object LogUtils {
      * @param args    占位符替换
      * @return 处理 ( 格式化 ) 后准备打印的日志信息
      */
+    @JvmStatic
     private fun createMessage(message: String?, vararg args: Any?): String {
         return try {
             if (message != null) {
@@ -93,6 +101,7 @@ object LogUtils {
      * @param args      动态参数
      * @return 处理 ( 格式化 ) 后准备打印的日志信息
      */
+    @JvmStatic
     private fun splitErrorMessage(
         throwable: Throwable?,
         message: String?,
@@ -116,42 +125,52 @@ object LogUtils {
     // ===============================
     // = 对外公开方法 ( 使用默认 TAG ) =
     // ===============================
+    @JvmStatic
     fun d(message: String?, vararg args: Any?) {
         dTag(DEFAULT_TAG, message, *args)
     }
 
+    @JvmStatic
     fun e(throwable: Throwable?) {
         eTag(DEFAULT_TAG, throwable, null)
     }
 
+    @JvmStatic
     fun e(message: String?, vararg args: Any?) {
         e(null as Throwable?, message, *args)
     }
 
+    @JvmStatic
     fun e(throwable: Throwable?, message: String?, vararg args: Any?) {
         eTag(DEFAULT_TAG, throwable, message, *args)
     }
 
+    @JvmStatic
     fun w(message: String?, vararg args: Any?) {
         wTag(DEFAULT_TAG, message, *args)
     }
 
+    @JvmStatic
     fun i(message: String?, vararg args: Any?) {
         iTag(DEFAULT_TAG, message, *args)
     }
 
+    @JvmStatic
     fun v(message: String?, vararg args: Any?) {
         vTag(DEFAULT_TAG, message, *args)
     }
 
+    @JvmStatic
     fun wtf(message: String?, vararg args: Any?) {
         wtfTag(DEFAULT_TAG, message, *args)
     }
 
+    @JvmStatic
     fun json(json: String?) {
         jsonTag(DEFAULT_TAG, json)
     }
 
+    @JvmStatic
     fun xml(xml: String?) {
         xmlTag(DEFAULT_TAG, xml)
     }
@@ -159,54 +178,63 @@ object LogUtils {
     // ===============================
     // = 对外公开方法 ( 日志打印方法 ) =
     // ===============================
+    @JvmStatic
     fun dTag(tag: String, message: String?, vararg args: Any?) {
         if (sPrintLog) {
             printLog(Log.DEBUG, tag, createMessage(message, *args))
         }
     }
 
+    @JvmStatic
     fun eTag(tag: String, message: String?, vararg args: Any?) {
         if (sPrintLog) {
             printLog(Log.ERROR, tag, createMessage(message, *args))
         }
     }
 
+    @JvmStatic
     fun eTag(tag: String, throwable: Throwable?) {
         if (sPrintLog) {
             printLog(Log.ERROR, tag, splitErrorMessage(throwable, null))
         }
     }
 
+    @JvmStatic
     fun eTag(tag: String, throwable: Throwable?, message: String?, vararg args: Any?) {
         if (sPrintLog) {
             printLog(Log.ERROR, tag, splitErrorMessage(throwable, message, *args))
         }
     }
 
+    @JvmStatic
     fun wTag(tag: String, message: String?, vararg args: Any?) {
         if (sPrintLog) {
             printLog(Log.WARN, tag, createMessage(message, *args))
         }
     }
 
+    @JvmStatic
     fun iTag(tag: String, message: String?, vararg args: Any?) {
         if (sPrintLog) {
             printLog(Log.INFO, tag, createMessage(message, *args))
         }
     }
 
+    @JvmStatic
     fun vTag(tag: String, message: String?, vararg args: Any?) {
         if (sPrintLog) {
             printLog(Log.VERBOSE, tag, createMessage(message, *args))
         }
     }
 
+    @JvmStatic
     fun wtfTag(tag: String, message: String?, vararg args: Any?) {
         if (sPrintLog) {
             printLog(Log.ASSERT, tag, createMessage(message, *args))
         }
     }
 
+    @JvmStatic
     fun jsonTag(tag: String, json: String?) {
         if (sPrintLog) {
             // 判断传入 JSON 格式信息是否为 null
@@ -216,22 +244,26 @@ object LogUtils {
             }
             try {
                 // 属于对象的 JSON 格式信息
-                if (json.startsWith("{")) {
-                    val jsonObject = JSONObject(json)
-                    // 进行缩进
-                    val message = jsonObject.toString(JSON_INDENT)
-                    // 打印信息
-                    printLog(Log.DEBUG, tag, message)
-                } else if (json.startsWith("[")) {
-                    // 属于数据的 JSON 格式信息
-                    val jsonArray = JSONArray(json)
-                    // 进行缩进
-                    val message = jsonArray.toString(JSON_INDENT)
-                    // 打印信息
-                    printLog(Log.DEBUG, tag, message)
-                } else {
-                    // 打印信息
-                    printLog(Log.DEBUG, tag, "json content format error")
+                when {
+                    json.startsWith("{") -> {
+                        val jsonObject = JSONObject(json)
+                        // 进行缩进
+                        val message = jsonObject.toString(JSON_INDENT)
+                        // 打印信息
+                        printLog(Log.DEBUG, tag, message)
+                    }
+                    json.startsWith("[") -> {
+                        // 属于数据的 JSON 格式信息
+                        val jsonArray = JSONArray(json)
+                        // 进行缩进
+                        val message = jsonArray.toString(JSON_INDENT)
+                        // 打印信息
+                        printLog(Log.DEBUG, tag, message)
+                    }
+                    else -> {
+                        // 打印信息
+                        printLog(Log.DEBUG, tag, "json content format error")
+                    }
                 }
             } catch (e: Exception) {
                 val errorInfo: String
@@ -247,6 +279,7 @@ object LogUtils {
         }
     }
 
+    @JvmStatic
     fun xmlTag(tag: String, xml: String?) {
         if (sPrintLog) {
             // 判断传入 XML 格式信息是否为 null

@@ -1,14 +1,14 @@
 package me.ibore.base.mvp
 
 
-abstract class XMvpPresenter<V : XMvpView<*, XMvpPresenter<V>>> {
+abstract class XMvpPresenter<V : XMvpView<*>> {
 
     protected lateinit var mView: V
 
     protected fun getView(): V = mView
 
     @Suppress("UNCHECKED_CAST")
-    fun onAttach(view: XMvpView<*, XMvpPresenter<V>>) {
+    fun onAttach(view: XMvpView<*>) {
         this.mView = view as V
     }
 

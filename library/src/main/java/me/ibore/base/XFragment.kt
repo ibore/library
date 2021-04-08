@@ -9,7 +9,7 @@ import androidx.viewbinding.ViewBinding
 import me.ibore.utils.BindingUtils
 import me.ibore.widget.RootLayout
 
-abstract class XFragment<VB : ViewBinding> : Fragment(), XView<VB> {
+abstract class XFragment<VB : ViewBinding> : Fragment(), XStatusView<VB> {
 
     protected val mBinding: VB by lazy(mode = LazyThreadSafetyMode.NONE) {
         BindingUtils.reflexViewBinding(javaClass, layoutInflater)
@@ -52,5 +52,13 @@ abstract class XFragment<VB : ViewBinding> : Fragment(), XView<VB> {
 
     override fun showError() {
         (mBinding.root as RootLayout?)?.showError()
+    }
+
+    override fun showDialog() {
+
+    }
+
+    override fun dismissDialog() {
+
     }
 }

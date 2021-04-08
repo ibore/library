@@ -1,6 +1,8 @@
 package me.ibore.ktx
 
 import android.content.Context
+import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 
 /**
@@ -21,9 +23,9 @@ fun Context.dp2px(dpValue: Float): Int {
 /**
  * px 转 dp
  */
-fun Context.px2dp(pxValue: Float): Int {
+fun Context.px2dp(pxValue: Int): Float {
     val scale = resources.displayMetrics.density
-    return (pxValue / scale + 0.5f).toInt()
+    return pxValue / scale + 0.5f
 }
 
 /**
@@ -37,9 +39,73 @@ fun Context.sp2px(spValue: Float): Int {
 /**
  * px 转 sp
  */
-fun Context.px2sp(pxValue: Float): Int {
+fun Context.px2sp(pxValue: Int): Float {
     val scale = resources.displayMetrics.scaledDensity
-    return (pxValue / scale + 0.5f).toInt()
+    return pxValue / scale + 0.5f
+}
+
+/**
+ * dp 转 px
+ */
+fun View.dp2px(dpValue: Float): Int {
+    val scale = resources.displayMetrics.density
+    return (dpValue * scale + 0.5f).toInt()
+}
+
+/**
+ * px 转 dp
+ */
+fun View.px2dp(pxValue: Int): Float {
+    val scale = resources.displayMetrics.density
+    return pxValue / scale + 0.5f
+}
+
+/**
+ * sp 转 px
+ */
+fun View.sp2px(spValue: Float): Int {
+    val scale = resources.displayMetrics.scaledDensity
+    return (spValue * scale + 0.5f).toInt()
+}
+
+/**
+ * px 转 sp
+ */
+fun View.px2sp(pxValue: Int): Float {
+    val scale = resources.displayMetrics.scaledDensity
+    return pxValue / scale + 0.5f
+}
+
+/**
+ * dp 转 px
+ */
+fun ViewGroup.dp2px(dpValue: Float): Int {
+    val scale = resources.displayMetrics.density
+    return (dpValue * scale + 0.5f).toInt()
+}
+
+/**
+ * px 转 dp
+ */
+fun ViewGroup.px2dp(pxValue: Int): Float {
+    val scale = resources.displayMetrics.density
+    return pxValue / scale + 0.5f
+}
+
+/**
+ * sp 转 px
+ */
+fun ViewGroup.sp2px(spValue: Float): Int {
+    val scale = resources.displayMetrics.scaledDensity
+    return (spValue * scale + 0.5f).toInt()
+}
+
+/**
+ * px 转 sp
+ */
+fun ViewGroup.px2sp(pxValue: Int): Float {
+    val scale = resources.displayMetrics.scaledDensity
+    return pxValue / scale + 0.5f
 }
 
 /**
@@ -53,9 +119,9 @@ fun Fragment.dp2px(dpValue: Float): Int {
 /**
  * px 转 dp
  */
-fun Fragment.px2dp(pxValue: Float): Int {
+fun Fragment.px2dp(pxValue: Int): Float {
     val scale = resources.displayMetrics.density
-    return (pxValue / scale + 0.5f).toInt()
+    return pxValue / scale + 0.5f
 }
 
 /**
@@ -69,7 +135,7 @@ fun Fragment.sp2px(spValue: Float): Int {
 /**
  * px 转 sp
  */
-fun Fragment.px2sp(pxValue: Float): Int {
+fun Fragment.px2sp(pxValue: Int): Float {
     val scale = resources.displayMetrics.scaledDensity
-    return (pxValue / scale + 0.5f).toInt()
+    return pxValue / scale + 0.5f
 }

@@ -1,5 +1,6 @@
 package me.ibore.base
 
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -10,11 +11,11 @@ import me.ibore.ktx.logD
 import me.ibore.utils.BindingUtils
 import me.ibore.widget.RootLayout
 
-abstract class XActivity<VB : ViewBinding> : AppCompatActivity(), XView<VB> {
+abstract class XActivity<VB : ViewBinding> : AppCompatActivity(), XStatusView<VB> {
 
     protected val TAG: String = javaClass.simpleName
 
-    protected val mBinding: VB by lazy(mode = LazyThreadSafetyMode.NONE) {
+    protected open val mBinding: VB by lazy(mode = LazyThreadSafetyMode.NONE) {
         BindingUtils.reflexViewBinding(javaClass, layoutInflater)
     }
 
@@ -34,8 +35,8 @@ abstract class XActivity<VB : ViewBinding> : AppCompatActivity(), XView<VB> {
     override fun getXActivity(): XActivity<VB> = this
 
     override fun onBindConfig() {
-//        BarUtils.setStatusBarColor(this, Color.TRANSPARENT, true)
-//        BarUtils.setStatusBarLightMode(this, true)
+        BarUtils.setStatusBarColor(this, Color.TRANSPARENT, true)
+        BarUtils.setStatusBarLightMode(this, true)
     }
 
     override fun onUnBindConfig() {
@@ -58,4 +59,11 @@ abstract class XActivity<VB : ViewBinding> : AppCompatActivity(), XView<VB> {
         (mBinding.root as RootLayout?)?.showError()
     }
 
+    override fun showDialog() {
+
+    }
+
+    override fun dismissDialog() {
+
+    }
 }

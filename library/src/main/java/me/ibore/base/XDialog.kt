@@ -17,15 +17,15 @@ import me.ibore.utils.BindingUtils
 
 abstract class XDialog<VB : ViewBinding> : AppCompatDialogFragment(), XView<VB> {
 
-    protected val mBinding: VB by lazy(mode = LazyThreadSafetyMode.NONE) {
+    protected open val mBinding: VB by lazy(mode = LazyThreadSafetyMode.NONE) {
         BindingUtils.reflexViewBinding(javaClass, layoutInflater)
     }
 
-    protected val mDialogConfig: DialogConfig by lazy(mode = LazyThreadSafetyMode.NONE) {
+    private val mDialogConfig: DialogConfig by lazy(mode = LazyThreadSafetyMode.NONE) {
         onBindDialogConfig()
     }
 
-    private fun onBindDialogConfig(): DialogConfig {
+    protected open fun onBindDialogConfig(): DialogConfig {
         return DialogConfig(WRAP_CONTENT, WRAP_CONTENT)
     }
 
@@ -40,13 +40,14 @@ abstract class XDialog<VB : ViewBinding> : AppCompatDialogFragment(), XView<VB> 
         onDismissListener?.onDismiss(dialog)
     }
 
+    @Suppress("DEPRECATION")
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         if (mDialogConfig.isTransBg) setStyle(STYLE_NO_TITLE, R.style.XDialog_Trans)
         else setStyle(STYLE_NO_TITLE, R.style.XDialog_Not_Trans)
         val dialog = object : AppCompatDialog(requireContext(), theme) {
             override fun show() {
-                if (window != null) {
-                    window!!.decorView.systemUiVisibility =
+                window?.apply {
+                    decorView.systemUiVisibility =
                         (View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_STABLE)
                 }
                 super.show()
@@ -92,6 +93,10 @@ abstract class XDialog<VB : ViewBinding> : AppCompatDialogFragment(), XView<VB> 
     override fun getXActivity(): XActivity<*> {
         return (activity as XActivity<*>)
     }
+
+    override fun onBindConfig() {}
+
+    override fun onUnBindConfig() {}
 
     override fun onDestroyView() {
         //DisposablesUtils.clear(this)

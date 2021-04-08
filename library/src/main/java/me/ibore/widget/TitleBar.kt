@@ -1,4 +1,4 @@
-package me.ibore.utils
+package me.ibore.widget
 
 import android.content.Context
 import android.graphics.drawable.Drawable
@@ -13,12 +13,13 @@ import androidx.core.view.marginEnd
 import androidx.core.view.marginStart
 import androidx.core.view.marginTop
 import me.ibore.R
-import me.ibore.utils.BarUtils
-import me.ibore.utils.UIUtils
+import me.ibore.ktx.dp2px
 
-@Suppress("UNCHECKED_CAST")
-class TitleBar @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0)
-    : ViewGroup(context, attrs, defStyleAttr) {
+class TitleBar @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
+) : ViewGroup(context, attrs, defStyleAttr) {
 
     var statusBar = true
         set(value) {
@@ -31,7 +32,9 @@ class TitleBar @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
     private var shadowHeight = 0
     private var shadowBackground: Drawable? = null
     private val statusBarHeight: Int
-        get() = if (statusBar) BarUtils.getStatusBarHeight(context) else 0
+        get() = 0
+
+    //get() = if (statusBar) BarUtils.getStatusBarHeight(context) else 0
     private var titleText: CharSequence? = null
     private var subTitleText: CharSequence? = null
 
@@ -66,7 +69,7 @@ class TitleBar @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         val layoutWidth = if (MeasureSpec.getMode(widthMeasureSpec) == MeasureSpec.EXACTLY) MeasureSpec.getSize(widthMeasureSpec) else 0
-        val layoutHeight = if (MeasureSpec.getMode(heightMeasureSpec) == MeasureSpec.EXACTLY) MeasureSpec.getSize(heightMeasureSpec) else UIUtils.dp2px(context, 48F)
+        val layoutHeight = if (MeasureSpec.getMode(heightMeasureSpec) == MeasureSpec.EXACTLY) MeasureSpec.getSize(heightMeasureSpec) else dp2px(48F)
         startViews.clear()
         endViews.clear()
         for (i in 0 until childCount) {

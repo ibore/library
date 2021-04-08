@@ -17,11 +17,4 @@ interface XView<VB : ViewBinding> {
 
     fun onUnBindConfig()
 
-    fun showLoading()
-
-    fun showContent()
-
-    fun showError()
-
-    fun showEmpty()
 }
