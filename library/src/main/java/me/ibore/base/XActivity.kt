@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewbinding.ViewBinding
 import me.ibore.ktx.logD
+import me.ibore.utils.BarUtils
 import me.ibore.utils.BindingUtils
 import me.ibore.widget.RootLayout
 

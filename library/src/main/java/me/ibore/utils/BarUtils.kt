@@ -647,15 +647,13 @@ object BarUtils {
      */
     val isSupportNavBar: Boolean
         get() {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                val windowManager: WindowManager = AppUtils.getWindowManager() ?: return false
-                val display: Display = windowManager.getDefaultDisplay()
-                val size = Point()
-                val realSize = Point()
-                display.getSize(size)
-                display.getRealSize(realSize)
-                return realSize.y != size.y || realSize.x != size.x
-            }
+            val windowManager: WindowManager = AppUtils.windowManager ?: return false
+            val display: Display = windowManager.getDefaultDisplay()
+            val size = Point()
+            val realSize = Point()
+            display.getSize(size)
+            display.getRealSize(realSize)
+            return realSize.y != size.y || realSize.x != size.x
             val menu: Boolean = ViewConfiguration.get(DevUtils.getContext()).hasPermanentMenuKey()
             val back: Boolean = KeyCharacterMap.deviceHasKey(KeyEvent.KEYCODE_BACK)
             return !menu && !back
