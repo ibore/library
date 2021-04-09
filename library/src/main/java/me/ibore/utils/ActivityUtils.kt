@@ -507,22 +507,20 @@ class ActivityUtils private constructor() {
              * @param callback Activity 跳转回传回调
              * @return `true` success, `false` fail
              */
-            fun start(callback: ResultCallback?): Boolean {
+            fun start(callback: ResultCallback): Boolean {
                 var uuid = -1
                 var result = false
-                if (callback != null) {
+                uuid = DevCommonUtils.randomUUIDToHashCode()
+                while (sResultCallbackMaps.containsKey(uuid)) {
                     uuid = DevCommonUtils.randomUUIDToHashCode()
-                    while (sResultCallbackMaps.containsKey(uuid)) {
-                        uuid = DevCommonUtils.randomUUIDToHashCode()
-                    }
-                    sResultCallbackMaps[uuid] = callback
-                    try {
-                        val intent = Intent(XUtils.context, ResultActivity::class.java)
-                        intent.putExtra(EXTRA_UUID, uuid)
-                        result = AppUtils.startActivity(intent)
-                    } catch (e: Exception) {
-                        LogUtils.eTag(TAG, e, "start")
-                    }
+                }
+                sResultCallbackMaps[uuid] = callback
+                try {
+                    val intent = Intent(XUtils.context, ResultActivity::class.java)
+                    intent.putExtra(EXTRA_UUID, uuid)
+                    result = AppUtils.startActivity(intent)
+                } catch (e: Exception) {
+                    LogUtils.eTag(TAG, e, "start")
                 }
                 if (!result && uuid != -1) {
                     sResultCallbackMaps.remove(uuid)
@@ -954,7 +952,7 @@ class ActivityUtils private constructor() {
          * 获取 ActivityUtils 管理实例
          * @return [ActivityUtils]
          */
-        val manager: ActivityUtils?
+        val manager: ActivityUtils
             get() {
                 if (sInstance == null) {
                     synchronized(ActivityUtils::class.java) {
@@ -963,7 +961,7 @@ class ActivityUtils private constructor() {
                         }
                     }
                 }
-                return sInstance
+                return sInstance!!
             }
 
         // ===========
@@ -977,7 +975,7 @@ class ActivityUtils private constructor() {
          * @param callback Activity 跳转回传回调
          * @return `true` success, `false` fail
          */
-        fun startActivityForResult(callback: ResultCallback?): Boolean {
+        fun startActivityForResult(callback: ResultCallback): Boolean {
             return ResultActivity.start(callback)
         }
     }
