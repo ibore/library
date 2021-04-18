@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<me.ibore.widget.RootLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_f4f5f7">
+
+    <me.ibore.widget.refresh.RefreshLayout
+        android:id="@+id/refresh_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_rootType="content">
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="16dp"
+                android:text="我的抖音大号已经积累了两万粉丝，并且稳定增长中，同时我也开了小号，准备做另一个方向。
+本以为靠着大号的经验，能快速做起来，但现实给了我狠狠的一巴掌，快两个月了，粉丝还没破千。
+
+小号最早的定位是与“香”有关的一切，包括香水香薰等等。
+我做了很多期内容，香水背后的故事，场景，视频质量应该说还不错，但是，数据非常糟糕。
+为什么呢？
+因为短视频领域，火起来的因素太多了，其中一条就是不要自嗨。
+我认为我的内容好，只是我以为，观众不这么想。
+首先标题就不够有吸引力，抖音的用户每天要看上百个视频，凭什么要停留在你这？标题党，给诱惑力、好奇、获得感，或者非常炸裂，都是脱颖而出的关健。相比之下，我的标题就平平无奇，只是简单的叙述。
+“追女孩需要送礼物吗？”“你吃过帝王蟹吗？”“怎么买普洱茶？”，这些标题是不是很多新手常用的格式。
+别人的标题是什么？“如何让你的视频变高清”“土办法直播五天涨粉八万”“土豆这样做，拿肉都不换”。
+看了这些标题，很多人一定会有兴趣接着看。
+
+其次，用户看一个视频，可能画面停留0.8秒就决定要不要继续看下去。
+要知道用户的耐心和阈值是不断增加的，那么多创作者变着花样讨好，各种炫酷沙雕的开头。
+我作为知识类口播创作者，很多时候都是第一段直接真人出镜，简单叙述，内容的设置往往在中后段才有比较搞笑的梗和信息量。
+可是用户等不到，第一秒就划走了。
+所以短视频的开头，一定要炸裂，你讲名人，就把他们的图片和最有争议的话题写上去。
+和图文时代不同，短视频的开头峰值，最好是占据最大的篇幅，也就是最吸引人的部分。
+当用户激起了兴趣，你中间的内容平淡，也不会影响太多。
+然后在视频的中间设置一些小高潮，结尾再设计终值高潮。
+什么是好内容，让用户看下去的就算好内容。
+
+第三点，要不要垂直。
+很多人做抖音，没有具体的方向，什么火拍什么，往往是一个都不火。
+而偶尔火的视频，也很难留住用户。
+所以很多机构、老师，会建议你做垂直内容。但是这里也有个坑，假垂直。
+比如你是红酒服务商，你做红酒相关的内容，能够触及对红酒感兴趣的用户，这已经被市场验证了。
+可如果你是卖盐的，有谁会对盐的相关话题感兴趣吗？系统都不知道怎么给你推荐。
+我选择“香”其实也是个假垂直领域，因为类似的博主非常少，大多也就10万左右的粉丝数，说明基数很少，而且大部分对香水香薰感兴趣的人，更多是美妆领域的粉丝，他们去推荐产品。
+专业做香水香薰的领域，受众太窄，系统给的推荐自然就少了。
+
+还有呢，播放量最关键的是什么？
+也许你听过完播率这个词，对于新手，完播率很重要，很多人会建议7秒破播放等等。
+除了完播率，还有点赞数，评论数，转发数等KPI。
+这些数据的表现，决定了你的视频能否进入下一个流量池，有火的可能。
+完播率最容易达成，短一些，一不留神就看完了。
+点赞，需要你的内容比较好，让用户认可。
+评论，一定是你的内容非常好，或者用户持反对意见，以及其他的心理，吸引评论需要在视频中精心设计、
+转发，是权重最高的，想一想你转发一个视频的心理是什么？
+也许是非常搞笑有梗，转发给朋友。也许是信息量足，转发出去不仅自己获得知识，还能显得自己挺优秀，层次不一样。
+我的视频目前只是点赞数有一些，其他的部分都很差，就是没有好好设计内容。
+
+做抖音不易，就像一场修行，不断磨练自己。
+后续还会分享其他抖音心得。
+
+作者：奚磊Morry
+链接：https://www.jianshu.com/p/d7ee1236f1d5
+来源：简书
+著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。" />
+
+        </androidx.core.widget.NestedScrollView>
+
+    </me.ibore.widget.refresh.RefreshLayout>
+
+    <me.ibore.widget.TitleBar
+        android:id="@+id/title_bar"
+        style="@style/TitleBar">
+
+        <include layout="@layout/title_bar" />
+
+    </me.ibore.widget.TitleBar>
+
+</me.ibore.widget.RootLayout>

@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<me.ibore.widget.RootLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000" >
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/content_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <me.ibore.widget.TitleBar
+        android:id="@+id/title_bar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/image_picker_action_bar_height"
+        android:background="@color/image_picker_bar_color"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/image_picker_action_bar_height">
+
+            <ImageView
+                android:id="@+id/iv_image_picker_back"
+                android:layout_width="@dimen/image_picker_action_bar_height"
+                android:layout_height="@dimen/image_picker_action_bar_height"
+                android:scaleType="center"
+                android:src="@drawable/ic_picker_image_title_bar_back" />
+
+            <TextView
+                android:id="@+id/tv_title_bar_title"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="@dimen/image_picker_action_bar_height"
+                android:gravity="center_vertical"
+                android:textColor="@color/image_picker_text_color"
+                android:textSize="18sp"
+                tools:text="1/1000" />
+
+            <TextView
+                android:id="@+id/tv_image_picker_commit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end|center_vertical"
+                android:layout_marginEnd="16dp"
+                android:background="@drawable/image_picker_commit"
+                android:enabled="false"
+                android:paddingLeft="10dp"
+                android:paddingTop="5dp"
+                android:paddingRight="10dp"
+                android:paddingBottom="5dp"
+                android:text="@string/image_picker_confirm"
+                android:textColor="@color/image_picker_text_color"
+                android:textSize="14sp" />
+
+        </FrameLayout>
+    </me.ibore.widget.TitleBar>
+
+    <LinearLayout
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:id="@+id/bottom_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/image_picker_bar_color"
+        android:orientation="vertical">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_image_select"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clipToPadding="false"
+            android:orientation="horizontal"
+            android:paddingStart="7.5dp"
+            android:paddingTop="15dp"
+            android:paddingEnd="7.5dp"
+            android:paddingBottom="15dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:itemCount="4"
+            tools:listitem="@layout/item_image_picker_preview_select" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/image_picker_line_color" />
+
+        <LinearLayout
+            android:id="@+id/ll_pre_select"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/image_picker_action_bar_height"
+            android:layout_gravity="end"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp">
+
+            <ImageView
+                android:id="@+id/iv_image_picker_check"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="6dp"
+                android:background="@drawable/image_picker_checked"
+                android:scaleType="center"
+                android:src="@drawable/image_picker_preview_checked" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/image_picker_select"
+                android:textColor="@color/image_picker_text_color"
+                android:textSize="15sp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</me.ibore.widget.RootLayout>

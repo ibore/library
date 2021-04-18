@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<me.ibore.widget.TitleBar xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="48dp"
+    app:layout_rootType="title"
+    app:tbStatusBar="false">
+
+    <TextView
+        android:id="@+id/tv_negative"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start|center_vertical"
+        android:layout_marginStart="8dp"
+        android:background="?android:attr/selectableItemBackground"
+        android:padding="8dp"
+        android:text="@string/dialog_negative"
+        android:textColor="@color/dialog_negative"
+        android:textSize="@dimen/dialog_negative"
+        app:layout_titleType="start" />
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginStart="56dp"
+        android:layout_marginEnd="56dp"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:singleLine="true"
+        android:textColor="@color/dialog_view_title"
+        android:textSize="@dimen/dialog_view_title"
+        android:textStyle="bold"
+        app:layout_titleType="title"
+        tools:text="标题" />
+
+    <TextView
+        android:id="@+id/tv_positive"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|center_vertical"
+        android:layout_marginEnd="8dp"
+        android:background="?android:attr/selectableItemBackground"
+        android:padding="8dp"
+        android:text="@string/dialog_positive"
+        android:textColor="@color/dialog_positive"
+        android:textSize="@dimen/dialog_positive"
+        app:layout_titleType="end" />
+
+</me.ibore.widget.TitleBar>

@@ -1,6 +1,64 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
     <string name="loading">正在加载…</string>
+    <string name="picker_view_year" >年</string>
+    <string name="picker_view_month">月</string>
+    <string name="picker_view_day" >日</string>
+    <string name="picker_view_hour">时</string>
+    <string name="picker_view_minute">分</string>
+    <string name="dialog_positive" >确定</string>
+    <string name="dialog_negative">取消</string>
+    <string name="dialog_date_title" >选择日期</string>
+    <string name="dialog_timer_title">选择时间</string>
+    <string name="dialog_list_max_count">"最多只能选择%1$d项"</string>
+    <string name="dialog_list_at_least_one">"请最少选择一项"</string>
+
+    <string name="image_picker_select_max">最多选择%1$d张图片</string>
+    <string name="image_picker_confirm">确定</string>
+    <string name="image_picker_preview">预览</string>
+    <string name="image_picker_preview_msg">预览(%1$d)</string>
+    <string name="image_picker_confirm_msg">确定(%1$d/%2$d)</string>
+    <string name="image_picker_num">(%d)</string>
+    <string name="image_picker_all_media">图片和视频</string>
+    <string name="image_picker_all_video">所有视频</string>
+    <string name="image_picker_take_photo">拍摄图片</string>
+    <string name="image_picker_permission_tip">当前没有读取存储卡或摄像头权限</string>
+    <string name="image_picker_select">选择</string>
+    <string name="image_picker_single_type_choose">不能同时选择图片与视频</string>
+
+    <string name="refresh_pull_down_to_refresh">下拉刷新…</string>
+    <string name="refresh_release_refresh">释放刷新…</string>
+    <string name="refresh_refresh_complete">刷新完成…</string>
+    <string name="refresh_refresh_failed">刷新失败…</string>
+    <string name="refresh_loading">加载中…</string>
+
+    <string name="pay_wxpay_code_unsupport">未安装微信或者微信版本太低</string>
+    <string name="pay_wxpay_code_illegal_argure">订单参数不合法</string>
+
+
+    <string name="dev_str_to">至</string>
+
+    <string name="dev_str_packname">应用包名</string>
+    <string name="dev_str_md5">应用 MD5签名</string>
+    <string name="dev_str_version_code">应用版本号(内部判断)</string>
+    <string name="dev_str_version_name">应用版本名(用户展示)</string>
+    <string name="dev_str_apk_uri">安装包地址</string>
+    <string name="dev_str_sha1">SHA1</string>
+    <string name="dev_str_sha256">SHA256</string>
+    <string name="dev_str_first_install_time">首次安装时间</string>
+    <string name="dev_str_last_update_time">最近更新时间</string>
+    <string name="dev_str_minsdkversion">App 最低支持版本</string>
+    <string name="dev_str_targetsdkversion">App 兼容sdk版本</string>
+    <string name="dev_str_apk_length">APK 安装包大小</string>
+    <string name="dev_str_effective">有效时间</string>
+    <string name="dev_str_iseffective">签名是否过期</string>
+    <string name="dev_str_overdue">已过期</string>
+    <string name="dev_str_notoverdue">未过期</string>
+    <string name="dev_str_principal">证书发布方</string>
+    <string name="dev_str_version">证书版本号</string>
+    <string name="dev_str_sigalgname">证书算法名称</string>
+    <string name="dev_str_sigalgoid">证书算法OID</string>
+    <string name="dev_str_dercode">证书DER编码</string>
+    <string name="dev_str_serialnumber">证书机器码</string>
 
 </resources>

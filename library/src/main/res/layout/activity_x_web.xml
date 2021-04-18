@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<me.ibore.widget.RootLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:id="@+id/content_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_rootType="content">
+
+        <FrameLayout
+            android:id="@+id/fl_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <me.ibore.webview.XWebView
+            android:id="@+id/web_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/bg_page" />
+
+        <me.ibore.webview.view.XWebProgress
+            android:id="@+id/web_progress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </FrameLayout>
+
+    <me.ibore.widget.TitleBar
+        android:id="@+id/title_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        app:layout_rootType="title">
+
+        <ImageView
+            android:id="@+id/iv_title_bar_back"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingStart="16dp"
+            android:paddingEnd="8dp"
+            android:scaleType="center"
+            android:src="@drawable/ic_title_bar_back"
+            app:layout_titleType="start" />
+
+        <ImageView
+            android:id="@+id/iv_title_bar_close"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:scaleType="center"
+            android:src="@drawable/ic_title_bar_close"
+            app:layout_titleType="start" />
+
+        <TextView
+            android:id="@+id/tv_title_bar_title"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:lines="1"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:textColor="@color/text_normal"
+            android:textSize="@dimen/text_more"
+            android:textStyle="bold"
+            app:layout_titleType="title"
+            tools:text="标题" />
+
+    </me.ibore.widget.TitleBar>
+
+</me.ibore.widget.RootLayout>

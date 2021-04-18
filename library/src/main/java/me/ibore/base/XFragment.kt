@@ -1,5 +1,7 @@
 package me.ibore.base
 
+import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -7,6 +9,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
 import me.ibore.utils.BindingUtils
+import me.ibore.utils.DisposablesUtils
+import me.ibore.utils.ViewBindingUtils
 import me.ibore.widget.RootLayout
 
 abstract class XFragment<VB : ViewBinding> : Fragment(), XStatusView<VB> {
@@ -15,11 +19,7 @@ abstract class XFragment<VB : ViewBinding> : Fragment(), XStatusView<VB> {
         BindingUtils.reflexViewBinding(javaClass, layoutInflater)
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return mBinding.root
     }
 
@@ -28,15 +28,18 @@ abstract class XFragment<VB : ViewBinding> : Fragment(), XStatusView<VB> {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        onBindConfig()
         mBinding.onBindView(arguments, savedInstanceState)
+        onBindConfig()
         onBindData()
     }
 
     override fun onDestroyView() {
         onUnBindConfig()
+        DisposablesUtils.clear(this)
         super.onDestroyView()
     }
+
+    override fun onBindData() {}
 
     override fun showLoading() {
         (mBinding.root as RootLayout?)?.showLoading()
@@ -61,4 +64,13 @@ abstract class XFragment<VB : ViewBinding> : Fragment(), XStatusView<VB> {
     override fun dismissDialog() {
 
     }
+
+    override fun onBindConfig() {
+
+    }
+
+    override fun onUnBindConfig() {
+
+    }
+
 }

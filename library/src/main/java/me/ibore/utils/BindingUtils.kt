@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.viewbinding.ViewBinding
 import me.ibore.base.mvp.XMvpPresenter
+import me.ibore.exception.ClientException
 import java.lang.reflect.InvocationTargetException
 import java.lang.reflect.ParameterizedType
 import java.util.*
@@ -26,7 +27,8 @@ object BindingUtils {
      * @param from   layouinflater
      * @return viewBinding实例
     </V> */
-    fun <V : ViewBinding> reflexViewBinding(aClass: Class<*>, from: LayoutInflater?): V {
+    @Suppress("UNCHECKED_CAST")
+    fun <V : ViewBinding> reflexViewBinding(aClass: Class<*>, from: LayoutInflater): V {
         try {
             val actualTypeArguments =
                 (Objects.requireNonNull(aClass.genericSuperclass) as ParameterizedType).actualTypeArguments
@@ -42,7 +44,7 @@ object BindingUtils {
                     return inflate.invoke(null, from) as V
                 }
             }
-            return reflexViewBinding<V>(aClass.superclass, from)
+            return reflexViewBinding(aClass.superclass, from)
         } catch (e: NoSuchMethodException) {
             e.printStackTrace()
         } catch (e: IllegalAccessException) {
@@ -50,17 +52,15 @@ object BindingUtils {
         } catch (e: InvocationTargetException) {
             e.printStackTrace()
         }
-        throw RuntimeException("ViewBinding初始化失败")
+        throw ClientException("ViewBinding初始化失败")
     }
 
     /**
      * 反射获取ViewBinding\
      */
+    @Suppress("UNCHECKED_CAST")
     fun <V : ViewBinding> reflexViewBinding(
-        aClass: Class<*>,
-        from: LayoutInflater?,
-        viewGroup: ViewGroup?,
-        b: Boolean
+        aClass: Class<*>, from: LayoutInflater?, viewGroup: ViewGroup?, b: Boolean
     ): V {
         try {
             val actualTypeArguments =
@@ -101,6 +101,7 @@ object BindingUtils {
      * @param owner  生命周期管理
      * @return ViewModel实例
     </VM> */
+    @Suppress("UNCHECKED_CAST")
     fun <VM : ViewModel> reflexViewModel(aClass: Class<*>, owner: ViewModelStoreOwner): VM {
         try {
             val actualTypeArguments =
@@ -130,6 +131,7 @@ object BindingUtils {
      * @param aClass 当前class
      * @return Presenter实例
     </VM> */
+    @Suppress("UNCHECKED_CAST")
     fun <P : XMvpPresenter<*>> reflexPresenter(aClass: Class<*>): P {
         try {
             val actualTypeArguments =
@@ -162,6 +164,7 @@ object BindingUtils {
      * @param fragment fragment  调用 [Fragment.requireActivity] 方法
      * @return ViewModel实例
     </VM> */
+    @Suppress("UNCHECKED_CAST")
     fun <VM : ViewModel> reflexViewModelShared(aClass: Class<*>, fragment: Fragment): VM {
         try {
             val actualTypeArguments =

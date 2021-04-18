@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="tv_content" type="id" />
+    <item name="ll_item" type="id" />
+
+    <item name="content_layout" type="id" />
+    <item name="content_layout_title" type="id" />
+    <item name="content_layout_content" type="id" />
+    <item name="content_layout_start" type="id" />
+    <item name="content_layout_end" type="id" />
+
+    <item name="decode" type="id" />
+    <item name="decode_failed" type="id" />
+    <item name="decode_succeeded" type="id" />
+    <item name="launch_product_query" type="id" />
+    <item name="quit" type="id" />
+    <item name="restart_preview" type="id" />
+    <item name="return_scan_result" type="id" />
+    <item name="title_bar" type="id" />
+    <item name="content_view" type="id" />
+    <item name="bottom_bar" type="id" />
+    <item name="loading_view" type="id" />
+    <item name="empty_view" type="id" />
+    <item name="error_view" type="id" />
+
+    <item type="id" name="bgaqrcode_camera_preview" />
+</resources>

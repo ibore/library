@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="280dp"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:background="@drawable/dialog_view_bg"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp">
+
+        <TextView
+            android:id="@+id/tv_negative"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start|center_vertical"
+            android:layout_marginStart="8dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:padding="8dp"
+            android:text="@string/dialog_negative"
+            android:textColor="@color/dialog_negative"
+            android:textSize="@dimen/dialog_negative" />
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="56dp"
+            android:layout_marginEnd="56dp"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:singleLine="true"
+            android:textColor="@color/dialog_view_title"
+            android:textSize="@dimen/dialog_view_title"
+            android:textStyle="bold"
+            tools:text="标题" />
+
+        <TextView
+            android:id="@+id/tv_positive"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|center_vertical"
+            android:layout_marginEnd="8dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:padding="8dp"
+            android:text="@string/dialog_positive"
+            android:textColor="@color/dialog_positive"
+            android:textSize="@dimen/dialog_positive" />
+
+    </FrameLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/dialog_view_line" />
+
+    <me.ibore.widget.wheel.RegionPickerView
+        android:id="@+id/regionPickerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        app:wvTextSize="17sp"
+        app:wvAutoFitTextSize="true"
+        app:wvDividerColor="@color/dialog_view_line"
+        app:wvDividerHeight="1dp"
+        app:wvLineSpacing="16dp"
+        app:wvShowDivider="true"
+        app:wvTextBoundaryMargin="0dp"
+        app:wvVisibleItems="7" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/dialog_view_line" />
+
+    <Button
+        android:id="@+id/btn_positive"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="?android:attr/selectableItemBackground"
+        android:gravity="center"
+        android:text="@string/dialog_positive"
+        android:textColor="@color/dialog_positive"
+        android:textSize="@dimen/dialog_positive"
+        android:textStyle="bold" />
+
+</LinearLayout>

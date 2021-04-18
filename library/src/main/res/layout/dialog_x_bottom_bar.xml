@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/bottom_bar"
+    android:layout_width="match_parent"
+    android:layout_height="48dp"
+    android:orientation="horizontal"
+    app:layout_rootType="bottom">
+
+    <TextView
+        android:id="@+id/btn_negative"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="?android:attr/selectableItemBackground"
+        android:gravity="center"
+        android:text="@string/dialog_negative"
+        android:textColor="@color/dialog_negative"
+        android:textSize="@dimen/dialog_button_text"
+        android:textStyle="bold" />
+
+    <View
+        android:id="@+id/view_line"
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:background="@color/dialog_view_line" />
+
+    <TextView
+        android:id="@+id/btn_positive"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="?android:attr/selectableItemBackground"
+        android:gravity="center"
+        android:text="@string/dialog_positive"
+        android:textColor="@color/dialog_positive"
+        android:textSize="@dimen/dialog_button_text"
+        android:textStyle="bold" />
+
+</LinearLayout>

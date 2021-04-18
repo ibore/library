@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import me.ibore.utils.Utils
 
 /**
  * @Author: QuYunShuo
@@ -139,3 +140,44 @@ fun Fragment.px2sp(pxValue: Int): Float {
     val scale = resources.displayMetrics.scaledDensity
     return pxValue / scale + 0.5f
 }
+
+/**
+ * dp 转 px
+ */
+fun Any.dp2px(dpValue: Float): Int {
+    val scale = Utils.app.resources.displayMetrics.density
+    return (dpValue * scale + 0.5f).toInt()
+}
+
+/**
+ * px 转 dp
+ */
+fun Any.px2dp(pxValue: Int): Float {
+    val scale = Utils.app.resources.displayMetrics.density
+    return pxValue / scale + 0.5f
+}
+
+/**
+ * sp 转 px
+ */
+fun Any.sp2px(spValue: Float): Int {
+    val scale = Utils.app.resources.displayMetrics.scaledDensity
+    return (spValue * scale + 0.5f).toInt()
+}
+
+/**
+ * px 转 sp
+ */
+fun Any.px2sp(pxValue: Int): Float {
+    val scale = Utils.app.resources.displayMetrics.scaledDensity
+    return pxValue / scale + 0.5f
+}
+
+fun Context.screenWidth(): Int {
+    return resources.displayMetrics.widthPixels
+}
+
+fun Context.screenHeight(): Int {
+    return resources.displayMetrics.heightPixels
+}
+

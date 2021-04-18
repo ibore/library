@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<me.ibore.widget.RootLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_f4f5f7">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_rootType="content">
+
+        <LinearLayout
+            android:padding="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp">
+
+                <TextView
+                    android:id="@+id/btn_common_web"
+                    style="@style/Item_Small"
+                    android:text="普通网页" />
+
+                <TextView
+                    android:id="@+id/btn_sogou_map"
+                    style="@style/Item_Small"
+                    android:text="搜狗地图" />
+
+                <TextView
+                    android:id="@+id/btn_web_dialog"
+                    style="@style/Item_Small"
+                    android:text="H5弹框" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp">
+
+                <TextView
+                    android:id="@+id/btn_video_web"
+                    style="@style/Item_Small"
+                    android:text="视频网站" />
+
+                <TextView
+                    style="@style/Item_Small"
+                    android:text="" />
+
+                <TextView
+                    style="@style/Item_Small"
+                    android:text="" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+    <me.ibore.widget.TitleBar
+        android:id="@+id/title_bar"
+        style="@style/TitleBar">
+
+        <include layout="@layout/title_bar" />
+
+    </me.ibore.widget.TitleBar>
+
+</me.ibore.widget.RootLayout>

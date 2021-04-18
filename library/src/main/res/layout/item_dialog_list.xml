@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ll_item"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/dialog_view_list_content_height"
+    android:clickable="true"
+    android:background="@drawable/dialog_view_content_bg"
+    android:focusable="true"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?android:attr/selectableItemBackground"
+        android:ellipsize="end"
+        android:textSize="@dimen/dialog_view_content"
+        android:textColorHint="@color/content_layout_content_hint_color"
+        android:textColor="@color/content_layout_content_color"
+        android:gravity="center_vertical|start"
+        android:maxLines="2"
+        android:paddingStart="@dimen/dialog_margin"
+        android:paddingEnd="@dimen/dialog_margin"
+        tools:text="测试数据测试数据测试数据测试数据测试数据测试数据测试数据测试数据" />
+
+    <View
+        android:id="@+id/view_bottom_line"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_gravity="bottom"
+        android:layout_marginStart="@dimen/dialog_margin"
+        android:layout_marginEnd="@dimen/dialog_margin"
+        android:background="@color/dialog_view_line" />
+</FrameLayout>

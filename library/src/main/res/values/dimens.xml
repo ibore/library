@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="date_picker_view_margins">8dp</dimen>
+
+    <dimen name="dialog_view_radius">10dp</dimen>
+    <dimen name="dialog_view_content">15sp</dimen>
+    <dimen name="dialog_view_hint">14sp</dimen>
+    <dimen name="dialog_view_title">16sp</dimen>
+    <dimen name="dialog_negative">15sp</dimen>
+    <dimen name="dialog_positive">15sp</dimen>
+
+    <dimen name="dialog_view_list_content_height">52dp</dimen>
+    <dimen name="image_picker_action_bar_height">48dp</dimen>
+    <dimen name="dialog_margin">16dp</dimen>
+    <dimen name="dialog_view_input_margin">8dp</dimen>
+    <dimen name="dialog_button_text">15sp</dimen>
+
+
+</resources>

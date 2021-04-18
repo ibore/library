@@ -1,6 +1,584 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <declare-styleable name="WheelView">
+        <!--文字大小-->
+        <attr name="wvTextSize" format="dimension" />
+        <!--是否自适应文字大小以完全显示过长的文字-->
+        <attr name="wvAutoFitTextSize" format="boolean" />
+        <!--文字对齐方式-->
+        <attr name="wvTextAlign" format="enum">
+            <enum name="left" value="0" />
+            <enum name="center" value="1" />
+            <enum name="right" value="2" />
+        </attr>
+        <!--文字距离边界的外边距-->
+        <attr name="wvTextBoundaryMargin" format="dimension" />
+        <!--未选中文字颜色-->
+        <attr name="wvNormalItemTextColor" format="color" />
+        <!--被选中的文字颜色-->
+        <attr name="wvSelectedItemTextColor" format="color" />
+        <!--行间距-->
+        <attr name="wvLineSpacing" format="dimension" />
+        <!--数据为Integer类型时是否需要转换-->
+        <attr name="wvIntegerNeedFormat" format="boolean" />
+        <!--Integer类型转换格式-->
+        <attr name="wvIntegerFormat" format="string" />
+
+        <!--可见item数-->
+        <attr name="wvVisibleItems" format="integer" />
+        <!--当前选中下标-->
+        <attr name="wvSelectedItemPosition" format="integer" />
+        <!--是否循环滚动-->
+        <attr name="wvCyclic" format="boolean" />
+
+        <!--是否显示分割线-->
+        <attr name="wvShowDivider" format="boolean" />
+        <!--分割线类型-->
+        <attr name="wvDividerType" format="enum">
+            <enum name="fill" value="0" />
+            <enum name="wrap" value="1" />
+        </attr>
+        <!--分割线颜色-->
+        <attr name="wvDividerColor" format="color" />
+        <!--分割线高度-->
+        <attr name="wvDividerHeight" format="dimension" />
+        <!--wrap类型下分割线内边距-->
+        <attr name="wvDividerPaddingForWrap" format="dimension" />
+        <!--是否是弯曲（3D）效果-->
+        <attr name="wvCurved" format="boolean" />
+        <!--弯曲（3D）效果左右圆弧偏移效果方向 可向指定方向偏移-->
+        <attr name="wvCurvedArc" format="enum">
+            <enum name="left" value="0" />
+            <enum name="center" value="1" />
+            <enum name="right" value="2" />
+        </attr>
+        <!--弯曲（3D）效果左右圆弧偏移效果方向系数 偏移系数-->
+        <attr name="wvCurvedArcFactor" format="float" />
+        <!--选中后折射的偏移(弯曲（3D）效果和普通效果都适用) 与字体大小的比值，1为不偏移 越小偏移越明显-->
+        <attr name="wvRefractRatio" format="float" />
+        <!--是否绘制选中区域-->
+        <attr name="wvDrawSelectedRect" format="boolean" />
+        <!--选中区域颜色-->
+        <attr name="wvSelectedRectColor" format="color" />
+        <!--选中区域/分割线上下偏移，通过移动分割线上下限制的位置来实现扩大/缩小显示区域-->
+        <attr name="wvDividerOffset" format="dimension" />
+    </declare-styleable>
+
+    <!-- 年选择器 -->
+    <declare-styleable name="YearWheelView">
+        <!-- 开始年份 -->
+        <attr name="wvStartYear" format="integer" />
+        <!-- 结束年份 -->
+        <attr name="wvEndYear" format="integer" />
+        <!-- 当前选择的年份 -->
+        <attr name="wvSelectedYear" format="integer" />
+    </declare-styleable>
+
+    <!-- 月选择器 -->
+    <declare-styleable name="MonthWheelView">
+        <!-- 当前选择的月份 -->
+        <attr name="wvSelectedMonth" format="integer" />
+    </declare-styleable>
+
+    <!-- 天选择器 -->
+    <declare-styleable name="DayWheelView">
+        <!-- 当前的年份 -->
+        <attr name="wvYear" format="integer" />
+        <!-- 当前的月份 -->
+        <attr name="wvMonth" format="integer" />
+        <!-- 当前选择的天 -->
+        <attr name="wvSelectedDay" format="integer" />
+    </declare-styleable>
+
+    <!-- 小时选择器 -->
+    <declare-styleable name="HourWheelView">
+        <!-- 当前选择的小时 -->
+        <attr name="wvSelectedHour" format="integer" />
+    </declare-styleable>
+
+    <!-- 分钟选择器 -->
+    <declare-styleable name="MinuteWheelView">
+        <!-- 当前选择的小时 -->
+        <attr name="wvSelectedMinute" format="integer" />
+    </declare-styleable>
+
+    <!-- 状态视图 -->
+    <declare-styleable name="StatusLayout">
+        <!-- 加载中布局 -->
+        <attr name="loadingLayout" format="reference" />
+        <!-- 空布局 -->
+        <attr name="emptyLayout" format="reference" />
+        <!-- 错误布局 -->
+        <attr name="errorLayout" format="reference" />
+    </declare-styleable>
+
+    <declare-styleable name="CardView">
+
+        <attr name="cvShadowSize" format="dimension" />
+        <attr name="cvShadowColor" format="color" />
+        <attr name="cvShadowStartAlpha" format="integer" />
+        <attr name="cvShadowFluidShape" format="enum">
+            <enum name="adsorption" value="0" />
+            <enum name="linear" value="1" />
+        </attr>
+        <attr name="cvBackgroundColor" format="color" />
+        <attr name="cvCornerRadius" format="dimension" />
+        <attr name="cvLeftTopCornerRadius" format="dimension" />
+        <attr name="cvRightTopCornerRadius" format="dimension" />
+        <attr name="cvLeftBottomCornerRadius" format="dimension" />
+        <attr name="cvRightBottomCornerRadius" format="dimension" />
+        <attr name="cvElevation" format="dimension" />
+        <attr name="cvElevationAffectShadowColor" format="boolean" />
+        <attr name="cvElevationAffectShadowSize" format="boolean" />
+        <attr name="cvLeftOffset" format="dimension" />
+        <attr name="cvRightOffset" format="dimension" />
+        <attr name="cvTopOffset" format="dimension" />
+        <attr name="cvBottomOffset" format="dimension" />
+        <attr name="cvFixedContentWidth" format="boolean"/>
+        <attr name="cvFixedContentHeight" format="boolean"/>
+
+    </declare-styleable>
+
+    <declare-styleable name="RingProgressBar">
+        <attr name="rpbRingColor" format="color" />
+        <attr name="rpbRingProgressColor" format="color" />
+        <attr name="rpbRingWidth" format="dimension" />
+        <attr name="rpbTextColor" format="color" />
+        <attr name="rpbTextSize" format="dimension" />
+        <attr name="rpbTextFormat" format="reference" />
+        <attr name="rpbMax" format="integer" />
+        <attr name="rpbTextIsShow" format="boolean" />
+        <attr name="rpbProgress" format="integer" />
+        <attr name="rpbRingPadding" format="dimension" />
+        <attr name="rpbStyle" format="enum">
+            <enum name="STROKE" value="0" />
+            <enum name="FILL" value="1" />
+        </attr>
+    </declare-styleable>
+
+    <declare-styleable name="StickyView">
+        <attr name="svStickyId" format="reference" />
+        <attr name="svTextSize" format="dimension" />
+        <attr name="svTextColor" format="color" />
+        <attr name="svTextBold" format="boolean" />
+        <attr name="svTextHeight" format="dimension" />
+        <attr name="svPaddingVertical" format="dimension" />
+        <attr name="svPaddingHorizontal" format="dimension" />
+        <attr name="svTextBackground" format="reference" />
+        <attr name="svTextGravity" format="enum">
+            <enum name="start" value="0x00800003" />
+            <enum name="end" value="0x00800005" />
+        </attr>
+    </declare-styleable>
+
+    <!-- 标题内容布局 -->
+    <declare-styleable name="TextLayout">
+        <!-- 标题颜色 -->
+        <attr name="tlTitleColor" format="reference" />
+        <!-- 标题字体大小 -->
+        <attr name="tlTitleSize" format="dimension" />
+        <!-- 标题最小宽度 -->
+        <attr name="tlTitleMinWidth" format="dimension" />
+        <!-- 标题最大宽度 -->
+        <attr name="tlTitleMaxWidth" format="dimension" />
+        <!-- 标题是否加粗 -->
+        <attr name="tlTitleBold" format="boolean" />
+        <!-- 内容颜色 -->
+        <attr name="tlContentColor" format="reference" />
+        <!-- 内容大小 -->
+        <attr name="tlContentSize" format="dimension" />
+        <!-- 标题文字 -->
+        <attr name="tlTitleText" format="string" />
+        <!-- 内容文字 -->
+        <attr name="tlContentText" format="string" />
+        <!-- 内容是否加粗 -->
+        <attr name="tlContentBold" format="boolean" />
+        <!-- 标题文字 -->
+        <attr name="tlTitleSingleLine" format="boolean" />
+        <!-- 内容文字 -->
+        <attr name="tlContentSingleLine" format="boolean" />
+        <!-- 内容是否可以编辑 -->
+        <attr name="tlContentEdit" format="boolean" />
+        <!-- 内容长度限制 -->
+        <attr name="tlContentLength" format="integer" />
+        <!-- 内容显示类型 -->
+        <attr name="tlContentType" format="enum">
+            <enum name="norm" value="0" />
+            <enum name="number" value="1" />
+            <enum name="email" value="2" />
+            <enum name="phone_norm" value="3" />
+            <enum name="phone_china" value="4" />
+            <enum name="telephone" value="5" />
+            <enum name="id_card_norm" value="6" />
+            <enum name="id_card_china" value="7" />
+        </attr>
+        <!-- 标题和内容的间隔距离，默认为8dp -->
+        <attr name="tlDistance" format="dimension" />
+        <!-- 布局排版(横竖) -->
+        <attr name="tlOrientation">
+            <!-- 布局右边 -->
+            <enum name="horizontal" value="0" />
+            <!-- 布局左边 -->
+            <enum name="vertical" value="1" />
+        </attr>
+        <!-- 内容显示的位置 -->
+        <attr name="tlContentGravity">
+            <!-- 布局左边 -->
+            <enum name="start" value="8388611" />
+            <!-- 布局右边 -->
+            <enum name="end" value="8388613" />
+        </attr>
+        <!-- 内容提示文字 -->
+        <attr name="tlContentHint" format="string" />
+        <!-- 内容提示文字颜色 -->
+        <attr name="tlContentHintColor" format="reference" />
+        <!-- 底部横线的高度 -->
+        <attr name="tlBottomLineHeight" format="dimension" />
+        <!-- 底部横线的颜色 -->
+        <attr name="tlBottomLineColor" format="reference" />
+        <!-- 右侧的ICON -->
+        <attr name="tlRightIcon" format="reference" />
+        <!-- 底部错误提示文本 -->
+        <attr name="tlErrorHint" format="string" />
+        <!-- 底部错误提示文本颜色 -->
+        <attr name="tlErrorHintColor" format="reference" />
+    </declare-styleable>
+
+    <declare-styleable name="BottomBarItem">
+        <!--默认状态下的图标-->
+        <attr name="bblIconNormal" format="reference" />
+        <!--选中状态下的图标-->
+        <attr name="bblIconSelected" format="reference" />
+
+        <!--底部文字-->
+        <attr name="bblText" format="string" />
+        <!--文字大小-->
+        <attr name="bblTextSize" format="dimension" />
+        <!--默认状态下的文字颜色-->
+        <attr name="bblTextColorNormal" format="color" />
+        <!--选中状态下的文字颜色-->
+        <attr name="bblTextColorSelected" format="color" />
+
+        <!--文字和图标的顶部距离-->
+        <attr name="bblMarginTextIcon" format="dimension" />
+
+        <!--是否开启触摸背景效果-->
+        <attr name="bblOpenTouchBg" format="boolean" />
+        <!--设置触摸背景-->
+        <attr name="bblTouchDrawable" format="reference" />
+
+        <!--设置图标的宽度-->
+        <attr name="bblIconWidth" format="dimension" />
+        <!--设置图标的高度-->
+        <attr name="bblIconHeight" format="dimension" />
+
+        <!--设置BottomBarItem的padding-->
+        <attr name="bblItemPadding" format="dimension" />
+
+        <!--设置未读数字体大小-->
+        <attr name="bblUnreadTextSize" format="dimension" />
+        <!--设置未读数字体颜色-->
+        <attr name="bblUnreadTextColor" format="reference" />
+        <!--设置未读数背景色-->
+        <attr name="bblUnreadTextBg" format="reference" />
+
+        <!--设置提示消息字体大小-->
+        <attr name="bblMsgTextSize" format="dimension" />
+        <!--设置提示消息字体颜色-->
+        <attr name="bblMsgTextColor" format="reference" />
+        <!--设置提示消息背景-->
+        <attr name="bblMsgTextBg" format="reference" />
+
+        <!--设置提示点背景-->
+        <attr name="bblNotifyPointBg" format="reference" />
+
+        <!--设置未读数组阈值 大于阈值的数字将显示为 n+ n为设置的阈值-->
+        <attr name="bblUnreadThreshold" format="integer" />
+    </declare-styleable>
+
+    <declare-styleable name="BottomBarLayout">
+        <attr name="bblSmoothScroll" format="boolean" />
+    </declare-styleable>
+
+    <!-- 标题视图 -->
+    <declare-styleable name="TitleBar">
+
+        <attr name="tbStatusBar" format="boolean" />
+
+    </declare-styleable>
+
+    <declare-styleable name="MarqueeTextView">
+        <attr name="scroll_interval" format="integer" />
+        <attr name="scroll_first_delay" format="integer" />
+        <attr name="scroll_mode">
+            <enum name="mode_forever" value="100" />
+            <enum name="mode_once" value="101" />
+        </attr>
+    </declare-styleable>
+
+    <declare-styleable name="PasswordInputView">
+        <attr name="pwv_maxLength" format="integer" />
+
+        <attr name="pwv_borderColor" format="color" />
+        <attr name="pwv_pwdColor" format="color" />
+        <attr name="pwv_haveInputBorderColor" format="color" />
+
+        <attr name="pwv_strokeWidth" format="dimension" />
+        <attr name="pwv_radius" format="dimension" />
+        <attr name="pwv_spacing" format="dimension" />
+        <attr name="pwv_asterisk" format="string" />
+
+        <attr name="pwv_borderStyle" format="enum">
+            <enum name="box" value="0" />
+            <enum name="line" value="1" />
+        </attr>
+        <attr name="pwv_pwdStyle" format="enum">
+            <enum name="circle" value="0" />
+            <enum name="asterisk" value="1" />
+            <enum name="plaintext" value="2" />
+        </attr>
+    </declare-styleable>
+
+    <!-- 标题内容布局 -->
+    <declare-styleable name="ContentLayout">
+        <!-- 标题颜色 -->
+        <attr name="clTitleColor" format="reference" />
+        <!-- 标题字体大小 -->
+        <attr name="clTitleSize" format="dimension" />
+        <!-- 标题最小宽度 -->
+        <attr name="clTitleMinWidth" format="dimension" />
+        <!-- 标题最大宽度 -->
+        <attr name="clTitleMaxWidth" format="dimension" />
+        <!-- 标题是否单行显示 -->
+        <attr name="clTitleSingleLine" format="boolean" />
+        <!-- 标题是否加粗 -->
+        <attr name="clTitleBold" format="boolean" />
+        <!-- 内容颜色 -->
+        <attr name="clContentColor" format="reference" />
+        <!-- 内容大小 -->
+        <attr name="clContentSize" format="dimension" />
+        <!-- 内容大小 -->
+        <attr name="clContentSingleLine" format="boolean" />
+        <!-- 内容是否加粗 -->
+        <attr name="clContentBold" format="boolean" />
+        <!-- 标题文字 -->
+        <attr name="clTitleText" format="string" />
+        <!-- 内容文字 -->
+        <attr name="clContentText" format="string" />
+        <!-- 标题和内容的间隔距离，默认为8dp -->
+        <attr name="clDistance" format="dimension" />
+        <!-- 布局排版(横竖) -->
+        <attr name="clOrientation">
+            <!-- 布局右边 -->
+            <enum name="horizontal" value="0" />
+            <!-- 布局左边 -->
+            <enum name="vertical" value="1" />
+        </attr>
+        <!-- 内容显示的位置 -->
+        <attr name="clGravity">
+            <!-- 布局左边 -->
+            <enum name="left" value="3" />
+            <!-- 布局右边 -->
+            <enum name="right" value="5" />
+        </attr>
+        <!-- 内容提示文字 -->
+        <attr name="clContentHint" format="string" />
+        <!-- 内容提示文字颜色 -->
+        <attr name="clContentHintColor" format="reference" />
+        <!-- 底部横线的高度 -->
+        <attr name="clTopLineHeight" format="dimension" />
+        <!-- 底部横线的颜色 -->
+        <attr name="clTopLineColor" format="reference" />
+        <!-- 底部横线的高度 -->
+        <attr name="clBottomLineHeight" format="dimension" />
+        <!-- 底部横线的颜色 -->
+        <attr name="clBottomLineColor" format="reference" />
+        <!-- 右侧的ICON -->
+        <attr name="clStartIcon" format="reference" />
+        <!-- 右侧的ICON -->
+        <attr name="clEndIcon" format="reference" />
+        <!-- 是否需要显底部错误弹框 -->
+        <attr name="clShowErrorHint" format="boolean" />
+    </declare-styleable>
+
+
+    <declare-styleable name="SwitchButton">
+        <attr name="sb_shadow_radius" format="reference|dimension" />
+        <attr name="sb_shadow_offset" format="reference|dimension" />
+        <attr name="sb_shadow_color" format="reference|color" />
+        <attr name="sb_uncheck_color" format="reference|color" />
+        <attr name="sb_checked_color" format="reference|color" />
+
+        <attr name="sb_border_width" format="reference|dimension" />
+        <attr name="sb_checkline_color" format="reference|color" />
+        <attr name="sb_checkline_width" format="reference|dimension" />
+        <attr name="sb_uncheckcircle_color" format="reference|color" />
+        <attr name="sb_uncheckcircle_width" format="reference|dimension" />
+        <attr name="sb_uncheckcircle_radius" format="reference|dimension" />
+
+        <attr name="sb_checked" format="reference|boolean" />
+        <attr name="sb_shadow_effect" format="reference|boolean" />
+        <attr name="sb_effect_duration" format="reference|integer" />
+        <attr name="sb_button_color" format="reference|color" />
+        <attr name="sb_show_indicator" format="reference|boolean" />
+        <attr name="sb_background" format="reference|color" />
+        <attr name="sb_enable_effect" format="reference|boolean" />
+
+        <attr name="sb_checkedbutton_color" format="reference|color" />
+        <attr name="sb_uncheckbutton_color" format="reference|color" />
+
+    </declare-styleable>
+
+
+    <declare-styleable name="ViewfinderView">
+        <attr name="maskColor" format="color" />
+        <attr name="frameColor" format="color" />
+        <attr name="cornerColor" format="color" />
+        <attr name="laserColor" format="color" />
+        <attr name="resultPointColor" format="color" />
+        <attr name="labelText" format="string" />
+        <attr name="labelTextColor" format="color" />
+        <attr name="labelTextSize" format="dimension" />
+        <attr name="labelTextPadding" format="dimension" />
+        <attr name="labelTextLocation" format="enum">
+            <enum name="top" value="0" />
+            <enum name="bottom" value="1" />
+        </attr>
+        <attr name="showResultPoint" format="boolean" />
+        <attr name="frameWidth" format="dimension" />
+        <attr name="frameHeight" format="dimension" />
+        <attr name="gridColumn" format="integer" />
+        <attr name="gridHeight" format="dimension" />
+        <attr name="laserStyle" format="enum">
+            <enum name="none" value="0" />
+            <enum name="line" value="1" />
+            <enum name="grid" value="2" />
+        </attr>
+        <attr name="cornerRectWidth" format="dimension" />
+        <attr name="cornerRectHeight" format="dimension" />
+        <attr name="scannerLineMoveDistance" format="dimension" />
+        <attr name="scannerLineHeight" format="dimension" />
+        <attr name="frameLineWidth" format="dimension" />
+        <attr name="scannerAnimationDelay" format="integer" />
+        <attr name="frameRatio" format="float" />
+    </declare-styleable>
+
+    <declare-styleable name="RefreshLayout">
+        <attr name="refreshPinContent" format="boolean" />
+        <attr name="refreshKeepHeader" format="boolean" />
+        <attr name="refreshRefreshEnable" format="boolean" />
+        <attr name="refreshDurationOffset" format="integer" />
+        <attr name="refreshDefRefreshHeight" format="dimension" />
+        <attr name="refreshDefMaxOffset" format="dimension|enum">
+            <enum name="match_parent" value="-1" />
+        </attr>
+    </declare-styleable>
+
+    <declare-styleable name="LabelView">
+        <!-- 设置文字内容 -->
+        <attr name="lvText" format="string" />
+        <!-- 设置文字颜色,默认#ffffff -->
+        <attr name="lvTextColor" format="color" />
+        <!-- 设置文字大小,默认11sp -->
+        <attr name="lvTextSize" format="dimension" />
+        <!-- 设置文字是否支持加粗,默认true -->
+        <attr name="lvTextBold" format="boolean" />
+        <!-- 设置文字是否支持全部大写,默认true-->
+        <attr name="lvTextAllCaps" format="boolean" />
+        <!-- 设置背景颜色,默认"#FF4081"-->
+        <attr name="lvBackgroundColor" format="color" />
+        <!-- 设置LabelView所在矩形最小宽高,默认mFillTriangle?35dp:50dp-->
+        <attr name="lvMinSize" format="dimension" />
+        <!-- 设置文字上下padding,默认3.5dp,mFillTriangle为true时无效-->
+        <attr name="lvPadding" format="dimension" />
+        <!-- 设置LabelView方向 -->
+        <attr name="lvGravity" format="enum">
+            <enum name="TOP_LEFT" value="51" />
+            <enum name="TOP_RIGHT" value="53" />
+            <enum name="BOTTOM_LEFT" value="83" />
+            <enum name="BOTTOM_RIGHT" value="85" />
+        </attr>
+        <!-- 设置是否填充三角区域,默认false -->
+        <attr name="lvFillTriangle" format="boolean" />
+
+    </declare-styleable>
+
+
+    <declare-styleable name="QRCodeView">
+        <!-- 扫描框距离toolbar底部的距离，默认值为90dp -->
+        <attr name="qrcv_topOffset" format="dimension|reference" />
+        <!-- 扫描框边角线的宽度，默认值为3dp -->
+        <attr name="qrcv_cornerSize" format="dimension|reference" />
+        <!-- 扫描框边角线的长度，默认值为20dp -->
+        <attr name="qrcv_cornerLength" format="dimension|reference" />
+        <!-- 扫描框边角线的颜色，默认值为@android:color/white -->
+        <attr name="qrcv_cornerColor" format="color|reference" />
+        <!-- 扫描框边角线显示位置(相对于边框)，默认值为中间 -->
+        <attr name="qrcv_cornerDisplayType">
+            <enum name="center" value="1" />
+            <enum name="inside" value="2" />
+        </attr>
+        <!-- 扫描框的宽度，默认值为200dp -->
+        <attr name="qrcv_rectWidth" format="dimension|reference" />
+        <!-- 条码扫样式描框的高度，默认值为140dp -->
+        <attr name="qrcv_barcodeRectHeight" format="dimension|reference" />
+        <!-- 除去扫描框，其余部分阴影颜色，默认值为#33FFFFFF -->
+        <attr name="qrcv_maskColor" format="color|reference" />
+        <!-- 扫描线的宽度，默认值为1dp -->
+        <attr name="qrcv_scanLineSize" format="dimension|reference" />
+        <!-- 扫描线的颜色，默认值为@android:color/white -->
+        <attr name="qrcv_scanLineColor" format="color|reference" />
+        <!-- 扫描线距离上下或者左右边框的间距，默认值为0dp -->
+        <attr name="qrcv_scanLineMargin" format="dimension|reference" />
+        <!-- 是否显示默认的图片扫描线，默认值为false -->
+        <attr name="qrcv_isShowDefaultScanLineDrawable" format="boolean" />
+        <!-- 扫描线的图片资源，默认值为null -->
+        <attr name="qrcv_customScanLineDrawable" format="reference" />
+        <!-- 扫描边框的宽度，默认值为1dp -->
+        <attr name="qrcv_borderSize" format="dimension|reference" />
+        <!-- 扫描边框的颜色，默认值为@android:color/white -->
+        <attr name="qrcv_borderColor" format="color|reference" />
+        <!-- 扫描线从顶部移动到底部的动画时间，默认值为1000 -->
+        <attr name="qrcv_animTime" format="integer" />
+        <!-- 扫描框中心点在屏幕垂直方向的比例，当设置此值时，会忽略 qrcv_topOffset -->
+        <attr name="qrcv_verticalBias" format="float" />
+        <!-- Toolbar的高度，当有设置qrcv_isCenterVertical属性时，通过该属性来修正有Toolbar时导致扫描框垂直居中的偏差，默认值为0dp -->
+        <attr name="qrcv_toolbarHeight" format="dimension|reference" />
+        <!-- 扫描框的样式是否为扫条形码样式，默认值为false -->
+        <attr name="qrcv_isBarcode" format="boolean" />
+        <!-- 扫描二维码时的提示文案，默认值为null -->
+        <attr name="qrcv_qrCodeTipText" format="string|reference" />
+        <!-- 扫描条码时的提示文案，默认值为null -->
+        <attr name="qrcv_barCodeTipText" format="string|reference" />
+        <!-- 提示文案字体大小，默认值为14sp -->
+        <attr name="qrcv_tipTextSize" format="dimension|reference" />
+        <!-- 提示文案颜色，默认值为@android:color/white -->
+        <attr name="qrcv_tipTextColor" format="color|reference" />
+        <!-- 提示文案是否在扫描框的底部，默认值为false -->
+        <attr name="qrcv_isTipTextBelowRect" format="boolean" />
+        <!-- 提示文案与扫描框之间的间距，默认值为20dp -->
+        <attr name="qrcv_tipTextMargin" format="dimension|reference" />
+        <!-- 是否把提示文案作为单行显示，默认值为false -->
+        <attr name="qrcv_isShowTipTextAsSingleLine" format="boolean" />
+        <!-- 是否显示提示文案的背景，默认值为false -->
+        <attr name="qrcv_isShowTipBackground" format="boolean" />
+        <!-- 提示文案的背景色，默认值为#22000000 -->
+        <attr name="qrcv_tipBackgroundColor" format="color|reference" />
+        <!-- 扫描线是否来回移动，默认值为true -->
+        <attr name="qrcv_isScanLineReverse" format="boolean" />
+        <!-- 是否显示默认的网格图片扫描线，默认值为false -->
+        <attr name="qrcv_isShowDefaultGridScanLineDrawable" format="boolean" />
+        <!-- 扫描线的网格图片资源，默认值为null -->
+        <attr name="qrcv_customGridScanLineDrawable" format="reference" />
+        <!-- 是否只识别扫描框中的码，默认值为false -->
+        <attr name="qrcv_isOnlyDecodeScanBoxArea" format="boolean" />
+        <!-- 是否显示定位点，默认值为false -->
+        <attr name="qrcv_isShowLocationPoint" format="boolean" />
+        <!-- 码太小时是否自动缩放，默认值为false -->
+        <attr name="qrcv_isAutoZoom" format="boolean" />
+    </declare-styleable>
+
     <declare-styleable name="RootLayout">
         <attr name="rootShowType">
             <enum name="content" value="2" />
@@ -22,17 +600,10 @@
         </attr>
     </declare-styleable>
 
-    <!-- 标题视图 -->
-    <declare-styleable name="TitleBar">
-        <attr name="tbShadowHeight" format="dimension" />
-        <attr name="tbShadowBackground" format="reference" />
-        <attr name="tbStatusBar" format="boolean" />
-        <attr name="tbTitleText" format="string" />
-        <attr name="tbSubTitleText" format="string" />
-    </declare-styleable>
-
     <declare-styleable name="TitleBar_Layout">
+
         <attr name="layout_titleBackPress" format="boolean" />
+
         <attr name="layout_titleType">
             <enum name="none" value="0" />
             <enum name="title" value="1" />

@@ -5,15 +5,18 @@ import android.content.DialogInterface
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.os.Parcelable
 import android.view.*
 import androidx.appcompat.app.AppCompatDialog
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.viewbinding.ViewBinding
-import kotlinx.parcelize.Parcelize
 import me.ibore.R
+import me.ibore.base.XDialog.DialogConfig.Companion.MATCH_PARENT
 import me.ibore.base.XDialog.DialogConfig.Companion.WRAP_CONTENT
 import me.ibore.utils.BindingUtils
+import me.ibore.utils.DisposablesUtils
+import me.ibore.utils.ScreenUtils
+import me.ibore.utils.ViewBindingUtils
+
 
 abstract class XDialog<VB : ViewBinding> : AppCompatDialogFragment(), XView<VB> {
 
@@ -40,15 +43,13 @@ abstract class XDialog<VB : ViewBinding> : AppCompatDialogFragment(), XView<VB> 
         onDismissListener?.onDismiss(dialog)
     }
 
-    @Suppress("DEPRECATION")
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         if (mDialogConfig.isTransBg) setStyle(STYLE_NO_TITLE, R.style.XDialog_Trans)
         else setStyle(STYLE_NO_TITLE, R.style.XDialog_Not_Trans)
         val dialog = object : AppCompatDialog(requireContext(), theme) {
             override fun show() {
-                window?.apply {
-                    decorView.systemUiVisibility =
-                        (View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_STABLE)
+                if (window != null) {
+                    window!!.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_STABLE)
                 }
                 super.show()
             }
@@ -67,23 +68,18 @@ abstract class XDialog<VB : ViewBinding> : AppCompatDialogFragment(), XView<VB> 
     override fun onResume() {
         super.onResume()
         if (mDialogConfig.isFullScreen) {
-            //dialog!!.window!!.setLayout(ScreenUtils.appScreenWidth, MATCH_PARENT)
+            dialog?.window?.setLayout(ScreenUtils.appScreenWidth, MATCH_PARENT)
         } else {
-            dialog!!.window!!.setLayout(mDialogConfig.width, mDialogConfig.height)
+            dialog?.window?.setLayout(mDialogConfig.width, mDialogConfig.height)
         }
-        dialog!!.window!!.setGravity(mDialogConfig.gravity)
+        dialog?.window?.setGravity(mDialogConfig.gravity)
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return mBinding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        onBindConfig()
         mBinding.onBindView(arguments, savedInstanceState)
         onBindData()
     }
@@ -94,13 +90,8 @@ abstract class XDialog<VB : ViewBinding> : AppCompatDialogFragment(), XView<VB> 
         return (activity as XActivity<*>)
     }
 
-    override fun onBindConfig() {}
-
-    override fun onUnBindConfig() {}
-
     override fun onDestroyView() {
-        //DisposablesUtils.clear(this)
-        onUnBindConfig()
+        DisposablesUtils.clear(this)
         super.onDestroyView()
     }
 
@@ -109,12 +100,16 @@ abstract class XDialog<VB : ViewBinding> : AppCompatDialogFragment(), XView<VB> 
         show(xActivity.supportFragmentManager, this::class.java.simpleName)
     }
 
-    @Parcelize
-    data class DialogConfig(
-        val width: Int, val height: Int, val gravity: Int = Gravity.CENTER,
-        val isFullScreen: Boolean = false, val isTransBg: Boolean = false,
-        val touchBack: Boolean = false, val touchOutside: Boolean = false
-    ) : Parcelable {
+    override fun onBindConfig() {
+
+    }
+
+    override fun onUnBindConfig() {
+
+    }
+
+    data class DialogConfig(val width: Int, val height: Int, val gravity: Int = Gravity.CENTER, val isFullScreen: Boolean = false, val isTransBg: Boolean = false,
+                            val touchBack: Boolean = false, val touchOutside: Boolean = false) {
         companion object {
             const val MATCH_PARENT = ViewGroup.LayoutParams.MATCH_PARENT
             const val WRAP_CONTENT = ViewGroup.LayoutParams.WRAP_CONTENT

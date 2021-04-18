@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<me.ibore.widget.RootLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_f4f5f7">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_rootType="content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp">
+
+            <Button
+                android:id="@+id/btn_content_dialog"
+                style="@style/Item_Small"
+                android:text="内容" />
+
+            <Button
+                android:id="@+id/btn_title_content_dialog"
+                style="@style/Item_Small"
+                android:text="标题+内容" />
+
+            <Button
+                android:id="@+id/btn_custom_dialog"
+                style="@style/Item_Small"
+                android:text="自定义" />
+
+            <Button
+                android:id="@+id/btn_click_dialog"
+                style="@style/Item_Small"
+                android:text="内容可点击" />
+
+        </LinearLayout>
+
+        <!--<me.ibore.recycler.sticky.StickyView
+            android:id="@+id/sticky_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal|start"
+            app:svTextBackground="@color/white"
+            app:svTextBold="true"
+            app:svPaddingHorizontal="12dp"
+            app:svTextGravity="start"
+            app:svTextHeight="48dp" />
+            -->
+    </LinearLayout>
+
+    <me.ibore.widget.TitleBar
+        android:id="@+id/title_bar"
+        style="@style/TitleBar">
+
+        <include layout="@layout/title_bar" />
+
+    </me.ibore.widget.TitleBar>
+
+
+</me.ibore.widget.RootLayout>

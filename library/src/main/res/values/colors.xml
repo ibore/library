@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="bg_page">#F4F4F4</color>
+
+    <color name="dialog_view_bg">#FFFFFF</color>
+    <color name="dialog_view_pressed">#F4F4F4</color>
+    <color name="dialog_view_title">#333333</color>
+    <color name="dialog_positive">#4BB1FF</color>
+    <color name="dialog_view_neutral">#4D4D4D</color>
+    <color name="dialog_negative">#999999</color>
+    <color name="dialog_view_button_bg">#FFFFFF</color>
+    <color name="dialog_view_button_bg_pressed">#D2D2D2</color>
+    <color name="dialog_view_line">#EBEBEB</color>
+    <color name="dialog_view_content">#333333</color>
+    <color name="dialog_view_hint">#666666</color>
+    <color name="dialog_view_content_select">#333333</color>
+
+    <color name="title_bar_title_text_color">#333333</color>
+    <color name="title_bar_start_text_color">#333333</color>
+    <color name="title_bar_end_text_color">#333333</color>
+
+    <color name="content_layout_content_color">#333333</color>
+    <color name="content_layout_content_hint_color">#999999</color>
+    <color name="content_layout_line">#EBEBEB</color>
+    <color name="content_layout_title_color">#666666</color>
+
+
+    <color name="image_picker_bar_color">#333333</color>
+    <color name="image_picker_line_color">#494949</color>
+
+
+    <array name="refresh_color">
+        <item>#F2A829</item>
+        <item>#FF4081</item>
+        <item>#0b6b1c</item>
+        <item>#151c66</item>
+    </array>
+
+</resources>

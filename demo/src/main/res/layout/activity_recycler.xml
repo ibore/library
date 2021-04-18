@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<me.ibore.widget.RootLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_page">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_rootType="content">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:clipToPadding="false"
+            android:padding="5dp" />
+
+        <LinearLayout
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:orientation="vertical"
+            android:paddingTop="10dp"
+            android:layout_width="match_parent"
+            android:paddingBottom="10dp">
+
+            <RadioGroup
+                android:id="@+id/rg_anim"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/rb_alpha_in"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="AlphaIn"
+                    android:textColor="@color/text_strong"
+                    android:textSize="@dimen/text_less"
+                    android:textStyle="bold" />
+
+                <RadioButton
+                    android:id="@+id/rb_scale_in"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="ScaleIn"
+                    android:textColor="@color/text_strong"
+                    android:textSize="@dimen/text_less"
+                    android:textStyle="bold" />
+
+                <RadioButton
+                    android:id="@+id/rb_si_bottom"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="SIBottom"
+                    android:textColor="@color/text_strong"
+                    android:textSize="@dimen/text_less"
+                    android:textStyle="bold" />
+
+                <RadioButton
+                    android:id="@+id/rb_si_left"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="SILeft"
+                    android:textColor="@color/text_strong"
+                    android:textSize="@dimen/text_less"
+                    android:textStyle="bold" />
+
+                <RadioButton
+                    android:id="@+id/rb_si_right"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="SIRight"
+                    android:textColor="@color/text_strong"
+                    android:textSize="@dimen/text_less"
+                    android:textStyle="bold" />
+
+            </RadioGroup>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <CheckBox
+                    android:id="@+id/cb_animator_first_only"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="AnimatorFirstOnly"
+                    android:textSize="@dimen/text_less"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <me.ibore.widget.TitleBar
+        android:id="@+id/title_bar"
+        style="@style/TitleBar">
+
+        <include layout="@layout/title_bar" />
+
+    </me.ibore.widget.TitleBar>
+
+</me.ibore.widget.RootLayout>

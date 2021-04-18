@@ -4,10 +4,9 @@ import androidx.viewbinding.ViewBinding
 import me.ibore.base.XActivity
 import me.ibore.utils.BindingUtils
 
-abstract class XMvpActivity<VB : ViewBinding, P : XMvpPresenter<*>> : XActivity<VB>(),
-    XMvpView<VB> {
+abstract class XMvpActivity<VB : ViewBinding, P : XMvpPresenter<*>> : XActivity<VB>(), XMvpView<VB> {
 
-    protected val mPresenter: P by lazy(mode = LazyThreadSafetyMode.NONE) {
+    protected open val mPresenter: P by lazy(mode = LazyThreadSafetyMode.NONE) {
         BindingUtils.reflexPresenter(javaClass)
     }
 
@@ -20,5 +19,5 @@ abstract class XMvpActivity<VB : ViewBinding, P : XMvpPresenter<*>> : XActivity<
         super.onUnBindConfig()
         mPresenter.onDetach()
     }
-
+    
 }
