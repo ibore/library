@@ -154,16 +154,15 @@ class XListDialog : XDialog<DialogXListBinding>() {
             return false
         }
 
-        override fun onBindingHolder(
+        override fun ItemDialogListBinding.onBindingHolder(
             holder: BindingHolder<ItemDialogListBinding>,
-            binding: ItemDialogListBinding,
             data: CharSequence,
             dataPosition: Int
         ) {
-            binding.tvContent.text = data
-            binding.viewBottomLine.visibility =
+            tvContent.text = data
+            viewBottomLine.visibility =
                 if (dataPosition + 1 == getDataSize()) View.GONE else View.VISIBLE
-            binding.tvContent.setOnClickListener {
+            tvContent.setOnClickListener {
                 if (builder.maxCount == 1) {
                     if (isSelected(data)) {
                         builder.selectedDatas.clear()
@@ -189,13 +188,10 @@ class XListDialog : XDialog<DialogXListBinding>() {
                 }
                 notifyDataSetChanged()
             }
-            binding.tvContent.setCompoundDrawablesWithIntrinsicBounds(
-                0,
-                0,
-                if (isSelected(data)) R.drawable.ic_selector else 0,
-                0
+            tvContent.setCompoundDrawablesWithIntrinsicBounds(
+                0, 0, if (isSelected(data)) R.drawable.ic_selector else 0, 0
             )
-            binding.llItem.isSelected = isSelected(data)
+            llItem.isSelected = isSelected(data)
         }
     }
 

@@ -2,12 +2,15 @@ package me.ibore.demo.main
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
 import me.ibore.demo.adapter.ActivityAdapter
 import me.ibore.demo.audio.AudioActivity
 import me.ibore.demo.base.BaseActivity
 import me.ibore.demo.databinding.ActivityMainBinding
+import me.ibore.demo.databinding.ItemActivityBinding
 import me.ibore.demo.databinding.TitleBarBinding
 import me.ibore.demo.dialog.DialogActivity
 import me.ibore.demo.http.HttpActivity
@@ -24,6 +27,9 @@ import me.ibore.demo.utils.UtilsActivity
 import me.ibore.demo.video.VideoActivity
 import me.ibore.demo.view.ViewActivity
 import me.ibore.demo.web.WebActivity
+import me.ibore.recycler.holder.BindingHolder
+import me.ibore.recycler.holder.ItemHolder
+import me.ibore.recycler.holder.RecyclerHolder
 import me.ibore.utils.LogUtils
 
 @SuppressLint("NonConstantResourceId")
@@ -41,6 +47,17 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     }
 
     override fun onBindData() {
+        adapter.setHeaderHolder(object : ItemHolder<BindingHolder<ItemActivityBinding>> {
+
+            override fun onCreateHolder(parent: ViewGroup): BindingHolder<ItemActivityBinding> {
+                return BindingHolder(ItemActivityBinding.inflate(LayoutInflater.from(parent.context)))
+            }
+
+            override fun onBindHolder(holder: BindingHolder<ItemActivityBinding>) {
+
+            }
+
+        })
         adapter.addData(ActivityItem("状  态  栏", StatusActivity::class.java))
         adapter.addData(ActivityItem("网络请求", HttpActivity::class.java))
         adapter.addData(ActivityItem("对  话  框", DialogActivity::class.java))

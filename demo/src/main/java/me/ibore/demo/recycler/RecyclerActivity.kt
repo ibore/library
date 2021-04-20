@@ -13,9 +13,9 @@ class RecyclerActivity : BaseActivity<ActivityListBinding>() {
     private var adapter = ActivityAdapter()
 
     override fun ActivityListBinding.onBindView(bundle: Bundle?, savedInstanceState: Bundle?) {
-        setTitleBar(TitleBarBinding.bind(mBinding.titleBar), bundle?.getString("title"))
-        mBinding.recyclerView.layoutManager = GridLayoutManager(getXActivity(), 3)
-        mBinding.recyclerView.adapter = adapter
+        setTitleBar(TitleBarBinding.bind(titleBar), bundle?.getString("title"))
+        recyclerView.layoutManager = GridLayoutManager(getXActivity(), 3)
+        recyclerView.adapter = adapter
     }
 
     override fun onBindData() {

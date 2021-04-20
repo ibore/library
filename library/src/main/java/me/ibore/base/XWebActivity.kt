@@ -56,6 +56,7 @@ class XWebActivity : XActivity<ActivityXWebBinding>(), XWebViewListener {
         tvTitleBarTitle.text = builder.title
         webView.setXWebViewListener(this@XWebActivity)
     }
+
     override fun onBindData() {
         if (builder.url.isNotBlank()) {
             mBinding.webView.loadUrl(builder.url)
@@ -96,7 +97,6 @@ class XWebActivity : XActivity<ActivityXWebBinding>(), XWebViewListener {
          request.setDestinationInExternalFilesDir(this, Environment.DIRECTORY_DOWNLOADS, suggestedFilename)
          val downloadManager = getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
          downloadManager.enqueue(request)*/
-
         LogUtils.d(url, suggestedFilename, userAgent, contentDisposition, mimeType, contentLength)
     }
 

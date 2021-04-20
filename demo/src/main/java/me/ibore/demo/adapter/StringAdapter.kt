@@ -7,13 +7,12 @@ import me.ibore.recycler.holder.BindingHolder
 
 class StringAdapter : BindingAdapter<ItemActivityBinding, String>() {
 
-    override fun onBindingHolder(
+    override fun ItemActivityBinding.onBindingHolder(
         holder: BindingHolder<ItemActivityBinding>,
-        binding: ItemActivityBinding,
         data: String,
         dataPosition: Int
     ) {
-        binding.tvTitle.text = data
+        tvTitle.text = data
     }
 
 }

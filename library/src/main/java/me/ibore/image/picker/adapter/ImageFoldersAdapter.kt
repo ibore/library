@@ -9,9 +9,8 @@ class ImageFoldersAdapter : BindingAdapter<ItemImagePickerFolderBinding, MediaFo
 
     private var currentPosition: Int = 0
 
-    override fun onBindingHolder(
+    override fun ItemImagePickerFolderBinding.onBindingHolder(
         holder: BindingHolder<ItemImagePickerFolderBinding>,
-        binding: ItemImagePickerFolderBinding,
         data: MediaFolder,
         dataPosition: Int
     ) {

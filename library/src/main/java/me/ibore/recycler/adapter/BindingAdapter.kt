@@ -4,25 +4,21 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.viewbinding.ViewBinding
 import me.ibore.recycler.holder.BindingHolder
-import me.ibore.utils.ViewBindingUtils
+import me.ibore.utils.BindingUtils
 
 abstract class BindingAdapter<VB : ViewBinding, D> : RecyclerAdapter<BindingHolder<VB>, D>() {
 
     override fun onCreateHolder(parent: ViewGroup, dataType: Int): BindingHolder<VB> {
-        val vb: VB =
-            ViewBindingUtils.inflate<VB>(this, LayoutInflater.from(parent.context), parent)!!
+        val vb: VB = BindingUtils.reflexViewBinding(javaClass, LayoutInflater.from(parent.context), parent, false)
         return BindingHolder(vb)
     }
 
     override fun onBindHolder(
-        holder: BindingHolder<VB>,
-        data: D,
-        dataPosition: Int,
-        viewType: Int
+        holder: BindingHolder<VB>, data: D, dataPosition: Int, viewType: Int
     ) {
-        onBindingHolder(holder, holder.binding, data, dataPosition)
+        holder.binding.onBindingHolder(holder,  data, dataPosition)
     }
 
-    abstract fun onBindingHolder(holder: BindingHolder<VB>, binding: VB, data: D, dataPosition: Int)
+    abstract fun VB.onBindingHolder(holder: BindingHolder<VB>, data: D, dataPosition: Int)
 
 }

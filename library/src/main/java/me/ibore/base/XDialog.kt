@@ -15,14 +15,11 @@ import me.ibore.base.XDialog.DialogConfig.Companion.WRAP_CONTENT
 import me.ibore.utils.BindingUtils
 import me.ibore.utils.DisposablesUtils
 import me.ibore.utils.ScreenUtils
-import me.ibore.utils.ViewBindingUtils
 
 
 abstract class XDialog<VB : ViewBinding> : AppCompatDialogFragment(), XView<VB> {
 
-    protected open val mBinding: VB by lazy(mode = LazyThreadSafetyMode.NONE) {
-        BindingUtils.reflexViewBinding(javaClass, layoutInflater)
-    }
+    protected lateinit var mBinding: VB
 
     private val mDialogConfig: DialogConfig by lazy(mode = LazyThreadSafetyMode.NONE) {
         onBindDialogConfig()
@@ -76,6 +73,7 @@ abstract class XDialog<VB : ViewBinding> : AppCompatDialogFragment(), XView<VB> 
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        mBinding = BindingUtils.reflexViewBinding(javaClass, layoutInflater, container, false)
         return mBinding.root
     }
 

@@ -9,9 +9,8 @@ class ImageSelectAdapter : BindingAdapter<ItemImagePickerPreviewSelectBinding, M
 
     var currentPosition: Int = -1
 
-    override fun onBindingHolder(
+    override fun ItemImagePickerPreviewSelectBinding.onBindingHolder(
         holder: BindingHolder<ItemImagePickerPreviewSelectBinding>,
-        binding: ItemImagePickerPreviewSelectBinding,
         data: MediaFile,
         dataPosition: Int
     ) {

@@ -1,7 +1,5 @@
 package me.ibore.base
 
-import android.annotation.SuppressLint
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,16 +8,16 @@ import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
 import me.ibore.utils.BindingUtils
 import me.ibore.utils.DisposablesUtils
-import me.ibore.utils.ViewBindingUtils
 import me.ibore.widget.RootLayout
 
 abstract class XFragment<VB : ViewBinding> : Fragment(), XStatusView<VB> {
 
-    protected val mBinding: VB by lazy(mode = LazyThreadSafetyMode.NONE) {
-        BindingUtils.reflexViewBinding(javaClass, layoutInflater)
-    }
+    protected lateinit var mBinding: VB
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+    ): View {
+        mBinding = BindingUtils.reflexViewBinding(javaClass, layoutInflater, container, false)
         return mBinding.root
     }
 

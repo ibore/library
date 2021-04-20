@@ -50,9 +50,9 @@ abstract class RecyclerAdapter<VH : RecyclerHolder, D> : RecyclerView.Adapter<Re
 
     private var datas: MutableList<D> = ArrayList()
     private var showItem: Boolean = true
-    private var headerHolder: ItemHolder? = null
+    private var headerHolder: ItemHolder<*>? = null
     private var loadHolder: LoadHolder? = null
-    private var footerHolder: ItemHolder? = null
+    private var footerHolder: ItemHolder<*>? = null
     private var loadMoreHolder: LoadMoreHolder? = null
 
     private var showContent = false
@@ -420,18 +420,28 @@ abstract class RecyclerAdapter<VH : RecyclerHolder, D> : RecyclerView.Adapter<Re
         }
     }
 
-    open fun setHeaderHolder(headerHolder: ItemHolder) {
+    open fun setHeaderHolder(headerHolder: ItemHolder<out RecyclerHolder>) {
         this.headerHolder = headerHolder
         notifyDataSetChanged()
     }
 
-    open fun setFooterHolder(footerHolder: ItemHolder) {
+    open fun setFooterHolder(footerHolder: ItemHolder<out RecyclerHolder>) {
         this.footerHolder = footerHolder
         notifyDataSetChanged()
     }
 
-    open fun removeHeaderHolder(headerHolder: ItemHolder) {
+    open fun removeHeaderHolder( ) {
+        if (null != headerHolder) {
+            this.headerHolder = null
+            notifyDataSetChanged()
+        }
+    }
 
+    open fun removeFooterHolder() {
+        if (null != headerHolder) {
+            this.footerHolder = null
+            notifyDataSetChanged()
+        }
     }
 
 }

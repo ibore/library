@@ -8,12 +8,13 @@ import me.ibore.recycler.holder.BindingHolder
 
 class ActivityAdapter : BindingAdapter<ItemActivityBinding, ActivityItem>() {
 
-    override fun onBindingHolder(holder: BindingHolder<ItemActivityBinding>, binding: ItemActivityBinding, data: ActivityItem, dataPosition: Int) {
-        binding.tvTitle.text = data.title
-        binding.root.setOnClickListener {
-            val intent = Intent(binding.root.context, data.clazz)
+    override fun ItemActivityBinding.onBindingHolder(
+        holder: BindingHolder<ItemActivityBinding>, data: ActivityItem, dataPosition: Int) {
+        tvTitle.text = data.title
+        root.setOnClickListener {
+            val intent = Intent(root.context, data.clazz)
             intent.putExtra("title", data.title)
-            binding.root.context.startActivity(intent)
+            root.context.startActivity(intent)
         }
     }
 

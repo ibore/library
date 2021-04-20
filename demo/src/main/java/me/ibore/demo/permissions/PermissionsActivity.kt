@@ -198,8 +198,8 @@ class PermissionsActivity : BaseActivity<ActivityPermissionsBinding>() {
     }
 
     class Adapter : BindingAdapter<ItemActivityBinding, String>() {
-        override fun onBindingHolder(holder: BindingHolder<ItemActivityBinding>, binding: ItemActivityBinding, data: String, dataPosition: Int) {
-            binding.tvTitle.text = data
+        override fun ItemActivityBinding.onBindingHolder(holder: BindingHolder<ItemActivityBinding>, data: String, dataPosition: Int) {
+            tvTitle.text = data
         }
     }
 
