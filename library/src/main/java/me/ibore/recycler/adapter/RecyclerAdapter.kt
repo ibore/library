@@ -19,8 +19,7 @@ import me.ibore.utils.AnimatorUtils
 
 
 @Suppress("UNREACHABLE_CODE")
-abstract class  RecyclerAdapter<VH : RecyclerHolder, D> : RecyclerView.Adapter<RecyclerHolder>(),
-    IRecyclerAdapter<VH, D> {
+abstract class RecyclerAdapter<D> : RecyclerView.Adapter<RecyclerHolder>(), IRecyclerAdapter<D> {
 
     companion object {
         // 头布局
@@ -41,10 +40,10 @@ abstract class  RecyclerAdapter<VH : RecyclerHolder, D> : RecyclerView.Adapter<R
     }
 
     // 点击事件监听
-    open var onItemClickListener: OnItemClickListener<VH, D>? = null
-    open var onItemLongClickListener: OnItemLongClickListener<VH, D>? = null
-    open var onItemChildClickListener: OnItemChildClickListener<VH, D>? = null
-    open var onItemChildLongClickListener: OnItemChildLongClickListener<VH, D>? = null
+    open var onItemClickListener: OnItemClickListener<RecyclerHolder, D>? = null
+    open var onItemLongClickListener: OnItemLongClickListener<RecyclerHolder, D>? = null
+    open var onItemChildClickListener: OnItemChildClickListener<RecyclerHolder, D>? = null
+    open var onItemChildLongClickListener: OnItemChildLongClickListener<RecyclerHolder, D>? = null
     open var onLoadListener: OnLoadListener? = null
     open var onLoadMoreListener: OnLoadMoreListener? = null
 
@@ -149,10 +148,10 @@ abstract class  RecyclerAdapter<VH : RecyclerHolder, D> : RecyclerView.Adapter<R
                 val dataPosition = getDataPosition(position)
                 val data = getData(dataPosition)
                 holder.itemView.setOnClickListener {
-                    onItemClickListener?.onItemClick(holder as VH, data, dataPosition)
+                    onItemClickListener?.onItemClick(holder, data, dataPosition)
                 }
                 holder.itemView.setOnLongClickListener {
-                    onItemLongClickListener?.onItemLongClick(holder as VH, data, dataPosition) ?: false
+                    onItemLongClickListener?.onItemLongClick(holder, data, dataPosition) ?: false
                 }
                 onBindHolder(
                     holder as VH,

@@ -4,7 +4,6 @@ import android.content.Intent
 import me.ibore.demo.databinding.ItemActivityBinding
 import me.ibore.demo.model.ActivityItem
 import me.ibore.recycler.adapter.BindingAdapter
-import me.ibore.recycler.holder.BindingHolder
 
 class ActivityAdapter : BindingAdapter<ItemActivityBinding, ActivityItem>() {
 

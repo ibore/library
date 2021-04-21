@@ -11,7 +11,6 @@ import me.ibore.demo.databinding.ItemActivityBinding
 import me.ibore.demo.databinding.TitleBarBinding
 import me.ibore.ktx.dp2px
 import me.ibore.recycler.adapter.BindingAdapter
-import me.ibore.recycler.holder.BindingHolder
 
 class RecyclerAnimActivity : BaseActivity<ActivityRecyclerBinding>() {
 

@@ -7,11 +7,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import me.ibore.demo.adapter.TitleAdapter
 import me.ibore.demo.base.BaseActivity
 import me.ibore.demo.databinding.ActivityDialogBinding
-import me.ibore.demo.databinding.ItemActivityBinding
 import me.ibore.demo.databinding.TitleBarBinding
 import me.ibore.demo.model.TitleItem
-import me.ibore.recycler.holder.BindingHolder
-import me.ibore.recycler.holder.BindingItemHolder
 import me.ibore.utils.DialogUtils
 import me.ibore.utils.ToastUtils
 

@@ -35,7 +35,6 @@ import me.ibore.image.picker.observable.MediaObservable
 import me.ibore.image.picker.utils.ImagePickerUtils
 import me.ibore.image.picker.utils.MediaFileUtil
 import me.ibore.loading.XLoading
-import me.ibore.recycler.holder.BindingHolder
 import me.ibore.recycler.listener.OnItemClickListener
 import me.ibore.utils.*
 import java.io.File

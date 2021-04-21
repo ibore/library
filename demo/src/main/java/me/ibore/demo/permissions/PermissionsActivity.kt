@@ -15,7 +15,6 @@ import me.ibore.permissions.OnPermissionListener
 import me.ibore.permissions.Permission
 import me.ibore.permissions.XPermissions
 import me.ibore.recycler.adapter.BindingAdapter
-import me.ibore.recycler.holder.BindingHolder
 import me.ibore.recycler.listener.OnItemClickListener
 import me.ibore.utils.DialogUtils
 import me.ibore.utils.GsonUtils

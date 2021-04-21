@@ -3,7 +3,6 @@ package me.ibore.image.picker.adapter
 import me.ibore.databinding.ItemImagePickerPreviewSelectBinding
 import me.ibore.image.picker.model.MediaFile
 import me.ibore.recycler.adapter.BindingAdapter
-import me.ibore.recycler.holder.BindingHolder
 
 class ImageSelectAdapter : BindingAdapter<ItemImagePickerPreviewSelectBinding, MediaFile>() {
 

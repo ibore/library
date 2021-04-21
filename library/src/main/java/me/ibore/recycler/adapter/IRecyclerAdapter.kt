@@ -3,7 +3,7 @@ package me.ibore.recycler.adapter
 import android.view.ViewGroup
 import me.ibore.recycler.holder.RecyclerHolder
 
-interface IRecyclerAdapter<VH : RecyclerHolder, D> {
+interface IRecyclerAdapter<D> {
 
     fun setDatas(datas: MutableList<D>)
 
@@ -25,10 +25,10 @@ interface IRecyclerAdapter<VH : RecyclerHolder, D> {
 
     fun clearDatas()
 
-    fun onCreateHolder(parent: ViewGroup, dataType: Int): VH
+    fun onCreateHolder(parent: ViewGroup, dataType: Int): RecyclerHolder
 
     fun getDataType(data: D, dataPosition: Int): Int
 
-    fun onBindHolder(holder: VH, data: D, dataPosition: Int, viewType: Int)
+    fun onBindHolder(holder: RecyclerHolder, data: D, dataPosition: Int, viewType: Int)
 
 }

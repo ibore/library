@@ -25,6 +25,8 @@ open class RecyclerHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     }
 
+    var extra: Any? = null
+
     val context: Context
         get() = itemView.context
 

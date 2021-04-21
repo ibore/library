@@ -17,7 +17,6 @@ import me.ibore.image.picker.ImagePicker
 import me.ibore.image.picker.adapter.ImageSelectAdapter
 import me.ibore.image.picker.model.MediaFile
 import me.ibore.image.picker.utils.ImagePickerUtils
-import me.ibore.recycler.holder.BindingHolder
 import me.ibore.recycler.holder.RecyclerHolder
 import me.ibore.recycler.layoutmanager.CenterLayoutManager
 import me.ibore.recycler.listener.OnItemClickListener

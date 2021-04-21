@@ -25,7 +25,6 @@ import me.ibore.demo.utils.UtilsActivity
 import me.ibore.demo.video.VideoActivity
 import me.ibore.demo.view.ViewActivity
 import me.ibore.demo.web.WebActivity
-import me.ibore.recycler.holder.BindingHolder
 import me.ibore.recycler.holder.BindingItemHolder
 
 @SuppressLint("NonConstantResourceId")
