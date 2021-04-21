@@ -2,10 +2,10 @@ package me.ibore.recycler.holder
 
 import android.view.ViewGroup
 
-interface ItemHolder<VH : RecyclerHolder> {
+interface ItemHolder {
 
-    fun onCreateHolder(parent: ViewGroup): VH
+    fun onCreateHolder(parent: ViewGroup): RecyclerHolder
 
-    fun onBindHolder(holder: VH)
+    fun onBindHolder(holder: RecyclerHolder)
 
 }

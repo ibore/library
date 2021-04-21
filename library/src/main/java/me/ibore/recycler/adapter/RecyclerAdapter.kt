@@ -19,7 +19,7 @@ import me.ibore.utils.AnimatorUtils
 
 
 @Suppress("UNREACHABLE_CODE")
-abstract class RecyclerAdapter<VH : RecyclerHolder, D> : RecyclerView.Adapter<RecyclerHolder>(),
+abstract class  RecyclerAdapter<VH : RecyclerHolder, D> : RecyclerView.Adapter<RecyclerHolder>(),
     IRecyclerAdapter<VH, D> {
 
     companion object {
@@ -50,9 +50,9 @@ abstract class RecyclerAdapter<VH : RecyclerHolder, D> : RecyclerView.Adapter<Re
 
     private var datas: MutableList<D> = ArrayList()
     private var showItem: Boolean = true
-    private var headerHolder: ItemHolder<*>? = null
+    private var headerHolder: ItemHolder? = null
     private var loadHolder: LoadHolder? = null
-    private var footerHolder: ItemHolder<*>? = null
+    private var footerHolder: ItemHolder? = null
     private var loadMoreHolder: LoadMoreHolder? = null
 
     private var showContent = false
@@ -127,9 +127,7 @@ abstract class RecyclerAdapter<VH : RecyclerHolder, D> : RecyclerView.Adapter<Re
 
     @JvmOverloads
     open fun setAnimation(
-        animation: BaseAnimation,
-        duration: Long? = null,
-        value: Interpolator? = null
+        animation: BaseAnimation, duration: Long? = null, value: Interpolator? = null
     ) {
         this.animation = animation
         this.animatorDuration = duration
@@ -420,12 +418,12 @@ abstract class RecyclerAdapter<VH : RecyclerHolder, D> : RecyclerView.Adapter<Re
         }
     }
 
-    open fun setHeaderHolder(headerHolder: ItemHolder<out RecyclerHolder>) {
+    open fun setHeaderHolder(headerHolder: ItemHolder) {
         this.headerHolder = headerHolder
         notifyDataSetChanged()
     }
 
-    open fun setFooterHolder(footerHolder: ItemHolder<out RecyclerHolder>) {
+    open fun setFooterHolder(footerHolder: ItemHolder) {
         this.footerHolder = footerHolder
         notifyDataSetChanged()
     }

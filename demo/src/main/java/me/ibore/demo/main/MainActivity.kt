@@ -2,9 +2,7 @@ package me.ibore.demo.main
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
 import me.ibore.demo.adapter.ActivityAdapter
 import me.ibore.demo.audio.AudioActivity
@@ -28,9 +26,7 @@ import me.ibore.demo.video.VideoActivity
 import me.ibore.demo.view.ViewActivity
 import me.ibore.demo.web.WebActivity
 import me.ibore.recycler.holder.BindingHolder
-import me.ibore.recycler.holder.ItemHolder
-import me.ibore.recycler.holder.RecyclerHolder
-import me.ibore.utils.LogUtils
+import me.ibore.recycler.holder.BindingItemHolder
 
 @SuppressLint("NonConstantResourceId")
 class MainActivity : BaseActivity<ActivityMainBinding>() {
@@ -47,16 +43,10 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     }
 
     override fun onBindData() {
-        adapter.setHeaderHolder(object : ItemHolder<BindingHolder<ItemActivityBinding>> {
-
-            override fun onCreateHolder(parent: ViewGroup): BindingHolder<ItemActivityBinding> {
-                return BindingHolder(ItemActivityBinding.inflate(LayoutInflater.from(parent.context)))
+        adapter.setHeaderHolder(object : BindingItemHolder<ItemActivityBinding>() {
+            override fun ItemActivityBinding.onBindingHolder(holder: BindingHolder<ItemActivityBinding>) {
+                tvTitle.setText("头布局")
             }
-
-            override fun onBindHolder(holder: BindingHolder<ItemActivityBinding>) {
-
-            }
-
         })
         adapter.addData(ActivityItem("状  态  栏", StatusActivity::class.java))
         adapter.addData(ActivityItem("网络请求", HttpActivity::class.java))

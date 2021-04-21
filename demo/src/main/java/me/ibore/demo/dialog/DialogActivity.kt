@@ -7,8 +7,11 @@ import androidx.recyclerview.widget.GridLayoutManager
 import me.ibore.demo.adapter.TitleAdapter
 import me.ibore.demo.base.BaseActivity
 import me.ibore.demo.databinding.ActivityDialogBinding
+import me.ibore.demo.databinding.ItemActivityBinding
 import me.ibore.demo.databinding.TitleBarBinding
 import me.ibore.demo.model.TitleItem
+import me.ibore.recycler.holder.BindingHolder
+import me.ibore.recycler.holder.BindingItemHolder
 import me.ibore.utils.DialogUtils
 import me.ibore.utils.ToastUtils
 
@@ -24,9 +27,8 @@ class DialogActivity : BaseActivity<ActivityDialogBinding>() {
         setTitleBar(TitleBarBinding.bind(mBinding.titleBar), bundle?.getString("title"))
 //        binding.titleBar.tvSubTitle.visibility = View.VISIBLE
 //        binding.titleBar.tvSubTitle.text = "副标题"
-        mBinding.recyclerView.layoutManager = GridLayoutManager(getXActivity(), 3)
-        mBinding.recyclerView.adapter = adapter
-
+        recyclerView.layoutManager = GridLayoutManager(getXActivity(), 3)
+        recyclerView.adapter = adapter
     }
 
     override fun onBindData() {

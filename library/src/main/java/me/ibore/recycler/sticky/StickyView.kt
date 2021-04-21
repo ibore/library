@@ -16,16 +16,17 @@
 //import androidx.recyclerview.widget.LinearLayoutManager
 //import androidx.recyclerview.widget.RecyclerView
 //import me.ibore.R
-//import me.ibore.holder.ViewHolder
-//import me.ibore.recycler.adapter.ICommonAdapter
+//import me.ibore.ktx.dp2px
 //import me.ibore.recycler.adapter.RecyclerAdapter
 //import me.ibore.recycler.holder.RecyclerHolder
-//import me.ibore.utils.UIUtils
 //
-//class StickyView @JvmOverloads constructor(context: Context, @Nullable private val attrs: AttributeSet? = null, private val defStyleAttr: Int = 0) :
-//        FrameLayout(context, attrs, defStyleAttr) {
+//class StickyView @JvmOverloads constructor(
+//    context: Context,
+//    @Nullable private val attrs: AttributeSet? = null,
+//    private val defStyleAttr: Int = 0
+//) :
+//    FrameLayout(context, attrs, defStyleAttr) {
 //
-//    private var viewHolder: ViewHolder? = null
 //    private var recyclerView: RecyclerView? = null
 //    private var stickyId: Int
 //    private var mLastPosition = -1
@@ -44,11 +45,12 @@
 //        textSize = ta.getDimension(R.styleable.StickyView_svTextSize, 12F)
 //        textColor = ta.getColor(R.styleable.StickyView_svTextColor, Color.DKGRAY)
 //        textBold = ta.getBoolean(R.styleable.StickyView_svTextBold, false)
-//        textHeight = ta.getDimensionPixelOffset(R.styleable.StickyView_svTextHeight, dp2px(context, 32F))
+//        textHeight = ta.getDimensionPixelOffset(R.styleable.StickyView_svTextHeight, dp2px(32F))
 //        textBackground = ta.getResourceId(R.styleable.StickyView_svTextBackground, 0)
 //        textGravity = ta.getInteger(R.styleable.StickyView_svTextGravity, 0)
 //        paddingVertical = ta.getDimensionPixelOffset(R.styleable.StickyView_svPaddingVertical, 0)
-//        paddingHorizontal = ta.getDimensionPixelOffset(R.styleable.StickyView_svPaddingHorizontal, 0)
+//        paddingHorizontal =
+//            ta.getDimensionPixelOffset(R.styleable.StickyView_svPaddingHorizontal, 0)
 //        ta.recycle()
 //
 //    }
@@ -68,9 +70,22 @@
 //        }
 //    }
 //
-//    fun setAdapter(adapter: Adapter<*>, layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(context)) {
+//    fun setAdapter(
+//        adapter: Adapter<*>,
+//        layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(context)
+//    ) {
 //        removeAllViews()
-//        adapter.setParameter(stickyId, textSize, textColor, textBold, textHeight, textBackground, textGravity, paddingVertical, paddingHorizontal)
+//        adapter.setParameter(
+//            stickyId,
+//            textSize,
+//            textColor,
+//            textBold,
+//            textHeight,
+//            textBackground,
+//            textGravity,
+//            paddingVertical,
+//            paddingHorizontal
+//        )
 //        val stickyView = adapter.onCreateStickyView(this, stickyId)
 //        viewHolder = ViewHolder.create(stickyView)
 //        recyclerView = RecyclerView(context, attrs, defStyleAttr)
@@ -81,7 +96,7 @@
 //        recyclerView!!.addOnScrollListener(object : RecyclerView.OnScrollListener() {
 //            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
 //                val view = recyclerView.findChildViewUnder(0F, stickyView.measuredHeight + 1F)
-//                        ?: return
+//                    ?: return
 //                val position = recyclerView.getChildLayoutPosition(view)
 //                if (position < 0) return
 //                if (adapter.getData(position) is StickyModel) {
@@ -101,14 +116,23 @@
 //        recyclerView!!.adapter = adapter
 //    }
 //
-//    abstract class Adapter<D> : RecyclerAdapter<Any>(), ICommonAdapter<D> {
+//    abstract class Adapter<D> : RecyclerAdapter<Any>() {
 //
 //        companion object {
 //            const val STICKY = Int.MAX_VALUE - 1
 //        }
 //
-//        internal fun setParameter(stickyId: Int, textSize: Float, textColor: Int, textBold: Boolean,
-//                                  textHeight: Int, textBackground: Int, textGravity: Int, paddingVertical: Int, paddingHorizontal: Int) {
+//        internal fun setParameter(
+//            stickyId: Int,
+//            textSize: Float,
+//            textColor: Int,
+//            textBold: Boolean,
+//            textHeight: Int,
+//            textBackground: Int,
+//            textGravity: Int,
+//            paddingVertical: Int,
+//            paddingHorizontal: Int
+//        ) {
 //            this.stickyId = stickyId
 //            this.textSize = textSize
 //            this.textColor = textColor
@@ -131,13 +155,24 @@
 //        protected open var paddingHorizontal: Int = 0
 //
 //        override fun onCreateRecyclerHolder(parent: ViewGroup, viewType: Int): RecyclerHolder {
-//            return if (viewType == STICKY) RecyclerHolder.create(onCreateStickyView(parent, stickyId))
+//            return if (viewType == STICKY) RecyclerHolder.create(
+//                onCreateStickyView(
+//                    parent,
+//                    stickyId
+//                )
+//            )
 //            else RecyclerHolder.create(parent, getLayoutId())
 //        }
 //
-//        override fun onBindRecyclerHolder(holder: RecyclerHolder, data: Any, dataPosition: Int, viewType: Int) {
+//        override fun onBindRecyclerHolder(
+//            holder: RecyclerHolder,
+//            data: Any,
+//            dataPosition: Int,
+//            viewType: Int
+//        ) {
 //            if (viewType == STICKY) {
-//                if (stickyId == 0) (holder.itemView as AppCompatTextView).text = (data as StickyModel).title
+//                if (stickyId == 0) (holder.itemView as AppCompatTextView).text =
+//                    (data as StickyModel).title
 //                else onBindStickyView(holder, data as StickyModel)
 //            } else {
 //                onBindView(holder, holder, data as D, dataPosition)
@@ -152,8 +187,14 @@
 //                stickyView.typeface = if (textBold) Typeface.DEFAULT_BOLD else Typeface.DEFAULT
 //                stickyView.setBackgroundResource(textBackground)
 //                stickyView.gravity = CENTER_VERTICAL + textGravity
-//                stickyView.setPadding(paddingHorizontal, paddingVertical, paddingHorizontal, paddingVertical)
-//                stickyView.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, textHeight)
+//                stickyView.setPadding(
+//                    paddingHorizontal,
+//                    paddingVertical,
+//                    paddingHorizontal,
+//                    paddingVertical
+//                )
+//                stickyView.layoutParams =
+//                    LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, textHeight)
 //                stickyView
 //            } else {
 //                LayoutInflater.from(parent.context).inflate(stickyId, parent, false)
