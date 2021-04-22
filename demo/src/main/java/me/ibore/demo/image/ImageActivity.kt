@@ -26,11 +26,11 @@ class ImageActivity : BaseActivity<ActivityImageBinding>() {
         }
         mBinding.btnSelectImage.setOnClickListener {
             ImagePicker.start()
-                    .setShowCamera(true) //设置是否显示拍照按钮
+                    .setShowCamera(false) //设置是否显示拍照按钮
                     .setShowImage(true) //设置是否展示图片
                     .setShowVideo(false) //设置是否展示视频
                     .setFilterGif(false) //设置是否过滤gif图片
-                    .setMaxCount(1) //设置最大选择图片数目(默认为1，单选)
+                    .setMaxCount(9) //设置最大选择图片数目(默认为1，单选)
                     .setSingleType(true) //设置图片视频不能同时选择
                     .setImagePaths(mImagePaths) //设置历史选择记录
                     .request(getXActivity(), REQUEST_SELECT_IMAGES_CODE) //REQEST_SELECT_IMAGES_CODE为Intent调用的requestCode

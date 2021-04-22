@@ -7,12 +7,51 @@
     android:background="@android:color/black"
     android:orientation="vertical">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/content_view"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:clipToPadding="false"
-        android:padding="1dp" />
+        app:layout_rootType="content">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/content_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:padding="1dp" />
+
+        <TextView
+            android:id="@+id/tv_image_picker_time"
+            android:layout_width="match_parent"
+            android:layout_height="24dp"
+            android:background="@color/image_picker_bar_color"
+            android:gravity="center_vertical"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:paddingBottom="1dp"
+            android:textColor="@color/image_picker_text_color"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@+id/title_bar"
+            tools:text="2020/09"
+            tools:visibility="visible" />
+
+        <LinearLayout
+            android:id="@+id/ll_folder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/black"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@+id/title_bar">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_folder_picker"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:itemCount="6"
+                tools:listitem="@layout/item_image_picker_folder" />
+
+        </LinearLayout>
+
+    </FrameLayout>
 
     <LinearLayout
         android:id="@+id/bottom_bar"
@@ -21,7 +60,8 @@
         android:layout_alignParentBottom="true"
         android:background="@color/image_picker_bar_color"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/content_view">
+        app:layout_constraintTop_toBottomOf="@+id/content_view"
+        app:layout_rootType="bottom">
 
         <TextView
             android:id="@+id/tv_picker_preview"
@@ -38,44 +78,14 @@
 
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/tv_image_picker_time"
-        android:layout_width="match_parent"
-        android:layout_height="24dp"
-        android:background="@color/image_picker_bar_color"
-        android:gravity="center_vertical"
-        android:paddingStart="12dp"
-        android:paddingEnd="12dp"
-        android:paddingBottom="1dp"
-        android:textColor="@color/image_picker_text_color"
-        android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@+id/title_bar"
-        tools:text="2020/09"
-        tools:visibility="visible" />
-
-    <LinearLayout
-        android:id="@+id/ll_folder"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/black"
-        android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@+id/title_bar">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_folder_picker"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:itemCount="6"
-            tools:listitem="@layout/item_image_picker_folder" />
-
-    </LinearLayout>
 
     <me.ibore.widget.TitleBar
         android:id="@+id/title_bar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/image_picker_action_bar_height"
         android:background="@color/image_picker_bar_color"
-        app:tbStatusBar="true" >
+        app:layout_rootType="title"
+        app:tbStatusBar="true">
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -91,20 +101,20 @@
             <LinearLayout
                 android:id="@+id/ll_image_picker_folder"
                 android:layout_width="wrap_content"
-                android:layout_height="28dp"
+                android:layout_height="30dp"
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="@dimen/image_picker_action_bar_height"
                 android:background="@drawable/image_picker_bg_folder"
                 android:gravity="center_vertical"
                 android:paddingStart="10dp"
-                android:paddingEnd="6dp">
+                android:paddingEnd="8dp">
 
                 <TextView
                     android:id="@+id/tv_image_picker_folder"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/image_picker_text_color"
-                    android:textSize="14sp"
+                    android:textSize="15sp"
                     tools:text="图片和视频" />
 
                 <ImageView
@@ -126,13 +136,13 @@
                 android:layout_marginEnd="16dp"
                 android:background="@drawable/image_picker_commit"
                 android:enabled="false"
-                android:paddingLeft="10dp"
+                android:paddingStart="12dp"
                 android:paddingTop="5dp"
-                android:paddingRight="10dp"
+                android:paddingEnd="12dp"
                 android:paddingBottom="5dp"
                 android:text="@string/image_picker_confirm"
                 android:textColor="@color/image_picker_text_color"
-                android:textSize="14sp" />
+                android:textSize="15sp" />
 
         </FrameLayout>
 

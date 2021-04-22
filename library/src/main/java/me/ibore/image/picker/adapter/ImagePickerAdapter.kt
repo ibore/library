@@ -5,99 +5,79 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.updateLayoutParams
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import me.ibore.R
+import me.ibore.databinding.ItemImagePickerBinding
 import me.ibore.image.picker.ImagePicker
 import me.ibore.image.picker.model.MediaFile
+import me.ibore.image.picker.utils.ImagePickerUtils
 import me.ibore.ktx.dp2px
+import me.ibore.ktx.gone
+import me.ibore.ktx.visible
+import me.ibore.recycler.adapter.BindingAdapter
 import me.ibore.recycler.holder.RecyclerHolder
 import me.ibore.utils.ScreenUtils
 import java.text.SimpleDateFormat
 import java.util.*
 
-class ImagePickerAdapter : RecyclerView.Adapter<RecyclerHolder>() {
+class ImagePickerAdapter : BindingAdapter<ItemImagePickerBinding, MediaFile>() {
 
-    private var datas: MutableList<MediaFile>? = null
-
-    fun setDatas(datas: MutableList<MediaFile>) {
-        this.datas = datas
-        notifyDataSetChanged()
-    }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerHolder {
-        val holder = RecyclerHolder.create(parent, R.layout.item_image_picker)
+    override fun onCreateHolder(parent: ViewGroup, dataType: Int): RecyclerHolder {
+        val holder = super.onCreateHolder(parent, dataType)
         holder.itemView.updateLayoutParams<RecyclerView.LayoutParams> {
             height = (ScreenUtils.appScreenHeight - dp2px(10F)) / 4
         }
         return holder
     }
 
-    override fun onBindViewHolder(holder: RecyclerHolder, position: Int) {
-//        val viewHolder = holder.viewHolder
-//        if (ImagePicker.getConfig().showCamera && position == 0) {
-//            viewHolder.visibility(R.id.tv_picker_take_photo, View.VISIBLE)
-//            viewHolder.visibility(R.id.iv_picker_check, View.GONE)
-//            viewHolder.visibility(R.id.tv_picker_check, View.GONE)
-//            viewHolder.visibility(R.id.iv_picker_gif, View.GONE)
-//            viewHolder.visibility(R.id.tv_picker_video_duration, View.GONE)
-//            viewHolder.imageDrawable(R.id.iv_picker_image, ColorDrawable(ContextCompat.getColor(viewHolder.context(), R.color.image_picker_bar_color)))
-//            viewHolder.onClickListener(R.id.scl_item) {
-//                onMediaListener?.onCameraClick()
-//            }
+    override fun ItemImagePickerBinding.onBindHolder(
+        holder: RecyclerHolder, data: MediaFile, dataPosition: Int
+    ) {
+        tvPickerTakePhoto.gone()
+        tvPickerCheck.visible()
+        ivPickerCheck.visible()
+        val indexOf = ImagePickerUtils.indexOfSelect(data)
+        if (indexOf >= 0) {
+            tvPickerCheck.text = (indexOf + 1).toString()
+            ivPickerCheck.setImageResource(R.drawable.image_picker_checked)
+        } else {
+            tvPickerCheck.text = ""
+            ivPickerCheck.setImageResource(R.drawable.image_picker_check)
+        }
+        Glide.with(ivPickerImage).load(data.path).into(ivPickerImage)
+        if (data.duration > 0) {
+            //如果是视频，需要显示视频时长
+            tvPickerVideoDuration.text = getVideoDuration(data.duration)
+            tvPickerVideoDuration.visible()
+            ivPickerGif.gone()
+        } else {
+            //如果是gif图，显示gif标识
+            val suffix = data.path.substring(data.path.lastIndexOf(".") + 1)
+            if (suffix.toUpperCase(Locale.ROOT) == "GIF") {
+                ivPickerGif.visible()
+            } else {
+                ivPickerGif.gone()
+            }
+            tvPickerVideoDuration.gone()
+        }
+        sclItem.setOnClickListener { onMediaListener?.onMediaClick(it, data, dataPosition) }
+        ivPickerCheck.setOnClickListener { onMediaListener?.onMediaCheck(it, data, dataPosition) }
+//        if (ImagePicker.getConfig().showCamera && dataPosition == 0) {
+//            tvPickerTakePhoto.visible()
+//            tvPickerCheck.gone()
+//            ivPickerCheck.gone()
+//            ivPickerGif.gone()
+//            tvPickerVideoDuration.gone()
+//            ivPickerImage.setImageDrawable(ColorDrawable(holder.color(R.color.image_picker_bar_color)))
+//            sclItem.setOnClickListener { onMediaListener?.onCameraClick() }
 //        } else {
-//            viewHolder.visibility(R.id.tv_picker_take_photo, View.GONE)
-//            viewHolder.visibility(R.id.iv_picker_check, View.VISIBLE)
-//            viewHolder.visibility(R.id.tv_picker_check, View.VISIBLE)
-//            val dataPosition = position - getDifference()
-//            val data = datas!![dataPosition]
-//            val indexOf = ImagePickerUtils.indexOfSelect(data)
-//            if (indexOf >= 0) {
-//                viewHolder.text(R.id.tv_picker_check, (indexOf + 1).toString())
-//                viewHolder.imageResource(R.id.iv_picker_check, R.drawable.image_picker_checked)
-//            } else {
-//                viewHolder.text(R.id.tv_picker_check, "")
-//                viewHolder.imageResource(R.id.iv_picker_check, R.drawable.image_picker_check)
-//            }
-//            viewHolder.image(R.id.iv_picker_image, data.path)
-//            if (data.duration > 0) {
-//                //如果是视频，需要显示视频时长
-//                viewHolder.text(R.id.tv_picker_video_duration, getVideoDuration(data.duration))
-//                viewHolder.visibility(R.id.tv_picker_video_duration, View.VISIBLE)
-//                viewHolder.visibility(R.id.iv_picker_gif, View.GONE)
-//            } else {
-//                //如果是gif图，显示gif标识
-//                val suffix = data.path.substring(data.path.lastIndexOf(".") + 1)
-//                if (suffix.toUpperCase(Locale.ROOT) == "GIF") {
-//                    viewHolder.visibility(R.id.iv_picker_gif, View.VISIBLE)
-//                } else {
-//                    viewHolder.visibility(R.id.iv_picker_gif, View.GONE)
-//                }
-//                viewHolder.visibility(R.id.tv_picker_video_duration, View.GONE)
-//            }
-//            viewHolder.onClickListener(R.id.scl_item) {
-//                onMediaListener?.onMediaClick(it, data, dataPosition)
-//            }
-//            viewHolder.onClickListener(R.id.iv_picker_check) {
-//                onMediaListener?.onMediaCheck(it, data, dataPosition)
-//            }
+//
 //        }
     }
 
-    override fun getItemCount(): Int {
-        return if (!datas.isNullOrEmpty()) {
-            datas!!.size + getDifference()
-        } else 0
-    }
-
     fun getDifference(): Int {
-        return (if (ImagePicker.getConfig().showCamera) 1 else 0)
-    }
-
-    fun getData(position: Int): MediaFile {
-        return datas!![position]
-    }
-
-    fun getDatas(): MutableList<MediaFile>? {
-        return datas
+        return 0
+//        return (if (ImagePicker.getConfig().showCamera) 1 else 0)
     }
 
     // 获取视频时长（格式化）
@@ -118,5 +98,6 @@ class ImagePickerAdapter : RecyclerView.Adapter<RecyclerHolder>() {
         fun onMediaClick(view: View, data: MediaFile, dataPosition: Int)
         fun onMediaCheck(view: View, data: MediaFile, dataPosition: Int)
     }
+
 
 }

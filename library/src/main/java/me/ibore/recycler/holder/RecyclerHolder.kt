@@ -45,10 +45,6 @@ open class RecyclerHolder @JvmOverloads constructor(itemView: View, var helper: 
         return itemView.context.getString(id)
     }
 
-    fun string(@StringRes id: Int, vararg formatArgs: Any): String {
-        return itemView.context.getString(id, formatArgs)
-    }
-
     fun drawable(@DrawableRes id: Int): Drawable? {
         return ContextCompat.getDrawable(itemView.context, id)
     }

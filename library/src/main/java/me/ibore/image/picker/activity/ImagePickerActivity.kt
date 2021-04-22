@@ -25,7 +25,6 @@ import me.ibore.R
 import me.ibore.base.XActivity
 import me.ibore.base.XObserver
 import me.ibore.databinding.ActivityImagePickerBinding
-import me.ibore.databinding.ItemImagePickerFolderBinding
 import me.ibore.image.picker.ImagePicker
 import me.ibore.image.picker.adapter.ImageFoldersAdapter
 import me.ibore.image.picker.adapter.ImagePickerAdapter
@@ -136,6 +135,7 @@ class ImagePickerActivity : XActivity<ActivityImagePickerBinding>(), ImagePicker
         DisposablesUtils.add(this, Observable.create(MediaObservable(applicationContext)),
                 object : XObserver<MutableList<MediaFolder>>(XLoading.DIALOG_TOAST) {
                     override fun onSuccess(data: MutableList<MediaFolder>) {
+                        //LogUtils.d(GsonUtils.toJson(data))
                         if (data.isNotEmpty()) {
                             //默认加载全部照片
                             mBinding.tvImagePickerFolder.text = data[0].folderName
@@ -168,26 +168,26 @@ class ImagePickerActivity : XActivity<ActivityImagePickerBinding>(), ImagePicker
         }
     }
 
-    private fun showOrHideFolderView() {
-        val isShow = mBinding.llFolder.visibility != View.VISIBLE
+    private fun ActivityImagePickerBinding.showOrHideFolderView() {
+        val isShow = llFolder.visibility != View.VISIBLE
         val valueAnimator = ValueAnimator.ofInt(0, mFolderPickerHeight).setDuration(300)
         valueAnimator.interpolator = DecelerateInterpolator()
         valueAnimator.addUpdateListener {
             val value = it.animatedValue
             if (isShow) {
                 if (value == 0) {
-                    mBinding.llFolder.visibility = View.VISIBLE
-                    mBinding.llFolder.setBackgroundColor(Color.TRANSPARENT)
+                    llFolder.visibility = View.VISIBLE
+                    llFolder.setBackgroundColor(Color.TRANSPARENT)
                 }
-                mBinding.rvFolderPicker.translationY = (value as Int) - mBinding.rvFolderPicker.height.toFloat()
-                mBinding.llFolder.setBackgroundColor(ColorUtils.setAlpha(Color.BLACK, 0.8f * (value / mFolderPickerHeight)))
-                mBinding.ivImageFolderIndicator.rotation = 180f * value / mFolderPickerHeight
+                rvFolderPicker.translationY = (value as Int) - rvFolderPicker.height.toFloat()
+                llFolder.setBackgroundColor(ColorUtils.setAlpha(Color.BLACK, 0.8f * (value / mFolderPickerHeight)))
+                ivImageFolderIndicator.rotation = 180f * value / mFolderPickerHeight
             } else {
-                mBinding.rvFolderPicker.translationY = -(value as Int).toFloat()
-                mBinding.llFolder.setBackgroundColor(ColorUtils.setAlpha(Color.BLACK, 0.8f * (1 - (value / mFolderPickerHeight))))
-                mBinding.ivImageFolderIndicator.rotation = 180 + (180f * value / mFolderPickerHeight)
-                if (value == mBinding.rvFolderPicker.height) {
-                    mBinding.llFolder.visibility = View.GONE
+                rvFolderPicker.translationY = -(value as Int).toFloat()
+                llFolder.setBackgroundColor(ColorUtils.setAlpha(Color.BLACK, 0.8f * (1 - (value / mFolderPickerHeight))))
+                ivImageFolderIndicator.rotation = 180 + (180f * value / mFolderPickerHeight)
+                if (value == rvFolderPicker.height) {
+                    llFolder.visibility = View.GONE
                 }
             }
         }
@@ -282,7 +282,7 @@ class ImagePickerActivity : XActivity<ActivityImagePickerBinding>(), ImagePicker
             ImagePickerUtils.removeSelect(data)
             if (!notifyList.isNullOrEmpty()) {
                 for (mediaFile in notifyList) {
-                    mImagePickerAdapter.notifyItemChanged(mImagePickerAdapter.getDatas()!!.indexOf(mediaFile) + mImagePickerAdapter.getDifference())
+                    mImagePickerAdapter.notifyItemChanged(mImagePickerAdapter.getDatas().indexOf(mediaFile) + mImagePickerAdapter.getDifference())
                 }
             }
         } else if (!ImagePickerUtils.isSelectOutRange()) {

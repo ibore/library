@@ -18,7 +18,7 @@
     <string name="image_picker_preview">预览</string>
     <string name="image_picker_preview_msg">预览(%1$d)</string>
     <string name="image_picker_confirm_msg">确定(%1$d/%2$d)</string>
-    <string name="image_picker_num">(%d)</string>
+    <string name="image_picker_num">(%1$d)</string>
     <string name="image_picker_all_media">图片和视频</string>
     <string name="image_picker_all_video">所有视频</string>
     <string name="image_picker_take_photo">拍摄图片</string>

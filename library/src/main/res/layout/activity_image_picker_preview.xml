@@ -8,6 +8,7 @@
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/content_view"
+        app:layout_rootType="content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -16,6 +17,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <me.ibore.widget.TitleBar
+        app:layout_rootType="title"
         android:id="@+id/title_bar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/image_picker_action_bar_height"
@@ -65,6 +67,7 @@
     </me.ibore.widget.TitleBar>
 
     <LinearLayout
+        app:layout_rootType="bottom"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
