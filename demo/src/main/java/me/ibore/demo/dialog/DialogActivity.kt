@@ -4,11 +4,18 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.widget.Toast
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import me.ibore.demo.adapter.TitleAdapter
 import me.ibore.demo.base.BaseActivity
 import me.ibore.demo.databinding.ActivityDialogBinding
+import me.ibore.demo.databinding.ItemActivityBinding
 import me.ibore.demo.databinding.TitleBarBinding
 import me.ibore.demo.model.TitleItem
+import me.ibore.recycler.delegate.Delegate
+import me.ibore.recycler.delegate.DelegateAdapter
+import me.ibore.recycler.delegate.DelegateBindingHolder
+import me.ibore.recycler.delegate.DelegateHolder
+import me.ibore.recycler.holder.RecyclerHolder
 import me.ibore.utils.DialogUtils
 import me.ibore.utils.ToastUtils
 
@@ -29,6 +36,29 @@ class DialogActivity : BaseActivity<ActivityDialogBinding>() {
     }
 
     override fun onBindData() {
+        val delegateHolders: MutableList<DelegateHolder> = ArrayList()
+        delegateHolders.add(object : DelegateBindingHolder<ItemActivityBinding, TitleModel>(100) {
+            override fun ItemActivityBinding.onBindHolder(
+                holder: RecyclerHolder, data: TitleModel
+            ) {
+                tvTitle.text = "delegate" + data.delegateType + "----" + data.dataString
+            }
+        })
+        delegateHolders.add(object : DelegateBindingHolder<ItemActivityBinding, TitleModel>(101) {
+            override fun ItemActivityBinding.onBindHolder(
+                holder: RecyclerHolder, data: TitleModel
+            ) {
+                tvTitle.text = "delegate" + data.delegateType + "----" + data.dataString
+            }
+        })
+        val delegateAdapter = DelegateAdapter(delegateHolders)
+        delegateAdapter.addData(TitleModel(100, "111111111111111"))
+        delegateAdapter.addData(TitleModel(101, "222222222222222"))
+        delegateAdapter.addData(TitleModel(100, "333333333333333"))
+        delegateAdapter.addData(TitleModel(100, "444444444444444"))
+        delegateAdapter.addData(TitleModel(100, "555555555555555"))
+        mBinding.recyclerView.layoutManager = LinearLayoutManager(getXActivity())
+        mBinding.recyclerView.adapter = delegateAdapter
 
 
         adapter.addData(TitleItem("普通内容") {
@@ -96,17 +126,18 @@ class DialogActivity : BaseActivity<ActivityDialogBinding>() {
             datas.add("生物")
             datas.add("政治")
 
-            DialogUtils.showList(getXActivity(), title = "普通列表多选", datas = datas,
+            DialogUtils.showList(
+                getXActivity(), title = "普通列表多选", datas = datas,
                 negative = "", positive = "",
                 showBottom = true, maxCount = 4,
                 selectedDatas = selectedDatas, selectedListener = {
-                selectedDatas = it
-            }, touchBack = false, touchOutside = false
+                    selectedDatas = it
+                }, touchBack = false, touchOutside = false
             )
         })
-
-
     }
 
+    class TitleModel(override val delegateType: Int, val dataString: String) :
+        Delegate(delegateType)
 
 }

@@ -4,28 +4,31 @@ import android.app.Activity
 import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.drawable.Drawable
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.*
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import me.ibore.ktx.layoutInflater
 import me.ibore.utils.ContextUtils
 
 @Suppress("UNCHECKED_CAST")
-open class RecyclerHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+open class RecyclerHolder @JvmOverloads constructor(itemView: View, var helper: Any? = null) :
+    RecyclerView.ViewHolder(itemView) {
 
     companion object {
 
-        fun create(parent: ViewGroup, @LayoutRes layoutId: Int): RecyclerHolder {
-            return create(LayoutInflater.from(parent.context).inflate(layoutId, parent, false))
+        @JvmOverloads
+        fun create(
+            parent: ViewGroup, @LayoutRes layoutId: Int, extra: Any? = null
+        ): RecyclerHolder {
+            return create(parent.layoutInflater.inflate(layoutId, parent, false), extra)
         }
 
-        fun create(itemView: View): RecyclerHolder = RecyclerHolder(itemView)
+        @JvmOverloads
+        fun create(itemView: View, extra: Any? = null) = RecyclerHolder(itemView, extra)
 
     }
-
-    var extra: Any? = null
 
     val context: Context
         get() = itemView.context

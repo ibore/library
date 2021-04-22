@@ -44,7 +44,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
 
     override fun onBindData() {
         adapter.setHeaderHolder(object : ItemBindingHolder<ItemActivityBinding>() {
-            override fun ItemActivityBinding.onBindingHolder(holder: RecyclerHolder) {
+            override fun ItemActivityBinding.onBindHolder(holder: RecyclerHolder) {
                 tvTitle.setText("头布局")
             }
         })
