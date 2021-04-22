@@ -88,11 +88,9 @@ class ImagePickerPreviewActivity : XActivity<ActivityImagePickerPreviewBinding>(
             CenterLayoutManager(getXActivity(), LinearLayoutManager.HORIZONTAL, false)
         rvImageSelect.adapter = mImageSelectAdapter
         mImageSelectAdapter.setDatas(ImagePickerUtils.selectMedias)
-        mImageSelectAdapter.onItemClickListener = object : OnItemClickListener<BindingHolder<ItemImagePickerPreviewSelectBinding>, MediaFile> {
+        mImageSelectAdapter.onItemClickListener = object : OnItemClickListener<RecyclerHolder, MediaFile> {
             override fun onItemClick(
-                holder: BindingHolder<ItemImagePickerPreviewSelectBinding>,
-                data: MediaFile,
-                position: Int
+                holder: RecyclerHolder, data: MediaFile, position: Int
             ) {
                 val indexOf = mMediaFileList.indexOf(data)
                 if (indexOf >= 0) {

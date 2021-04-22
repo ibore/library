@@ -25,7 +25,8 @@ import me.ibore.demo.utils.UtilsActivity
 import me.ibore.demo.video.VideoActivity
 import me.ibore.demo.view.ViewActivity
 import me.ibore.demo.web.WebActivity
-import me.ibore.recycler.holder.BindingItemHolder
+import me.ibore.recycler.holder.ItemBindingHolder
+import me.ibore.recycler.holder.RecyclerHolder
 
 @SuppressLint("NonConstantResourceId")
 class MainActivity : BaseActivity<ActivityMainBinding>() {
@@ -42,8 +43,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     }
 
     override fun onBindData() {
-        adapter.setHeaderHolder(object : BindingItemHolder<ItemActivityBinding>() {
-            override fun ItemActivityBinding.onBindingHolder(holder: BindingHolder<ItemActivityBinding>) {
+        adapter.setHeaderHolder(object : ItemBindingHolder<ItemActivityBinding>() {
+            override fun ItemActivityBinding.onBindingHolder(holder: RecyclerHolder) {
                 tvTitle.setText("头布局")
             }
         })

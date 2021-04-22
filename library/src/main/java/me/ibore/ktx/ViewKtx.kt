@@ -4,7 +4,9 @@ import android.animation.Animator
 import android.animation.IntEvaluator
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Build
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import me.ibore.ktx.ViewClickDelay.SPACE_TIME
@@ -192,6 +194,10 @@ fun View.animateWidthAndHeight(
 }
 
 /*************************************** View其他 ********************************************/
+
+val View.layoutInflater: LayoutInflater
+    get() = LayoutInflater.from(this.context)
+
 /**
  * 获取View id，如果没有id：SDK>17, 使用[View.generateViewId]；否则使用[View.hashCode]
  */

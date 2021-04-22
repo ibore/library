@@ -11,22 +11,19 @@ import me.ibore.demo.databinding.ItemActivityBinding
 import me.ibore.demo.databinding.TitleBarBinding
 import me.ibore.ktx.dp2px
 import me.ibore.recycler.adapter.BindingAdapter
+import me.ibore.recycler.holder.RecyclerHolder
 
 class RecyclerAnimActivity : BaseActivity<ActivityRecyclerBinding>() {
 
     private var adapter = object : BindingAdapter<ItemActivityBinding, String>() {
-        override fun onBindingHolder(
-            holder: BindingHolder<ItemActivityBinding>,
-            binding: ItemActivityBinding,
-            data: String,
-            dataPosition: Int
+        override fun ItemActivityBinding.onBindHolder(
+            holder: RecyclerHolder, data: String, dataPosition: Int
         ) {
-            binding.tvTitle.text = data
-            binding.tvTitle.updateLayoutParams<LinearLayout.LayoutParams> {
+            tvTitle.text = data
+            tvTitle.updateLayoutParams<LinearLayout.LayoutParams> {
                 height = dp2px(56F)
             }
         }
-
     }
 
     override fun ActivityRecyclerBinding.onBindView(bundle: Bundle?, savedInstanceState: Bundle?) {

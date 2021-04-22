@@ -1,15 +1,15 @@
 package me.ibore.rxbus
 
-internal class BusMessage(var mEvent: Any, var mTag: String) {
+internal class BusMessage(var event: Any, var tag: String) {
 
     fun isSameType(eventType: Class<*>?, tag: String?): Boolean {
-        return (Utils.equals(eventType, eventType) && Utils.equals(mTag, tag))
+        return (Utils.equals(this.eventType, eventType) && Utils.equals(this.tag, tag))
     }
 
-    val eventType: Class<*>? = Utils.getClassFromObject(mEvent)
+    val eventType: Class<*>? = Utils.getClassFromObject(event)
 
     override fun toString(): String {
-        return "event: $mEvent, tag: $mTag"
+        return "event: $event, tag: $tag"
     }
 
 }

@@ -59,4 +59,11 @@ open class RecyclerHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         return ContextCompat.getColor(itemView.context, id)
     }
 
+    fun onClickListener(onClickListener: View.OnClickListener) {
+        itemView.setOnClickListener(onClickListener)
+    }
+
+    fun onLongClickListener(onLongClickListener: View.OnLongClickListener) {
+        itemView.setOnLongClickListener(onLongClickListener)
+    }
 }

@@ -35,6 +35,7 @@ import me.ibore.image.picker.observable.MediaObservable
 import me.ibore.image.picker.utils.ImagePickerUtils
 import me.ibore.image.picker.utils.MediaFileUtil
 import me.ibore.loading.XLoading
+import me.ibore.recycler.holder.RecyclerHolder
 import me.ibore.recycler.listener.OnItemClickListener
 import me.ibore.utils.*
 import java.io.File
@@ -83,11 +84,9 @@ class ImagePickerActivity : XActivity<ActivityImagePickerBinding>(), ImagePicker
         rvFolderPicker.layoutParams = layoutParams
 
         mImageFoldersAdapter.onItemClickListener =
-            object : OnItemClickListener<BindingHolder<ItemImagePickerFolderBinding>, MediaFolder> {
+            object : OnItemClickListener<RecyclerHolder, MediaFolder> {
                 override fun onItemClick(
-                    holder: BindingHolder<ItemImagePickerFolderBinding>,
-                    data: MediaFolder,
-                    position: Int
+                    holder: RecyclerHolder, data: MediaFolder, position: Int
                 ) {
                     llFolder.visibility = View.GONE
                     tvImagePickerFolder.text = data.folderName

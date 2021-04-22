@@ -33,7 +33,7 @@ class RxBus private constructor() {
         Utils.requireNonNull(event, tag)
         val msgEvent = BusMessage(event, tag)
         if (isSticky) {
-            CacheUtils.instance.addStickyEvent(event, tag)
+            CacheUtils.INSTANCE.addStickyEvent(event, tag)
         }
         mBus.onNext(msgEvent)
     }
@@ -41,7 +41,7 @@ class RxBus private constructor() {
     @JvmOverloads
     fun removeSticky(event: Any?, tag: String? = "") {
         Utils.requireNonNull(event, tag)
-        CacheUtils.instance.removeStickyEvent(event, tag)
+        CacheUtils.INSTANCE.removeStickyEvent(event, tag)
     }
 
     fun <T> subscribe(subscriber: Any, callback: Callback<T>) {
@@ -81,16 +81,16 @@ class RxBus private constructor() {
         val typeClass: Class<T>? = Utils.getTypeClassFromParadigm(callback)
         val onNext: Consumer<T> = Consumer<T> { t -> callback.onEvent(t) }
         if (isSticky) {
-            val stickyEvent: BusMessage? = CacheUtils.instance.findStickyEvent(typeClass, tag)
+            val stickyEvent: BusMessage? = CacheUtils.INSTANCE.findStickyEvent(typeClass, tag)
             if (stickyEvent != null) {
                 var stickyFlowable: Flowable<T> = Flowable.create({ emitter ->
-                    emitter.onNext(typeClass?.cast(stickyEvent.mEvent)!!)
+                    emitter.onNext(typeClass?.cast(stickyEvent.event)!!)
                 }, BackpressureStrategy.LATEST)
                 if (scheduler != null) {
                     stickyFlowable = stickyFlowable.observeOn(scheduler)
                 }
                 val stickyDisposable: Disposable = FlowableUtils.subscribe(stickyFlowable, onNext, mOnError)
-                CacheUtils.instance.addDisposable(subscriber, stickyDisposable)
+                CacheUtils.INSTANCE.addDisposable(subscriber, stickyDisposable)
             } else {
                 Utils.logW("sticky event is empty.")
             }
@@ -98,7 +98,7 @@ class RxBus private constructor() {
         val disposable: Disposable = FlowableUtils.subscribe(
                 toFlowable(typeClass, tag, scheduler), onNext, mOnError
         )
-        CacheUtils.instance.addDisposable(subscriber, disposable)
+        CacheUtils.INSTANCE.addDisposable(subscriber, disposable)
     }
 
     private fun <T> toFlowable(eventType: Class<T>?,
@@ -106,7 +106,7 @@ class RxBus private constructor() {
                                scheduler: Scheduler?): Flowable<T> {
         val flowable: Flowable<T> = mBus.ofType(BusMessage::class.java)
                 .filter { busMessage -> busMessage.isSameType(eventType, tag) }
-                .map { busMessage -> busMessage.mEvent }
+                .map { busMessage -> busMessage.event }
                 .cast(eventType)
         return if (scheduler != null) {
             flowable.observeOn(scheduler)
@@ -114,11 +114,11 @@ class RxBus private constructor() {
     }
 
     fun unregister(subscriber: Any?) {
-        CacheUtils.instance.removeDisposables(subscriber)
+        CacheUtils.INSTANCE.removeDisposables(subscriber)
     }
 
     private object Holder {
-        internal val BUS = RxBus()
+        val BUS = RxBus()
     }
 
     abstract class Callback<T> {

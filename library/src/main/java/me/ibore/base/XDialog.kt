@@ -12,7 +12,7 @@ import androidx.viewbinding.ViewBinding
 import me.ibore.R
 import me.ibore.base.XDialog.DialogConfig.Companion.MATCH_PARENT
 import me.ibore.base.XDialog.DialogConfig.Companion.WRAP_CONTENT
-import me.ibore.utils.BindingUtils
+import me.ibore.utils.ReflexUtils
 import me.ibore.utils.DisposablesUtils
 import me.ibore.utils.ScreenUtils
 
@@ -73,7 +73,7 @@ abstract class XDialog<VB : ViewBinding> : AppCompatDialogFragment(), XView<VB> 
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        mBinding = BindingUtils.reflexViewBinding(javaClass, layoutInflater, container, false)
+        mBinding = ReflexUtils.viewBinding(javaClass, layoutInflater, container, false)
         return mBinding.root
     }
 

@@ -18,7 +18,7 @@ import java.util.*
  * @date 2020/9/29
  * Class 描述 : 用于反射获取 ViewModel  和 ViewBinding
  */
-object BindingUtils {
+object ReflexUtils {
     /**
      * 反射获取ViewBinding
      *
@@ -28,7 +28,7 @@ object BindingUtils {
      * @return viewBinding实例
     </V> */
     @Suppress("UNCHECKED_CAST")
-    fun <V : ViewBinding> reflexViewBinding(aClass: Class<*>, from: LayoutInflater): V {
+    fun <V : ViewBinding> viewBinding(aClass: Class<*>, from: LayoutInflater): V {
         try {
             val actualTypeArguments =
                 (Objects.requireNonNull(aClass.genericSuperclass) as ParameterizedType).actualTypeArguments
@@ -44,7 +44,7 @@ object BindingUtils {
                     return inflate.invoke(null, from) as V
                 }
             }
-            return reflexViewBinding(aClass.superclass, from)
+            return viewBinding(aClass.superclass, from)
         } catch (e: NoSuchMethodException) {
             e.printStackTrace()
         } catch (e: IllegalAccessException) {
@@ -59,7 +59,7 @@ object BindingUtils {
      * 反射获取ViewBinding\
      */
     @Suppress("UNCHECKED_CAST")
-    fun <V : ViewBinding> reflexViewBinding(
+    fun <V : ViewBinding> viewBinding(
         aClass: Class<*>, from: LayoutInflater?, viewGroup: ViewGroup?, b: Boolean
     ): V {
         try {
@@ -82,7 +82,7 @@ object BindingUtils {
                     return inflate.invoke(null, from, viewGroup, b) as V
                 }
             }
-            return reflexViewBinding<ViewBinding>(aClass.superclass, from, viewGroup, b) as V
+            return viewBinding<ViewBinding>(aClass.superclass, from, viewGroup, b) as V
         } catch (e: NoSuchMethodException) {
             e.printStackTrace()
         } catch (e: IllegalAccessException) {
@@ -90,7 +90,7 @@ object BindingUtils {
         } catch (e: InvocationTargetException) {
             e.printStackTrace()
         }
-        throw RuntimeException("ViewBinding初始化失败")
+        throw ClientException("ViewBinding初始化失败")
     }
 
     /**
@@ -102,7 +102,7 @@ object BindingUtils {
      * @return ViewModel实例
     </VM> */
     @Suppress("UNCHECKED_CAST")
-    fun <VM : ViewModel> reflexViewModel(aClass: Class<*>, owner: ViewModelStoreOwner): VM {
+    fun <VM : ViewModel> viewModel(aClass: Class<*>, owner: ViewModelStoreOwner): VM {
         try {
             val actualTypeArguments =
                 (Objects.requireNonNull(aClass.genericSuperclass) as ParameterizedType).actualTypeArguments
@@ -117,11 +117,11 @@ object BindingUtils {
                     return ViewModelProvider(owner)[tClass as Class<VM>]
                 }
             }
-            return reflexViewModel<VM>(aClass.superclass, owner)
+            return viewModel<VM>(aClass.superclass, owner)
         } catch (e: Exception) {
             e.printStackTrace()
         }
-        throw RuntimeException("ViewModel初始化失败")
+        throw ClientException("ViewModel初始化失败")
     }
 
     /**
@@ -132,7 +132,7 @@ object BindingUtils {
      * @return Presenter实例
     </VM> */
     @Suppress("UNCHECKED_CAST")
-    fun <P : XMvpPresenter<*>> reflexPresenter(aClass: Class<*>): P {
+    fun <P : XMvpPresenter<*>> presenter(aClass: Class<*>): P {
         try {
             val actualTypeArguments =
                 (Objects.requireNonNull(aClass.genericSuperclass) as ParameterizedType).actualTypeArguments
@@ -147,11 +147,11 @@ object BindingUtils {
                     return tClass as P
                 }
             }
-            return reflexPresenter<P>(aClass.superclass)
+            return presenter(aClass.superclass)
         } catch (e: Exception) {
             e.printStackTrace()
         }
-        throw RuntimeException("ViewModel初始化失败")
+        throw ClientException("ViewModel初始化失败")
     }
 
     /**
@@ -165,7 +165,7 @@ object BindingUtils {
      * @return ViewModel实例
     </VM> */
     @Suppress("UNCHECKED_CAST")
-    fun <VM : ViewModel> reflexViewModelShared(aClass: Class<*>, fragment: Fragment): VM {
+    fun <VM : ViewModel> viewModelShared(aClass: Class<*>, fragment: Fragment): VM {
         try {
             val actualTypeArguments =
                 (Objects.requireNonNull(aClass.genericSuperclass) as ParameterizedType).actualTypeArguments
@@ -180,10 +180,10 @@ object BindingUtils {
                     return ViewModelProvider(fragment.requireActivity())[tClass as Class<VM>]
                 }
             }
-            return reflexViewModelShared<VM>(aClass.superclass, fragment)
+            return viewModelShared<VM>(aClass.superclass, fragment)
         } catch (e: Exception) {
             e.printStackTrace()
         }
-        throw RuntimeException("ViewModel初始化失败")
+        throw ClientException("ViewModel初始化失败")
     }
 }

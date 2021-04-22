@@ -139,26 +139,22 @@ abstract class RecyclerAdapter<D> : RecyclerView.Adapter<RecyclerHolder>(), IRec
 
     @Suppress("UNCHECKED_CAST")
     final override fun onBindViewHolder(holder: RecyclerHolder, position: Int) {
-        when (getItemViewType(position)) {
-            STATUS -> loadHolder?.onBindRecyclerHolder(holder)
+        val itemViewType = getItemViewType(position)
+        when (itemViewType) {
+            STATUS -> loadHolder?.onBindHolder(holder)
             HEADER -> headerHolder?.onBindHolder(holder)
             FOOTER -> footerHolder?.onBindHolder(holder)
-            MORE -> loadMoreHolder?.onBindRecyclerHolder(holder)
+            MORE -> loadMoreHolder?.onBindHolder(holder)
             else -> {
                 val dataPosition = getDataPosition(position)
-                val data = getData(dataPosition)
-                holder.itemView.setOnClickListener {
-                    onItemClickListener?.onItemClick(holder, data, dataPosition)
+                val data = datas[dataPosition]
+                onItemClickListener?.run {
+                    holder.onClickListener { onItemClick(holder, data, dataPosition) }
                 }
-                holder.itemView.setOnLongClickListener {
-                    onItemLongClickListener?.onItemLongClick(holder, data, dataPosition) ?: false
+                onItemLongClickListener?.run {
+                    holder.onLongClickListener { onItemLongClick(holder, data, dataPosition) }
                 }
-                onBindHolder(
-                    holder as VH,
-                    getData(dataPosition),
-                    dataPosition,
-                    getItemViewType(position)
-                )
+                onBindHolder(holder, data, dataPosition, itemViewType)
                 if (animation != null && (!animatorFirstOnly || dataPosition > animatorLastPosition)) {
                     for (anim in animation!!.getAnimators(holder.itemView)) {
                         animatorDuration?.let { anim.duration = it }
@@ -198,7 +194,10 @@ abstract class RecyclerAdapter<D> : RecyclerView.Adapter<RecyclerHolder>(), IRec
             isHeaderHolder(position) -> HEADER
             isFooterHolder(position) -> FOOTER
             isMoreHolder(position) -> MORE
-            else -> getDataType(datas[getDataPosition(position)], getDataPosition(position))
+            else -> {
+                val dataPosition: Int = getDataPosition(position)
+                getDataType(datas[dataPosition], dataPosition)
+            }
         }
     }
 
@@ -211,10 +210,12 @@ abstract class RecyclerAdapter<D> : RecyclerView.Adapter<RecyclerHolder>(), IRec
                 isHeaderHolder(holder.layoutPosition) -> layoutParams.isFullSpan = true
                 isFooterHolder(holder.layoutPosition) -> layoutParams.isFullSpan = true
                 isMoreHolder(holder.layoutPosition) -> layoutParams.isFullSpan = true
-                else -> layoutParams.isFullSpan = isStaggeredFullSpan(
-                    getData(getDataPosition(holder.layoutPosition)),
-                    getDataPosition(holder.layoutPosition)
-                )
+                else -> {
+                    val dataPosition: Int = getDataPosition(holder.layoutPosition)
+                    layoutParams.isFullSpan = isStaggeredFullSpan(
+                        datas[dataPosition], dataPosition
+                    )
+                }
             }
         }
     }
@@ -228,10 +229,9 @@ abstract class RecyclerAdapter<D> : RecyclerView.Adapter<RecyclerHolder>(), IRec
                     return if (showStatusView || isHeaderHolder(position) || isMoreHolder(position)) {
                         layoutManager.spanCount
                     } else {
+                        val dataPosition: Int = getDataPosition(position)
                         getGridSpanSize(
-                            layoutManager.spanCount,
-                            getData(getDataPosition(position)),
-                            getDataPosition(position)
+                            layoutManager.spanCount, datas[dataPosition], dataPosition
                         )
                     }
                 }

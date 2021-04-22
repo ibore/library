@@ -10,7 +10,7 @@ import me.ibore.recycler.adapter.RecyclerAdapter.Companion.STATUS_ERROR
 import me.ibore.recycler.adapter.RecyclerAdapter.Companion.STATUS_LOAD
 import me.ibore.recycler.listener.OnLoadListener
 
-class LoadHolder {
+class LoadHolder : ItemHolder{
 
     companion object {
         fun create(context: Context, loadingId: Int, emptyId: Int, errorId: Int): LoadHolder {
@@ -41,7 +41,7 @@ class LoadHolder {
         this.errorView = errorView
     }
 
-    fun onCreateHolder(parent: ViewGroup): RecyclerHolder {
+    override fun onCreateHolder(parent: ViewGroup): RecyclerHolder {
         val frameLayout = FrameLayout(parent.context)
         frameLayout.layoutParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT)
         frameLayout.addView(loadingView)
@@ -50,7 +50,7 @@ class LoadHolder {
         return RecyclerHolder.create(frameLayout)
     }
 
-    fun onBindRecyclerHolder(holder: RecyclerHolder) {
+    override fun onBindHolder(holder: RecyclerHolder) {
         val frameLayout = holder.itemView as FrameLayout
         when (status) {
             STATUS_LOAD -> {

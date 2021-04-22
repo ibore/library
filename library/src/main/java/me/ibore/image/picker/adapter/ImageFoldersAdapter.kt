@@ -3,15 +3,14 @@ package me.ibore.image.picker.adapter
 import me.ibore.databinding.ItemImagePickerFolderBinding
 import me.ibore.image.picker.model.MediaFolder
 import me.ibore.recycler.adapter.BindingAdapter
+import me.ibore.recycler.holder.RecyclerHolder
 
 class ImageFoldersAdapter : BindingAdapter<ItemImagePickerFolderBinding, MediaFolder>() {
 
     private var currentPosition: Int = 0
 
-    override fun ItemImagePickerFolderBinding.onBindingHolder(
-        holder: BindingHolder<ItemImagePickerFolderBinding>,
-        data: MediaFolder,
-        dataPosition: Int
+    override fun ItemImagePickerFolderBinding.onBindHolder(
+        holder: RecyclerHolder, data: MediaFolder, dataPosition: Int
     ) {
         /*val imageSize = data.mediaFileList.size
         holder.viewHolder.text(R.id.tv_image_picker_folder, data.folderName)

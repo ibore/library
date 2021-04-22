@@ -36,7 +36,7 @@ internal class MyLambdaSubscriber<T>(onNext: Consumer<T>?, onError: Consumer<Thr
     override fun onNext(t: T?) {
         if (!isDisposed) {
             try {
-                onNext!!.accept(t)
+                onNext?.accept(t)
             } catch (e: Throwable) {
                 Exceptions.throwIfFatal(e)
                 onError(e)

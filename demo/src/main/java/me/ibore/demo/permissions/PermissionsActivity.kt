@@ -15,6 +15,7 @@ import me.ibore.permissions.OnPermissionListener
 import me.ibore.permissions.Permission
 import me.ibore.permissions.XPermissions
 import me.ibore.recycler.adapter.BindingAdapter
+import me.ibore.recycler.holder.RecyclerHolder
 import me.ibore.recycler.listener.OnItemClickListener
 import me.ibore.utils.DialogUtils
 import me.ibore.utils.GsonUtils
@@ -57,12 +58,10 @@ class PermissionsActivity : BaseActivity<ActivityPermissionsBinding>() {
         })
         mBinding.recyclerView.layoutManager = GridLayoutManager(getXActivity(), 2)
         mBinding.recyclerView.adapter = adapter
-        adapter.onItemClickListener = object : OnItemClickListener<BindingHolder<ItemActivityBinding>, String> {
+        adapter.onItemClickListener = object : OnItemClickListener<RecyclerHolder, String> {
 
             override fun onItemClick(
-                holder: BindingHolder<ItemActivityBinding>,
-                data: String,
-                position: Int
+                holder: RecyclerHolder, data: String, position: Int
             ) {
                 when (position) {
                     0 -> {
@@ -197,7 +196,7 @@ class PermissionsActivity : BaseActivity<ActivityPermissionsBinding>() {
     }
 
     class Adapter : BindingAdapter<ItemActivityBinding, String>() {
-        override fun ItemActivityBinding.onBindingHolder(holder: BindingHolder<ItemActivityBinding>, data: String, dataPosition: Int) {
+        override fun ItemActivityBinding.onBindHolder(holder: RecyclerHolder, data: String, dataPosition: Int) {
             tvTitle.text = data
         }
     }

@@ -99,10 +99,10 @@ internal class CacheUtils private constructor() {
     }
 
     private object Holder {
-        internal val CACHE_UTILS = CacheUtils()
+        val CACHE_UTILS = CacheUtils()
     }
 
     companion object {
-        val instance: CacheUtils = Holder.CACHE_UTILS
+        val INSTANCE: CacheUtils = Holder.CACHE_UTILS
     }
 }

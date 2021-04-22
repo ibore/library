@@ -14,6 +14,7 @@ import me.ibore.databinding.DialogXListBinding
 import me.ibore.databinding.ItemDialogListBinding
 import me.ibore.ktx.dp2px
 import me.ibore.recycler.adapter.BindingAdapter
+import me.ibore.recycler.holder.RecyclerHolder
 import me.ibore.recycler.layoutmanager.CenterLayoutManager
 import me.ibore.utils.ScreenUtils
 import me.ibore.utils.ToastUtils
@@ -153,8 +154,8 @@ class XListDialog : XDialog<DialogXListBinding>() {
             return false
         }
 
-        override fun ItemDialogListBinding.onBindingHolder(
-            holder: BindingHolder<ItemDialogListBinding>,
+        override fun ItemDialogListBinding.onBindHolder(
+            holder: RecyclerHolder,
             data: CharSequence,
             dataPosition: Int
         ) {

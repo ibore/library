@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
-import me.ibore.utils.BindingUtils
+import me.ibore.utils.ReflexUtils
 import me.ibore.utils.DisposablesUtils
 import me.ibore.widget.RootLayout
 
@@ -17,7 +17,7 @@ abstract class XFragment<VB : ViewBinding> : Fragment(), XStatusView<VB> {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-        mBinding = BindingUtils.reflexViewBinding(javaClass, layoutInflater, container, false)
+        mBinding = ReflexUtils.viewBinding(javaClass, layoutInflater, container, false)
         return mBinding.root
     }
 

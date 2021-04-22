@@ -2,21 +2,18 @@ package me.ibore.base
 
 import android.graphics.Color
 import android.os.Bundle
-import android.view.View
-import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewbinding.ViewBinding
 import me.ibore.utils.DisposablesUtils
-import me.ibore.utils.ViewBindingUtils
 import me.ibore.utils.BarUtils
-import me.ibore.utils.BindingUtils
+import me.ibore.utils.ReflexUtils
 import me.ibore.widget.RootLayout
 
 
 abstract class XActivity<VB : ViewBinding> : AppCompatActivity(), XStatusView<VB> {
 
     protected open val mBinding: VB by lazy(mode = LazyThreadSafetyMode.NONE) {
-        BindingUtils.reflexViewBinding(javaClass, layoutInflater)
+        ReflexUtils.viewBinding(javaClass, layoutInflater)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

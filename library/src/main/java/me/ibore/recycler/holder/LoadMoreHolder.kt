@@ -10,7 +10,7 @@ import me.ibore.recycler.adapter.RecyclerAdapter
 import me.ibore.recycler.listener.OnLoadMoreListener
 import me.ibore.utils.SizeUtils
 
-class LoadMoreHolder {
+class LoadMoreHolder : ItemHolder {
 
     companion object {
         fun create(context: Context, loadingId: Int, emptyId: Int, errorId: Int): LoadMoreHolder {
@@ -42,18 +42,17 @@ class LoadMoreHolder {
         this.errorView = errorView
     }
 
-    fun onCreateHolder(parent: ViewGroup): RecyclerHolder {
+    override fun onCreateHolder(parent: ViewGroup): RecyclerHolder {
         val frameLayout = FrameLayout(parent.context)
         frameLayout.layoutParams = RelativeLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-        val inflater = LayoutInflater.from(parent.context)
         frameLayout.addView(loadingView)
         frameLayout.addView(emptyView)
         frameLayout.addView(errorView)
         return RecyclerHolder.create(frameLayout)
     }
 
-    fun onBindRecyclerHolder(holder: RecyclerHolder) {
+    override  fun onBindHolder(holder: RecyclerHolder) {
         val frameLayout = holder.itemView as FrameLayout
         when (status) {
             RecyclerAdapter.STATUS_LOAD -> {

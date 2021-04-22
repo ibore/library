@@ -12,13 +12,13 @@ import androidx.fragment.app.DialogFragment
 import androidx.viewbinding.ViewBinding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import me.ibore.R
-import me.ibore.utils.BindingUtils
+import me.ibore.utils.ReflexUtils
 import me.ibore.utils.DisposablesUtils
 
 abstract class XBottomDialog<VB : ViewBinding> : BottomSheetDialogFragment(), XView<VB> {
 
     protected open val mBinding: VB by lazy(mode = LazyThreadSafetyMode.NONE) {
-        BindingUtils.reflexViewBinding(javaClass, layoutInflater)
+        ReflexUtils.viewBinding(javaClass, layoutInflater)
     }
 
     private var onDismissListener: DialogInterface.OnDismissListener? = null

@@ -3,15 +3,14 @@ package me.ibore.image.picker.adapter
 import me.ibore.databinding.ItemImagePickerPreviewSelectBinding
 import me.ibore.image.picker.model.MediaFile
 import me.ibore.recycler.adapter.BindingAdapter
+import me.ibore.recycler.holder.RecyclerHolder
 
 class ImageSelectAdapter : BindingAdapter<ItemImagePickerPreviewSelectBinding, MediaFile>() {
 
     var currentPosition: Int = -1
 
-    override fun ItemImagePickerPreviewSelectBinding.onBindingHolder(
-        holder: BindingHolder<ItemImagePickerPreviewSelectBinding>,
-        data: MediaFile,
-        dataPosition: Int
+    override fun ItemImagePickerPreviewSelectBinding.onBindHolder(
+        holder: RecyclerHolder, data: MediaFile, dataPosition: Int
     ) {
 //        holder.viewHolder.image(R.id.iv_image_select, data.path)
 //        if (currentPosition == dataPosition) {
