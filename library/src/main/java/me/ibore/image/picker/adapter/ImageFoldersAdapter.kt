@@ -17,19 +17,19 @@ class ImageFoldersAdapter : BindingAdapter<ItemImagePickerFolderBinding, MediaFo
         holder: RecyclerHolder, data: MediaFolder, dataPosition: Int
     ) {
         val imageSize: Int = data.mediaFileList.size
-        tvImagePickerFolder.text = data.folderName
-        tvImagePickerNumber.text = holder.context.getString(R.string.image_picker_num, imageSize)
+        tvImageFolder.text = data.folderName
+        tvImageNumber.text = holder.string(R.string.image_picker_num, imageSize)
         clItem.setOnClickListener {
             currentPosition = dataPosition
             onItemClickListener?.onItemClick(holder, data, dataPosition)
             notifyDataSetChanged()
         }
         if (currentPosition == dataPosition) {
-            ivImagePickerFolderCheck.isVisible = true
+            ivImageFolderCheck.isVisible = true
         } else {
-            ivImagePickerFolderCheck.isGone = true
+            ivImageFolderCheck.isGone = true
         }
-        Glide.with(ivImagePickerFolder).load(data.folderCover).into(ivImagePickerFolder)
+        Glide.with(ivImageFolder).load(data.folderCover).into(ivImageFolder)
     }
 
 }

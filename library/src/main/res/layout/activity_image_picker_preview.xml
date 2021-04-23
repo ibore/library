@@ -7,8 +7,8 @@
     android:background="#000000" >
 
     <androidx.viewpager2.widget.ViewPager2
+        android:overScrollMode="never"
         android:id="@+id/view_pager2"
-        app:layout_rootType="content"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
@@ -38,7 +38,7 @@
             tools:text="1/1000" />
 
         <TextView
-            android:id="@+id/tv_image_picker_commit"
+            android:id="@+id/tv_image_commit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end|center_vertical"
@@ -61,7 +61,7 @@
         android:id="@+id/bottom_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/image_picker_bar_color"
+        android:background="#F0333333"
         android:orientation="vertical">
 
         <androidx.recyclerview.widget.RecyclerView
@@ -71,11 +71,12 @@
             android:clipToPadding="false"
             android:orientation="horizontal"
             android:paddingStart="7.5dp"
+            android:overScrollMode="never"
             android:paddingTop="15dp"
             android:paddingEnd="7.5dp"
             android:paddingBottom="15dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:itemCount="4"
+            tools:itemCount="8"
             tools:listitem="@layout/item_image_picker_preview_select" />
 
         <View
@@ -83,35 +84,73 @@
             android:layout_height="1dp"
             android:background="@color/image_picker_line_color" />
 
-        <LinearLayout
-            android:id="@+id/ll_pre_select"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/image_picker_action_bar_height"
-            android:layout_gravity="end"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp">
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/image_picker_action_bar_height">
 
-            <ImageView
-                android:id="@+id/iv_image_picker_check"
-                android:layout_width="18dp"
-                android:layout_height="18dp"
-                android:layout_gravity="center_vertical"
-                android:layout_marginEnd="6dp"
-                android:background="@drawable/image_picker_checked"
-                android:scaleType="center"
-                android:src="@drawable/image_picker_preview_checked" />
-
-            <TextView
+            <LinearLayout
+                android:id="@+id/ll_original_image"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_gravity="center"
-                android:text="@string/image_picker_select"
-                android:textColor="@color/image_picker_text_color"
-                android:textSize="15sp" />
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp">
 
-        </LinearLayout>
+                <ImageView
+                    android:id="@+id/iv_original_image"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginEnd="6dp"
+                    android:background="@drawable/image_picker_checked"
+                    android:scaleType="center"
+                    android:src="@drawable/image_picker_preview_checked" />
+
+                <TextView
+                    android:id="@+id/tv_original_image"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/image_picker_original_image"
+                    android:textColor="@color/image_picker_text_color"
+                    android:textSize="15sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_pre_select"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="end"
+                android:layout_marginEnd="8dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp">
+
+                <ImageView
+                    android:id="@+id/iv_image_check"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginEnd="6dp"
+                    android:background="@drawable/image_picker_checked"
+                    android:scaleType="center"
+                    android:src="@drawable/image_picker_preview_checked" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/image_picker_select"
+                    android:textColor="@color/image_picker_text_color"
+                    android:textSize="15sp" />
+
+            </LinearLayout>
+
+        </FrameLayout>
 
     </LinearLayout>
 

@@ -17,9 +17,9 @@ class ImageSelectAdapter : BindingAdapter<ItemImagePickerPreviewSelectBinding, M
     ) {
         Glide.with(ivImageSelect).load(data.path).into(ivImageSelect)
         if (currentPosition == dataPosition) {
-            ivImageSelect.isVisible = true
+            viewImageSelect.isVisible = true
         } else {
-            ivImageSelect.isGone = true
+            viewImageSelect.isGone = true
         }
     }
 

@@ -41,40 +41,57 @@ class ImagePicker private constructor(private var config: Config = Config()) {
     }
 
     // 是否支持相机
-    fun setShowCamera(showCamera: Boolean): ImagePicker {
+    fun showCamera(): ImagePicker {
+        return showCamera(true)
+    }
+
+    // 是否支持相机
+    fun showCamera(showCamera: Boolean): ImagePicker {
         config.showCamera = showCamera
-        if (showCamera) {
-            config.maxCount = 1
-        }
         return this
     }
 
     // 是否展示图片
-    fun setShowImage(showImage: Boolean): ImagePicker {
+    fun showImage(): ImagePicker {
+        return showImage(true)
+    }
+
+    // 是否展示图片
+    fun showImage(showImage: Boolean): ImagePicker {
         config.showImage = showImage
         return this
     }
 
     // 是否展示图片
-    fun setOneCount(): ImagePicker {
+    fun oneCount(): ImagePicker {
         config.maxCount = 1
         return this
     }
 
     // 是否展示视频
-    fun setShowVideo(showVideo: Boolean): ImagePicker {
+    fun showVideo(): ImagePicker {
+        return showVideo(true)
+    }
+
+    // 是否展示视频
+    fun showVideo(showVideo: Boolean): ImagePicker {
         config.showVideo = showVideo
         return this
     }
 
     // 是否过滤GIF图片(默认不过滤)
-    fun setFilterGif(filterGif: Boolean): ImagePicker {
+    fun filterGif(): ImagePicker {
+        return filterGif(true)
+    }
+
+    // 是否过滤GIF图片(默认不过滤)
+    fun filterGif(filterGif: Boolean): ImagePicker {
         config.filterGif = filterGif
         return this
     }
 
     // 图片最大选择数
-    fun setMaxCount(maxCount: Int): ImagePicker {
+    fun maxCount(maxCount: Int): ImagePicker {
         if (config.showCamera) {
             return this
         }
@@ -82,14 +99,37 @@ class ImagePicker private constructor(private var config: Config = Config()) {
         return this
     }
 
+    // 图片压缩
+    fun imageCompress(): ImagePicker {
+        config.imageQuality = 1
+        return this
+    }
+
+    // 压缩图片
+    fun imageOriginal(): ImagePicker {
+        config.imageQuality = 2
+        return this
+    }
+
+    // 图片质量用户选择，默认压缩图片
+    fun imageQualityUser(): ImagePicker {
+        config.imageQuality = 3
+        return this
+    }
+
     // 设置单类型选择（只能选图片或者视频）
-    fun setSingleType(singleType: Boolean): ImagePicker {
+    fun singleType(): ImagePicker {
+        return singleType(true)
+    }
+
+    // 设置单类型选择（只能选图片或者视频）
+    fun singleType(singleType: Boolean): ImagePicker {
         config.singleType = singleType
         return this
     }
 
     // 设置图片选择历史记录
-    fun setImagePaths(imagePaths: ArrayList<String>?): ImagePicker {
+    fun imagePaths(imagePaths: ArrayList<String>?): ImagePicker {
         config.imagePaths = imagePaths
         return this
     }
@@ -117,6 +157,8 @@ class ImagePicker private constructor(private var config: Config = Config()) {
             var filterGif: Boolean = false,
             //最大选择数量，默认为1
             var maxCount: Int = 1,
+            //图片质量（1压缩，2原图，3用户选择压缩，4用户选择原图），默认为1
+            var imageQuality: Int = 1,
             //是否只支持选单类型（图片或者视频）
             var singleType: Boolean = false,
             //上一次选择的图片地址集合

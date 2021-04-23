@@ -14,6 +14,7 @@ class XLoadingHelper {
 
     @XLoading
     private val xLoading: Int
+
     var tag: Any? = null
         set(value) {
             field = value

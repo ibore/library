@@ -91,10 +91,14 @@ class MediaObservable(private val context: Context) : ObservableOnSubscribe<Muta
         if (cursor != null) {
             while (cursor.moveToNext()) {
                 val path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA))
-                val mime = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.MIME_TYPE))
-                val folderId = cursor.getInt(cursor.getColumnIndex(MediaStore.Images.Media.BUCKET_ID))
-                val folderName = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.BUCKET_DISPLAY_NAME))
-                val dateToken = cursor.getLong(cursor.getColumnIndex(MediaStore.Images.Media.DATE_TAKEN))
+                val mime =
+                    cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.MIME_TYPE))
+                val folderId =
+                    cursor.getInt(cursor.getColumnIndex(MediaStore.Images.Media.BUCKET_ID))
+                val folderName =
+                    cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.BUCKET_DISPLAY_NAME))
+                val dateToken =
+                    cursor.getLong(cursor.getColumnIndex(MediaStore.Images.Media.DATE_TAKEN))
                 mediaFiles.add(MediaFile(path, mime, folderId, folderName, 0, dateToken))
             }
             cursor.close()
@@ -102,7 +106,9 @@ class MediaObservable(private val context: Context) : ObservableOnSubscribe<Muta
         return mediaFiles
     }
 
-    private fun getMediaFolder(context: Context, imageFileList: ArrayList<MediaFile>?, videoFileList: ArrayList<MediaFile>?): MutableList<MediaFolder> {
+    private fun getMediaFolder(
+        context: Context, imageFileList: ArrayList<MediaFile>?, videoFileList: ArrayList<MediaFile>?
+    ): MutableList<MediaFolder> {
         //根据媒体所在文件夹Id进行聚类（相册）
         val mediaFolderMap: MutableMap<Int, MediaFolder> = HashMap()
         //全部图片、视频文件
@@ -123,12 +129,20 @@ class MediaObservable(private val context: Context) : ObservableOnSubscribe<Muta
         }
         //全部图片或视频
         if (mediaFileList.isNotEmpty()) {
-            val allMediaFolder = MediaFolder(ALL_MEDIA_FOLDER, context.getString(R.string.image_picker_all_media), mediaFileList[0].path!!, mediaFileList)
+            val allMediaFolder =
+                MediaFolder(
+                    ALL_MEDIA_FOLDER, context.getString(R.string.image_picker_all_media),
+                    mediaFileList[0].path, mediaFileList
+                )
             mediaFolderMap[ALL_MEDIA_FOLDER] = allMediaFolder
         }
         //全部视频
         if (!videoFileList.isNullOrEmpty()) {
-            val allVideoFolder = MediaFolder(ALL_VIDEO_FOLDER, context.getString(R.string.image_picker_all_video), videoFileList[0].path!!, videoFileList)
+            val allVideoFolder =
+                MediaFolder(
+                    ALL_VIDEO_FOLDER, context.getString(R.string.image_picker_all_video),
+                    videoFileList[0].path, videoFileList
+                )
             mediaFolderMap[ALL_VIDEO_FOLDER] = allVideoFolder
         }
         //对图片进行文件夹分类

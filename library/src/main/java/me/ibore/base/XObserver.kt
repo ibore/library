@@ -7,36 +7,37 @@ import me.ibore.loading.XLoadingHelper
 
 abstract class XObserver<T> : DisposableObserver<T>, XListener<T> {
 
-    private var XLoadingHelper: XLoadingHelper
+    private var helper: XLoadingHelper
+
     internal var tag: Any? = null
         set(value) {
             field = value
-            XLoadingHelper.tag = value
+            helper.tag = value
         }
 
     constructor() {
-        XLoadingHelper = XLoadingHelper()
+        helper = XLoadingHelper()
     }
 
     constructor(@XLoading xLoading: Int) {
-        XLoadingHelper = XLoadingHelper(xLoading)
+        helper = XLoadingHelper(xLoading)
     }
 
     constructor(tag: Any, @XLoading xLoading: Int) {
-        XLoadingHelper = XLoadingHelper(tag, xLoading)
+        helper = XLoadingHelper(tag, xLoading)
     }
 
     override fun onStart() {
-        XLoadingHelper.showLoading(this)
+        helper.showLoading(this)
     }
 
     final override fun onNext(t: T) {
-        XLoadingHelper.dismiss()
+        helper.dismiss()
         onSuccess(t)
     }
 
     override fun onComplete() {
-        XLoadingHelper.complete()
+        helper.complete()
     }
 
     final override fun onError(e: Throwable) {
@@ -47,7 +48,7 @@ abstract class XObserver<T> : DisposableObserver<T>, XListener<T> {
     }
 
     override fun onFailure(e: XException) {
-        XLoadingHelper.failure(e)
+        helper.failure(e)
     }
 
 }

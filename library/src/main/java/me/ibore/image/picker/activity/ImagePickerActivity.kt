@@ -10,9 +10,11 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.os.Handler
+import android.os.Looper
 import android.provider.MediaStore
 import android.view.View
 import android.view.animation.LinearInterpolator
+import androidx.core.animation.doOnEnd
 import androidx.core.app.ActivityCompat
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.content.ContextCompat
@@ -26,6 +28,7 @@ import me.ibore.R
 import me.ibore.base.XActivity
 import me.ibore.base.XObserver
 import me.ibore.databinding.ActivityImagePickerBinding
+import me.ibore.databinding.ActivityImagePickerPreviewBinding
 import me.ibore.image.picker.ImagePicker
 import me.ibore.image.picker.adapter.ImageFoldersAdapter
 import me.ibore.image.picker.adapter.ImagePickerAdapter
@@ -57,13 +60,20 @@ class ImagePickerActivity : XActivity<ActivityImagePickerBinding>(), ImagePicker
     }
 
     private lateinit var gridLayoutManager: GridLayoutManager
-    private var mImagePickerAdapter = ImagePickerAdapter()
+    private var mPickerAdapter = ImagePickerAdapter()
 
     //是否显示时间
-    private var showTime = false
-    private val mMyHandler = Handler()
+    private val mHandler = Handler(Looper.getMainLooper())
+
     private val mHideRunnable = Runnable {
-        hideImageTime()
+        val height = mBinding.tvImageTime.height.toFloat()
+        val animator = ObjectAnimator
+            .ofFloat(mBinding.tvImageTime, "translationY", 0f, -height)
+            .setDuration(300)
+        animator.doOnEnd {
+            mBinding.tvImageTime.isGone = true
+        }
+        animator.start()
     }
 
     private var mFilePath: String? = null
@@ -77,15 +87,14 @@ class ImagePickerActivity : XActivity<ActivityImagePickerBinding>(), ImagePicker
     }
 
     override fun ActivityImagePickerBinding.onBindView(
-        bundle: Bundle?,
-        savedInstanceState: Bundle?
+        bundle: Bundle?, savedInstanceState: Bundle?
     ) {
         val timeBgColor = ColorUtils.setAlpha(color(R.color.image_picker_bar_color), 0.8F)
-        tvImagePickerTime.setBackgroundColor(timeBgColor)
+        tvImageTime.setBackgroundColor(timeBgColor)
         //列表相关
         gridLayoutManager = GridLayoutManager(getXActivity(), 4)
         recyclerView.layoutManager = gridLayoutManager
-        mImagePickerAdapter.onMediaListener = this@ImagePickerActivity
+        mPickerAdapter.onMediaListener = this@ImagePickerActivity
 
         rvFolderPicker.layoutManager = LinearLayoutManager(getXActivity())
         rvFolderPicker.adapter = mImageFoldersAdapter
@@ -102,14 +111,14 @@ class ImagePickerActivity : XActivity<ActivityImagePickerBinding>(), ImagePicker
                     showOrHideFolderView(data)
                 }
             }
-        recyclerView.adapter = mImagePickerAdapter
+        recyclerView.adapter = mPickerAdapter
         ivImagePickerBack.setOnClickListener {
             setResult(RESULT_CANCELED)
             finish()
         }
-        tvImagePickerCommit.setOnClickListener { commitSelection(ImagePickerUtils.getSelectPaths()) }
+        tvImageCommit.setOnClickListener { commitSelection(ImagePickerUtils.getSelectPaths()) }
         llFolder.setOnClickListener { showOrHideFolderView(null) }
-        llImagePickerFolder.setOnClickListener { showOrHideFolderView(null) }
+        llImageFolder.setOnClickListener { showOrHideFolderView(null) }
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
@@ -127,15 +136,35 @@ class ImagePickerActivity : XActivity<ActivityImagePickerBinding>(), ImagePicker
             intent.putParcelableArrayListExtra("datas", ImagePickerUtils.selectMedias)
             startActivityForResult(intent, REQUEST_SELECT_IMAGES_CODE)
         }
+        val imageQuality = ImagePicker.getConfig().imageQuality
+        llOriginalImage.isGone = imageQuality == 1 || imageQuality == 2
+        llOriginalImage.setOnClickListener {
+            if (ImagePicker.getConfig().imageQuality == 3) {
+                ImagePicker.getConfig().imageQuality = 4
+            } else {
+                ImagePicker.getConfig().imageQuality = 3
+            }
+            mBinding.updateOriginalImageView(ImagePicker.getConfig().imageQuality)
+        }
+        mBinding.updateOriginalImageView(ImagePicker.getConfig().imageQuality)
     }
 
     override fun onBindData() {
         ImagePickerUtils.restSelect()
         //进行权限的判断
-        val hasPermission = (ContextCompat.checkSelfPermission(getXActivity(), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
-                && ContextCompat.checkSelfPermission(getXActivity(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED)
+        val hasPermission = (
+                ContextCompat.checkSelfPermission(
+                    getXActivity(), Manifest.permission.READ_EXTERNAL_STORAGE
+                ) == PackageManager.PERMISSION_GRANTED
+                        && ContextCompat.checkSelfPermission(
+                    getXActivity(), Manifest.permission.CAMERA
+                ) == PackageManager.PERMISSION_GRANTED)
         if (!hasPermission) {
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE), REQUEST_PERMISSION_CAMERA_CODE)
+            ActivityCompat.requestPermissions(
+                this, arrayOf(
+                    Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE
+                ), REQUEST_PERMISSION_CAMERA_CODE
+            )
         } else {
             startScannerTask()
         }
@@ -151,15 +180,15 @@ class ImagePickerActivity : XActivity<ActivityImagePickerBinding>(), ImagePicker
                             if (data.size > 0) {
                                 showImagePicker(data[0])
                             }
-                            ImagePickerUtils.updateCommitView(mBinding.tvImagePickerCommit)
+                            mBinding.updateCommitPreviewView()
                         }
                     }
                 })
     }
 
     private fun showImagePicker(data: MediaFolder) {
-        mBinding.tvImagePickerFolder.text = data.folderName
-        mImagePickerAdapter.setDatas(data.mediaFileList)
+        mBinding.tvImageFolder.text = data.folderName
+        mPickerAdapter.setDatas(data.mediaFileList)
     }
 
     // 权限申请回调
@@ -188,11 +217,6 @@ class ImagePickerActivity : XActivity<ActivityImagePickerBinding>(), ImagePicker
     private fun ActivityImagePickerBinding.showOrHideFolderView(data: MediaFolder?) {
         val isShow = !llFolder.isVisible
         val animator = ValueAnimator.ofInt(0, mFolderHeight).setDuration(300)
-//        if (isShow) {
-//            animator.interpolator = DecelerateInterpolator()
-//        } else {
-//            animator.interpolator = AccelerateInterpolator()
-//        }
         animator.interpolator = LinearInterpolator()
         animator.addUpdateListener {
             val value = it.animatedValue as Int
@@ -219,36 +243,24 @@ class ImagePickerActivity : XActivity<ActivityImagePickerBinding>(), ImagePicker
         animator.start()
     }
 
-    private fun showImageTime() {
-        if (showTime) {
-            showTime = false
-            ObjectAnimator.ofFloat(mBinding.tvImagePickerTime, "alpha", 1f, 0f)
-                .setDuration(300).start()
-        }
-    }
-
-    // 隐藏时间
-    private fun hideImageTime() {
-        if (!showTime) {
-            showTime = true
-            ObjectAnimator.ofFloat(mBinding.tvImagePickerTime, "alpha", 0f, 1f)
-                .setDuration(300).start()
-        }
-    }
-
     // 更新时间
-    private fun updateImageTime() {
+    private fun ActivityImagePickerBinding.updateImageTime() {
         val position = gridLayoutManager.findFirstVisibleItemPosition()
-        if (position != RecyclerView.NO_POSITION && !(ImagePicker.getConfig().showCamera && position == 0)) {
-            if (mBinding.tvImagePickerTime.visibility != View.VISIBLE) {
-                mBinding.tvImagePickerTime.visibility = View.VISIBLE
-            }
-            val time = ImagePickerUtils.getImageTime(mImagePickerAdapter.getData(position).dateToken)
-            mBinding.tvImagePickerTime.text = time
-            showImageTime()
-            mMyHandler.removeCallbacks(mHideRunnable)
-            mMyHandler.postDelayed(mHideRunnable, 1500)
+        if (position == RecyclerView.NO_POSITION) return
+        if (ImagePicker.getConfig().showCamera && position == 0) return
+        if (tvImageTime.isGone) {
+            tvImageTime.isVisible = true
+            val height = tvImageTime.height.toFloat()
+            ObjectAnimator.ofFloat(tvImageTime, "translationY", -height, 0f)
+                .setDuration(300).start()
         }
+        val dateToken = mPickerAdapter.getData(position).dateToken
+        val time = ImagePickerUtils.getImageTime(getXActivity(), dateToken)
+        if (!tvImageTime.text.equals(time)) {
+            tvImageTime.text = time
+        }
+        mHandler.removeCallbacks(mHideRunnable)
+        mHandler.postDelayed(mHideRunnable, 1000)
     }
 
     // 打开相机
@@ -267,7 +279,6 @@ class ImagePickerActivity : XActivity<ActivityImagePickerBinding>(), ImagePicker
                 }
             }
         }
-
         //拍照存放路径
         val fileDir = File(Environment.getExternalStorageDirectory(), "Pictures")
         if (!fileDir.exists()) {
@@ -283,10 +294,14 @@ class ImagePickerActivity : XActivity<ActivityImagePickerBinding>(), ImagePicker
     // 点击图片
     override fun onMediaClick(view: View, data: MediaFile, dataPosition: Int) {
         val optionsCompat: ActivityOptionsCompat = ActivityOptionsCompat.makeClipRevealAnimation(
-                view, view.width / 2, view.height / 2, 0, 0)
+            view, view.width / 2, view.height / 2, 0, 0
+        )
         val intent = Intent(this, ImagePickerPreviewActivity::class.java)
         intent.putExtra("position", dataPosition)
-        intent.putParcelableArrayListExtra("datas", mImagePickerAdapter.getDatas() as ArrayList<MediaFile>)
+        intent.putParcelableArrayListExtra(
+            "datas",
+            mPickerAdapter.getDatas() as ArrayList<MediaFile>
+        )
         startActivityForResult(intent, REQUEST_SELECT_IMAGES_CODE, optionsCompat.toBundle())
     }
 
@@ -309,17 +324,19 @@ class ImagePickerActivity : XActivity<ActivityImagePickerBinding>(), ImagePicker
             ImagePickerUtils.removeSelect(data)
             if (!notifyList.isNullOrEmpty()) {
                 for (mediaFile in notifyList) {
-                    mImagePickerAdapter.notifyItemChanged(mImagePickerAdapter.getDatas().indexOf(mediaFile) + mImagePickerAdapter.getDifference())
+                    mPickerAdapter.notifyItemChanged(
+                        mPickerAdapter.getDatas()
+                            .indexOf(mediaFile) + mPickerAdapter.getDifference()
+                    )
                 }
             }
         } else if (!ImagePickerUtils.isSelectOutRange()) {
             ImagePickerUtils.addSelect(data)
-            ImagePickerUtils.updateCommitView(mBinding.tvImagePickerCommit)
-            ImagePickerUtils.updatePreviewView(mBinding.tvPickerPreview)
-            mImagePickerAdapter.notifyItemChanged(dataPosition + mImagePickerAdapter.getDifference())
+            mPickerAdapter.notifyItemChanged(dataPosition + mPickerAdapter.getDifference())
         } else {
             ToastUtils.showShort(R.string.image_picker_select_max, ImagePicker.getConfig().maxCount)
         }
+        mBinding.updateCommitPreviewView()
     }
 
     /**
@@ -356,8 +373,8 @@ class ImagePickerActivity : XActivity<ActivityImagePickerBinding>(), ImagePicker
 
     override fun onResume() {
         super.onResume()
-        mImagePickerAdapter.notifyDataSetChanged()
-        ImagePickerUtils.updateCommitView(mBinding.tvImagePickerCommit)
+        mPickerAdapter.notifyDataSetChanged()
+        mBinding.updateCommitPreviewView()
     }
 
     override fun onBackPressed() {
@@ -366,4 +383,31 @@ class ImagePickerActivity : XActivity<ActivityImagePickerBinding>(), ImagePicker
         super.onBackPressed()
     }
 
+    private fun ActivityImagePickerBinding.updateCommitPreviewView() {
+        val selectCount = ImagePickerUtils.selectMedias.size
+        if (selectCount == 0) {
+            tvImageCommit.isEnabled = false
+            tvImageCommit.text = getString(R.string.image_picker_confirm)
+            tvPickerPreview.isEnabled = false
+            tvPickerPreview.text = getString(R.string.image_picker_preview)
+        } else if (selectCount <= ImagePickerUtils.maxCount) {
+            tvImageCommit.isEnabled = true
+            tvImageCommit.text =
+                getString(R.string.image_picker_confirm_msg, selectCount, ImagePickerUtils.maxCount)
+            tvPickerPreview.isEnabled = true
+            tvPickerPreview.text = getString(R.string.image_picker_preview_msg, selectCount)
+        }
+    }
+
+    private fun ActivityImagePickerBinding.updateOriginalImageView(imageQuality: Int) {
+        if (imageQuality == 3) {
+            ivOriginalImage.setImageDrawable(null)
+            tvOriginalImage.isEnabled = false
+        } else if (imageQuality == 4) {
+            ivOriginalImage.setImageDrawable(null)
+            tvOriginalImage.isEnabled = true
+        }
+    }
+
 }
+

@@ -40,9 +40,11 @@ class ImagePickerAdapter : BindingAdapter<ItemImagePickerBinding, MediaFile>() {
         if (indexOf >= 0) {
             tvPickerCheck.text = (indexOf + 1).toString()
             ivPickerCheck.setImageResource(R.drawable.image_picker_checked)
+            viewMask.isVisible = true
         } else {
             tvPickerCheck.text = ""
             ivPickerCheck.setImageResource(R.drawable.image_picker_check)
+            viewMask.isGone = true
         }
         Glide.with(ivPickerImage).load(data.path).into(ivPickerImage)
         if (data.duration > 0) {

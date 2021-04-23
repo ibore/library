@@ -24,6 +24,7 @@
     <string name="image_picker_take_photo">拍摄图片</string>
     <string name="image_picker_permission_tip">当前没有读取存储卡或摄像头权限</string>
     <string name="image_picker_select">选择</string>
+    <string name="image_picker_original_image">原图</string>
     <string name="image_picker_single_type_choose">不能同时选择图片与视频</string>
 
     <string name="refresh_pull_down_to_refresh">下拉刷新…</string>
@@ -60,5 +61,8 @@
     <string name="dev_str_sigalgoid">证书算法OID</string>
     <string name="dev_str_dercode">证书DER编码</string>
     <string name="dev_str_serialnumber">证书机器码</string>
+    <string name="today">今天</string>
+    <string name="this_week">本周</string>
+    <string name="this_month">本月</string>
 
 </resources>
