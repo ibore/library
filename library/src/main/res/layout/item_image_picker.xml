@@ -43,7 +43,6 @@
         app:layout_constraintTop_toTopOf="@+id/iv_picker_check"
         tools:text="1" />
 
-
     <ImageView
         android:id="@+id/iv_picker_gif"
         android:layout_width="30dp"

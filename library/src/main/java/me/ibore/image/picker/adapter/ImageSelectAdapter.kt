@@ -1,5 +1,8 @@
 package me.ibore.image.picker.adapter
 
+import androidx.core.view.isGone
+import androidx.core.view.isVisible
+import com.bumptech.glide.Glide
 import me.ibore.databinding.ItemImagePickerPreviewSelectBinding
 import me.ibore.image.picker.model.MediaFile
 import me.ibore.recycler.adapter.BindingAdapter
@@ -12,12 +15,12 @@ class ImageSelectAdapter : BindingAdapter<ItemImagePickerPreviewSelectBinding, M
     override fun ItemImagePickerPreviewSelectBinding.onBindHolder(
         holder: RecyclerHolder, data: MediaFile, dataPosition: Int
     ) {
-//        holder.viewHolder.image(R.id.iv_image_select, data.path)
-//        if (currentPosition == dataPosition) {
-//            holder.viewHolder.visibility(R.id.view_image_select, View.VISIBLE)
-//        } else {
-//            holder.viewHolder.visibility(R.id.view_image_select, View.GONE)
-//        }
+        Glide.with(ivImageSelect).load(data.path).into(ivImageSelect)
+        if (currentPosition == dataPosition) {
+            ivImageSelect.isVisible = true
+        } else {
+            ivImageSelect.isGone = true
+        }
     }
 
 }

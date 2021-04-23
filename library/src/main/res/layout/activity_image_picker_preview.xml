@@ -7,74 +7,60 @@
     android:background="#000000" >
 
     <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/content_view"
+        android:id="@+id/view_pager2"
         app:layout_rootType="content"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_height="match_parent" />
 
     <me.ibore.widget.TitleBar
         app:layout_rootType="title"
         android:id="@+id/title_bar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/image_picker_action_bar_height"
-        android:background="@color/image_picker_bar_color"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:background="@color/image_picker_bar_color">
 
-        <FrameLayout
+        <ImageView
+            android:id="@+id/iv_image_picker_back"
+            android:layout_width="@dimen/image_picker_action_bar_height"
+            android:layout_height="@dimen/image_picker_action_bar_height"
+            android:scaleType="center"
+            android:src="@drawable/ic_picker_image_title_bar_back"
+            app:layout_titleType="start" />
+
+        <TextView
+            android:id="@+id/tv_title_bar_title"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/image_picker_action_bar_height">
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:textColor="@color/image_picker_text_color"
+            android:textSize="18sp"
+            app:layout_titleType="subTitle"
+            tools:text="1/1000" />
 
-            <ImageView
-                android:id="@+id/iv_image_picker_back"
-                android:layout_width="@dimen/image_picker_action_bar_height"
-                android:layout_height="@dimen/image_picker_action_bar_height"
-                android:scaleType="center"
-                android:src="@drawable/ic_picker_image_title_bar_back" />
-
-            <TextView
-                android:id="@+id/tv_title_bar_title"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginStart="@dimen/image_picker_action_bar_height"
-                android:gravity="center_vertical"
-                android:textColor="@color/image_picker_text_color"
-                android:textSize="18sp"
-                tools:text="1/1000" />
-
-            <TextView
-                android:id="@+id/tv_image_picker_commit"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end|center_vertical"
-                android:layout_marginEnd="16dp"
-                android:background="@drawable/image_picker_commit"
-                android:enabled="false"
-                android:paddingLeft="10dp"
-                android:paddingTop="5dp"
-                android:paddingRight="10dp"
-                android:paddingBottom="5dp"
-                android:text="@string/image_picker_confirm"
-                android:textColor="@color/image_picker_text_color"
-                android:textSize="14sp" />
-
-        </FrameLayout>
+        <TextView
+            android:id="@+id/tv_image_picker_commit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|center_vertical"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/image_picker_commit"
+            android:enabled="false"
+            android:paddingLeft="10dp"
+            android:paddingTop="5dp"
+            android:paddingRight="10dp"
+            android:paddingBottom="5dp"
+            android:text="@string/image_picker_confirm"
+            android:textColor="@color/image_picker_text_color"
+            android:textSize="14sp"
+            app:layout_titleType="end" />
     </me.ibore.widget.TitleBar>
 
     <LinearLayout
         app:layout_rootType="bottom"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
         android:id="@+id/bottom_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:background="@color/image_picker_bar_color"
         android:orientation="vertical">
 

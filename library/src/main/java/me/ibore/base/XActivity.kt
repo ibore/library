@@ -33,7 +33,6 @@ abstract class XActivity<VB : ViewBinding> : AppCompatActivity(), XStatusView<VB
 
     override fun onBindConfig() {
         BarUtils.setStatusBarColor(this, Color.TRANSPARENT, true)
-        BarUtils.setStatusBarLightMode(this, true)
     }
 
     override fun onUnBindConfig() {

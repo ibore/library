@@ -8,7 +8,7 @@
     android:orientation="vertical">
 
     <FrameLayout
-        android:id="@+id/content_view"
+        android:id="@+id/view_pager2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_rootType="content">

@@ -61,9 +61,9 @@ class PermissionsActivity : BaseActivity<ActivityPermissionsBinding>() {
         adapter.onItemClickListener = object : OnItemClickListener<RecyclerHolder, String> {
 
             override fun onItemClick(
-                holder: RecyclerHolder, data: String, position: Int
+                holder: RecyclerHolder, data: String, dataPosition: Int
             ) {
-                when (position) {
+                when (dataPosition) {
                     0 -> {
                         XPermissions.with(getXActivity())
                             .permission(Permission.CAMERA)

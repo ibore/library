@@ -114,11 +114,14 @@ object ImagePickerUtils {
         currentCalendar.time = Date()
         val imageCalendar = Calendar.getInstance()
         imageCalendar.timeInMillis = timestamp
-        return if (currentCalendar[Calendar.DAY_OF_YEAR] == imageCalendar[Calendar.DAY_OF_YEAR] && currentCalendar[Calendar.YEAR] == imageCalendar[Calendar.YEAR]) {
+        return if (currentCalendar[Calendar.DAY_OF_YEAR] == imageCalendar[Calendar.DAY_OF_YEAR]
+            && currentCalendar[Calendar.YEAR] == imageCalendar[Calendar.YEAR]) {
             "今天"
-        } else if (currentCalendar[Calendar.WEEK_OF_YEAR] == imageCalendar[Calendar.WEEK_OF_YEAR] && currentCalendar[Calendar.YEAR] == imageCalendar[Calendar.YEAR]) {
+        } else if (currentCalendar[Calendar.WEEK_OF_YEAR] == imageCalendar[Calendar.WEEK_OF_YEAR]
+            && currentCalendar[Calendar.YEAR] == imageCalendar[Calendar.YEAR]) {
             "本周"
-        } else if (currentCalendar[Calendar.MONTH] == imageCalendar[Calendar.MONTH] && currentCalendar[Calendar.YEAR] == imageCalendar[Calendar.YEAR]) {
+        } else if (currentCalendar[Calendar.MONTH] == imageCalendar[Calendar.MONTH]
+            && currentCalendar[Calendar.YEAR] == imageCalendar[Calendar.YEAR]) {
             "本月"
         } else {
             val date = Date(timestamp)

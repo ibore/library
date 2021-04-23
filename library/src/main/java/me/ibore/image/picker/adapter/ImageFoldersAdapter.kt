@@ -1,11 +1,11 @@
 package me.ibore.image.picker.adapter
 
+import androidx.core.view.isGone
+import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import me.ibore.R
 import me.ibore.databinding.ItemImagePickerFolderBinding
 import me.ibore.image.picker.model.MediaFolder
-import me.ibore.ktx.gone
-import me.ibore.ktx.visible
 import me.ibore.recycler.adapter.BindingAdapter
 import me.ibore.recycler.holder.RecyclerHolder
 
@@ -25,9 +25,9 @@ class ImageFoldersAdapter : BindingAdapter<ItemImagePickerFolderBinding, MediaFo
             notifyDataSetChanged()
         }
         if (currentPosition == dataPosition) {
-            ivImagePickerFolderCheck.visible()
+            ivImagePickerFolderCheck.isVisible = true
         } else {
-            ivImagePickerFolderCheck.gone()
+            ivImagePickerFolderCheck.isGone = true
         }
         Glide.with(ivImagePickerFolder).load(data.folderCover).into(ivImagePickerFolder)
     }

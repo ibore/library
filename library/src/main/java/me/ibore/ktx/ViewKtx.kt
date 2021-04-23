@@ -14,53 +14,6 @@ import me.ibore.ktx.ViewClickDelay.hash
 import me.ibore.ktx.ViewClickDelay.lastClickTime
 
 
-/*************************************** View可见性相关 ********************************************/
-/**
- * 隐藏View
- */
-fun View.gone() {
-    visibility = View.GONE
-}
-
-/**
- * 显示View
- * @receiver View
- */
-fun View.visible() {
-    visibility = View.VISIBLE
-}
-
-/**
- * View不可见但存在原位置
- */
-fun View.invisible() {
-    visibility = View.INVISIBLE
-}
-
-/**
- * 判断View是不是[View.VISIBLE]状态
- */
-val View.isVisible: Boolean
-    get() {
-        return visibility == View.VISIBLE
-    }
-
-/**
- * 判断View是不是[View.INVISIBLE]状态
- */
-val View.isInvisible: Boolean
-    get() {
-        return visibility == View.INVISIBLE
-    }
-
-/**
- * 判断View是不是[View.GONE]状态
- */
-val View.isGone: Boolean
-    get() {
-        return visibility == View.GONE
-    }
-
 /*************************************** View宽高相关 ********************************************/
 /**
  * 设置View的高度

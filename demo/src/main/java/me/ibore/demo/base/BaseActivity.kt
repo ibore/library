@@ -13,7 +13,6 @@ abstract class BaseActivity<VB : ViewBinding> : XActivity<VB>() {
     override fun onBindConfig() {
         super.onBindConfig()
         BarUtils.setStatusBarLightMode(this, true)
-        //binding.root.setBackgroundResource(R.color.bg_f4f5f7)
     }
 
     fun setTitleBar(titleBarBinding: TitleBarBinding, title: CharSequence?) {

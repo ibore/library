@@ -3,6 +3,8 @@ package me.ibore.image.picker.adapter
 import android.annotation.SuppressLint
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isGone
+import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -12,8 +14,6 @@ import me.ibore.image.picker.ImagePicker
 import me.ibore.image.picker.model.MediaFile
 import me.ibore.image.picker.utils.ImagePickerUtils
 import me.ibore.ktx.dp2px
-import me.ibore.ktx.gone
-import me.ibore.ktx.visible
 import me.ibore.recycler.adapter.BindingAdapter
 import me.ibore.recycler.holder.RecyclerHolder
 import me.ibore.utils.ScreenUtils
@@ -33,9 +33,9 @@ class ImagePickerAdapter : BindingAdapter<ItemImagePickerBinding, MediaFile>() {
     override fun ItemImagePickerBinding.onBindHolder(
         holder: RecyclerHolder, data: MediaFile, dataPosition: Int
     ) {
-        tvPickerTakePhoto.gone()
-        tvPickerCheck.visible()
-        ivPickerCheck.visible()
+        tvPickerTakePhoto.isGone = true
+        tvPickerCheck.isVisible = true
+        ivPickerCheck.isVisible = true
         val indexOf = ImagePickerUtils.indexOfSelect(data)
         if (indexOf >= 0) {
             tvPickerCheck.text = (indexOf + 1).toString()
@@ -48,26 +48,26 @@ class ImagePickerAdapter : BindingAdapter<ItemImagePickerBinding, MediaFile>() {
         if (data.duration > 0) {
             //如果是视频，需要显示视频时长
             tvPickerVideoDuration.text = getVideoDuration(data.duration)
-            tvPickerVideoDuration.visible()
-            ivPickerGif.gone()
+            tvPickerVideoDuration.isVisible = true
+            ivPickerGif.isGone = true
         } else {
             //如果是gif图，显示gif标识
             val suffix = data.path.substring(data.path.lastIndexOf(".") + 1)
             if (suffix.toUpperCase(Locale.ROOT) == "GIF") {
-                ivPickerGif.visible()
+                ivPickerGif.isVisible = true
             } else {
-                ivPickerGif.gone()
+                ivPickerGif.isGone = true
             }
-            tvPickerVideoDuration.gone()
+            tvPickerVideoDuration.isGone = true
         }
         sclItem.setOnClickListener { onMediaListener?.onMediaClick(it, data, dataPosition) }
         ivPickerCheck.setOnClickListener { onMediaListener?.onMediaCheck(it, data, dataPosition) }
 //        if (ImagePicker.getConfig().showCamera && dataPosition == 0) {
-//            tvPickerTakePhoto.visible()
-//            tvPickerCheck.gone()
-//            ivPickerCheck.gone()
-//            ivPickerGif.gone()
-//            tvPickerVideoDuration.gone()
+//            tvPickerTakePhoto.isVisible = true
+//            tvPickerCheck.isGone = true
+//            ivPickerCheck.isGone = true
+//            ivPickerGif.isGone = true
+//            tvPickerVideoDuration.isGone = true
 //            ivPickerImage.setImageDrawable(ColorDrawable(holder.color(R.color.image_picker_bar_color)))
 //            sclItem.setOnClickListener { onMediaListener?.onCameraClick() }
 //        } else {

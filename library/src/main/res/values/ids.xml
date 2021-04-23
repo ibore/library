@@ -17,7 +17,7 @@
     <item name="restart_preview" type="id" />
     <item name="return_scan_result" type="id" />
     <item name="title_bar" type="id" />
-    <item name="content_view" type="id" />
+    <item name="view_pager2" type="id" />
     <item name="bottom_bar" type="id" />
     <item name="loading_view" type="id" />
     <item name="empty_view" type="id" />

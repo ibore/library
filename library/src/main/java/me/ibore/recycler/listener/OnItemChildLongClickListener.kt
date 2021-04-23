@@ -5,6 +5,6 @@ import me.ibore.recycler.holder.RecyclerHolder
 
 interface OnItemChildLongClickListener<H : RecyclerHolder, D> {
 
-    fun onItemLongClick(holder: H, @IdRes idRes: Int, data: D, position: Int): Boolean
+    fun onItemLongClick(holder: H, @IdRes idRes: Int, data: D, dataPosition: Int): Boolean
 
 }

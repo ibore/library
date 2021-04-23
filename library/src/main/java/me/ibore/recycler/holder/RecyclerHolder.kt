@@ -20,13 +20,13 @@ open class RecyclerHolder @JvmOverloads constructor(itemView: View, var helper: 
 
         @JvmOverloads
         fun create(
-            parent: ViewGroup, @LayoutRes layoutId: Int, extra: Any? = null
+            parent: ViewGroup, @LayoutRes layoutId: Int, helper: Any? = null
         ): RecyclerHolder {
-            return create(parent.layoutInflater.inflate(layoutId, parent, false), extra)
+            return create(parent.layoutInflater.inflate(layoutId, parent, false), helper)
         }
 
         @JvmOverloads
-        fun create(itemView: View, extra: Any? = null) = RecyclerHolder(itemView, extra)
+        fun create(itemView: View, helper: Any? = null) = RecyclerHolder(itemView, helper)
 
     }
 
@@ -43,6 +43,10 @@ open class RecyclerHolder @JvmOverloads constructor(itemView: View, var helper: 
 
     fun string(@StringRes id: Int): String {
         return itemView.context.getString(id)
+    }
+
+    fun string(@StringRes id: Int, vararg formatArgs: Any?): String {
+        return itemView.context.getString(id, *formatArgs)
     }
 
     fun drawable(@DrawableRes id: Int): Drawable? {

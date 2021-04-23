@@ -1,26 +1,30 @@
 package me.ibore.image.picker.activity
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.content.ContextCompat
+import androidx.core.view.isGone
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import me.ibore.R
 import me.ibore.base.XActivity
 import me.ibore.databinding.ActivityImagePickerPreviewBinding
-import me.ibore.databinding.ItemImagePickerPreviewSelectBinding
 import me.ibore.image.picker.ImagePicker
+import me.ibore.image.picker.adapter.ImagePreviewAdapter
 import me.ibore.image.picker.adapter.ImageSelectAdapter
 import me.ibore.image.picker.model.MediaFile
 import me.ibore.image.picker.utils.ImagePickerUtils
+import me.ibore.ktx.color
 import me.ibore.recycler.holder.RecyclerHolder
 import me.ibore.recycler.layoutmanager.CenterLayoutManager
+import me.ibore.recycler.listener.OnItemChildClickListener
 import me.ibore.recycler.listener.OnItemClickListener
+import me.ibore.utils.BarUtils
 import me.ibore.utils.ColorUtils
+import me.ibore.utils.ToastUtils
 
 
 class ImagePickerPreviewActivity : XActivity<ActivityImagePickerPreviewBinding>() {
@@ -28,21 +32,21 @@ class ImagePickerPreviewActivity : XActivity<ActivityImagePickerPreviewBinding>(
     private var mPosition = 0
     private lateinit var mMediaFileList: MutableList<MediaFile>
     private var mImageSelectAdapter = ImageSelectAdapter()
+    private var mImagePreviewAdapter = ImagePreviewAdapter()
+
+    override fun onBindConfig() {
+        super.onBindConfig()
+        BarUtils.setStatusBarLightMode(this, false)
+    }
 
     override fun ActivityImagePickerPreviewBinding.onBindView(bundle: Bundle?, savedInstanceState: Bundle?) {
         mPosition = bundle!!.getInt("position", 0)
         mMediaFileList = bundle.getParcelableArrayList<MediaFile>("datas") as MutableList<MediaFile>
         ivImagePickerBack.setOnClickListener { finish() }
-
         bottomBar.setBackgroundColor(
-            ColorUtils.setAlpha(
-                ContextCompat.getColor(
-                    getXActivity(),
-                    R.color.image_picker_bar_color
-                ), 0.3F
-            )
+            ColorUtils.setAlpha(color(R.color.image_picker_bar_color), 0.3F)
         )
-        contentView.registerOnPageChangeCallback(object :
+        viewPager2.registerOnPageChangeCallback(object :
             ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 tvTitleBarTitle.text =
@@ -70,87 +74,58 @@ class ImagePickerPreviewActivity : XActivity<ActivityImagePickerPreviewBinding>(
             if (addSuccess) {
                 updateImageSelect()
             } else {
-                Toast.makeText(
-                    getXActivity(),
-                    String.format(
-                        getString(R.string.image_picker_select_max),
-                        ImagePickerUtils.maxCount
-                    ),
-                    Toast.LENGTH_SHORT
-                ).show()
+                ToastUtils.showShort(R.string.image_picker_select_max, ImagePickerUtils.maxCount)
             }
         })
         tvImagePickerCommit.setOnClickListener {
             setResult(RESULT_OK, Intent())
             finish()
         }
+
+        //mBinding.viewPager2.adapter = mImageSelectAdapter
+        mImagePreviewAdapter.onItemChildClickListener =
+            object : OnItemChildClickListener<RecyclerHolder, MediaFile> {
+                override fun onItemClick(
+                    holder: RecyclerHolder, id: Int, data: MediaFile, dataPosition: Int
+                ) {
+                    if (id == R.id.iv_picker_image) {
+                        if (titleBar.isVisible) {
+                            titleBar.isGone = true
+                            bottomBar.isGone = true
+                        } else {
+                            titleBar.isVisible = true
+                            bottomBar.isVisible = true
+                        }
+                    }
+                }
+            }
+
         rvImageSelect.layoutManager =
             CenterLayoutManager(getXActivity(), LinearLayoutManager.HORIZONTAL, false)
         rvImageSelect.adapter = mImageSelectAdapter
         mImageSelectAdapter.setDatas(ImagePickerUtils.selectMedias)
-        mImageSelectAdapter.onItemClickListener = object : OnItemClickListener<RecyclerHolder, MediaFile> {
-            override fun onItemClick(
-                holder: RecyclerHolder, data: MediaFile, position: Int
-            ) {
-                val indexOf = mMediaFileList.indexOf(data)
-                if (indexOf >= 0) {
-                    contentView.currentItem = indexOf
+        mImageSelectAdapter.onItemClickListener =
+            object : OnItemClickListener<RecyclerHolder, MediaFile> {
+                override fun onItemClick(
+                    holder: RecyclerHolder, data: MediaFile, dataPosition: Int
+                ) {
+                    val indexOf = mMediaFileList.indexOf(data)
+                    if (indexOf >= 0) {
+                        viewPager2.currentItem = indexOf
+                    }
                 }
             }
-        }
 
     }
 
     private fun getCurrentMediaFile(): MediaFile {
-        return mMediaFileList[mBinding.contentView.currentItem]
+        return mMediaFileList[mBinding.viewPager2.currentItem]
     }
 
     override fun onBindData() {
-
         mBinding.tvTitleBarTitle.text = String.format("%d/%d", mPosition + 1, mMediaFileList.size)
-
-        mBinding.contentView.adapter = object : RecyclerView.Adapter<RecyclerHolder>() {
-            override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerHolder {
-                return RecyclerHolder.create(parent, R.layout.item_image_picker_preview)
-            }
-
-            override fun onBindViewHolder(holder: RecyclerHolder, position: Int) {
-//                val pinchImageView = holder.viewHolder.view<PinchImageView>(R.id.iv_picker_image)
-//                pinchImageView.reset()
-//                holder.viewHolder.image(R.id.iv_picker_image, mMediaFileList[position].path)
-//                pinchImageView.setOnClickListener {
-//                    if (binding.titleBar.visibility == View.VISIBLE) {
-//                        binding.titleBar.visibility = View.GONE
-//                        binding.bottomBar.visibility = View.GONE
-//                    } else {
-//                        binding.titleBar.visibility = View.VISIBLE
-//                        binding.bottomBar.visibility = View.VISIBLE
-//                    }
-//                }
-//                if (mMediaFileList[position].duration > 0) {
-//                    holder.viewHolder.visibility(R.id.iv_image_picker_play, View.VISIBLE)
-//                } else {
-//                    holder.viewHolder.visibility(R.id.iv_image_picker_play, View.GONE)
-//                }
-//                holder.viewHolder.onClickListener(R.id.iv_image_picker_play) {
-//                    val intent = Intent(Intent.ACTION_VIEW)
-//                    val uri = UriUtils.file2Uri(File(getCurrentMediaFile().path))
-//                    intent.setDataAndType(uri, "video/*")
-//                    //给所有符合跳转条件的应用授权
-//                    val resInfoList = packageManager
-//                            .queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY)
-//                    for (resolveInfo in resInfoList) {
-//                        val packageName = resolveInfo.activityInfo.packageName
-//                        grantUriPermission(packageName, uri, Intent.FLAG_GRANT_READ_URI_PERMISSION
-//                                or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
-//                    }
-//                    startActivity(intent)
-//                }
-            }
-
-            override fun getItemCount(): Int = mMediaFileList.size
-        }
-        mBinding.contentView.setCurrentItem(mPosition, false)
+        mImagePreviewAdapter.setDatas(mMediaFileList)
+        mBinding.viewPager2.setCurrentItem(mPosition, false)
     }
 
     private fun updateImageSelect() {

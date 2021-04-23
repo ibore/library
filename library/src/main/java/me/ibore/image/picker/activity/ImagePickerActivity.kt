@@ -12,11 +12,12 @@ import android.os.Environment
 import android.os.Handler
 import android.provider.MediaStore
 import android.view.View
-import android.view.animation.DecelerateInterpolator
-import android.widget.Toast
+import android.view.animation.LinearInterpolator
 import androidx.core.app.ActivityCompat
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.content.ContextCompat
+import androidx.core.view.isGone
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -33,6 +34,7 @@ import me.ibore.image.picker.model.MediaFolder
 import me.ibore.image.picker.observable.MediaObservable
 import me.ibore.image.picker.utils.ImagePickerUtils
 import me.ibore.image.picker.utils.MediaFileUtil
+import me.ibore.ktx.color
 import me.ibore.loading.XLoading
 import me.ibore.recycler.holder.RecyclerHolder
 import me.ibore.recycler.listener.OnItemClickListener
@@ -66,41 +68,49 @@ class ImagePickerActivity : XActivity<ActivityImagePickerBinding>(), ImagePicker
 
     private var mFilePath: String? = null
     private var mImageFoldersAdapter = ImageFoldersAdapter()
-    private var mFolderPickerHeight = ScreenUtils.appScreenHeight - Utils.app.resources.getDimensionPixelSize(R.dimen.image_picker_action_bar_height) * 3
+    private var mFolderHeight =
+        ScreenUtils.appScreenHeight - Utils.app.resources.getDimensionPixelSize(R.dimen.image_picker_action_bar_height) * 3
 
-    override fun ActivityImagePickerBinding.onBindView(bundle: Bundle?, savedInstanceState: Bundle?) {
-        tvImagePickerTime.setBackgroundColor(ColorUtils.setAlpha(ContextCompat.getColor(getXActivity(), R.color.image_picker_bar_color), 0.8F))
+    override fun onBindConfig() {
+        super.onBindConfig()
+        BarUtils.setStatusBarLightMode(this, false)
+    }
+
+    override fun ActivityImagePickerBinding.onBindView(
+        bundle: Bundle?,
+        savedInstanceState: Bundle?
+    ) {
+        val timeBgColor = ColorUtils.setAlpha(color(R.color.image_picker_bar_color), 0.8F)
+        tvImagePickerTime.setBackgroundColor(timeBgColor)
         //列表相关
         gridLayoutManager = GridLayoutManager(getXActivity(), 4)
-        contentView.layoutManager = gridLayoutManager
+        recyclerView.layoutManager = gridLayoutManager
         mImagePickerAdapter.onMediaListener = this@ImagePickerActivity
 
         rvFolderPicker.layoutManager = LinearLayoutManager(getXActivity())
         rvFolderPicker.adapter = mImageFoldersAdapter
 
         val layoutParams = rvFolderPicker.layoutParams
-        layoutParams.height = mFolderPickerHeight
+        layoutParams.height = mFolderHeight
         rvFolderPicker.layoutParams = layoutParams
 
         mImageFoldersAdapter.onItemClickListener =
             object : OnItemClickListener<RecyclerHolder, MediaFolder> {
                 override fun onItemClick(
-                    holder: RecyclerHolder, data: MediaFolder, position: Int
+                    holder: RecyclerHolder, data: MediaFolder, dataPosition: Int
                 ) {
-                    llFolder.visibility = View.GONE
-                    tvImagePickerFolder.text = data.folderName
-                    mImagePickerAdapter.setDatas(data.mediaFileList)
+                    showOrHideFolderView(data)
                 }
             }
-        contentView.adapter = mImagePickerAdapter
+        recyclerView.adapter = mImagePickerAdapter
         ivImagePickerBack.setOnClickListener {
             setResult(RESULT_CANCELED)
             finish()
         }
         tvImagePickerCommit.setOnClickListener { commitSelection(ImagePickerUtils.getSelectPaths()) }
-        llFolder.setOnClickListener { showOrHideFolderView() }
-        llImagePickerFolder.setOnClickListener { showOrHideFolderView() }
-        contentView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+        llFolder.setOnClickListener { showOrHideFolderView(null) }
+        llImagePickerFolder.setOnClickListener { showOrHideFolderView(null) }
+        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
                 updateImageTime()
@@ -135,20 +145,27 @@ class ImagePickerActivity : XActivity<ActivityImagePickerBinding>(), ImagePicker
         DisposablesUtils.add(this, Observable.create(MediaObservable(applicationContext)),
                 object : XObserver<MutableList<MediaFolder>>(XLoading.DIALOG_TOAST) {
                     override fun onSuccess(data: MutableList<MediaFolder>) {
-                        //LogUtils.d(GsonUtils.toJson(data))
                         if (data.isNotEmpty()) {
                             //默认加载全部照片
-                            mBinding.tvImagePickerFolder.text = data[0].folderName
-                            mImagePickerAdapter.setDatas(data[0].mediaFileList)
                             mImageFoldersAdapter.setDatas(data)
+                            if (data.size > 0) {
+                                showImagePicker(data[0])
+                            }
                             ImagePickerUtils.updateCommitView(mBinding.tvImagePickerCommit)
                         }
                     }
                 })
     }
 
+    private fun showImagePicker(data: MediaFolder) {
+        mBinding.tvImagePickerFolder.text = data.folderName
+        mImagePickerAdapter.setDatas(data.mediaFileList)
+    }
+
     // 权限申请回调
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int, permissions: Array<String>, grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == REQUEST_PERMISSION_CAMERA_CODE) {
             if (grantResults.isNotEmpty()) {
@@ -161,43 +178,52 @@ class ImagePickerActivity : XActivity<ActivityImagePickerBinding>(), ImagePicker
                     startScannerTask()
                 } else {
                     //没有权限
-                    Toast.makeText(this, getString(R.string.image_picker_permission_tip), Toast.LENGTH_SHORT).show()
+                    ToastUtils.showShort(R.string.image_picker_permission_tip)
                     finish()
                 }
             }
         }
     }
 
-    private fun ActivityImagePickerBinding.showOrHideFolderView() {
-        val isShow = llFolder.visibility != View.VISIBLE
-        val valueAnimator = ValueAnimator.ofInt(0, mFolderPickerHeight).setDuration(300)
-        valueAnimator.interpolator = DecelerateInterpolator()
-        valueAnimator.addUpdateListener {
-            val value = it.animatedValue
+    private fun ActivityImagePickerBinding.showOrHideFolderView(data: MediaFolder?) {
+        val isShow = !llFolder.isVisible
+        val animator = ValueAnimator.ofInt(0, mFolderHeight).setDuration(300)
+//        if (isShow) {
+//            animator.interpolator = DecelerateInterpolator()
+//        } else {
+//            animator.interpolator = AccelerateInterpolator()
+//        }
+        animator.interpolator = LinearInterpolator()
+        animator.addUpdateListener {
+            val value = it.animatedValue as Int
             if (isShow) {
                 if (value == 0) {
-                    llFolder.visibility = View.VISIBLE
+                    llFolder.isVisible = true
                     llFolder.setBackgroundColor(Color.TRANSPARENT)
                 }
-                rvFolderPicker.translationY = (value as Int) - rvFolderPicker.height.toFloat()
-                llFolder.setBackgroundColor(ColorUtils.setAlpha(Color.BLACK, 0.8f * (value / mFolderPickerHeight)))
-                ivImageFolderIndicator.rotation = 180f * value / mFolderPickerHeight
+                rvFolderPicker.translationY = (value - mFolderHeight).toFloat()
+                val alpha = value * 0.8f / mFolderHeight
+                llFolder.setBackgroundColor(ColorUtils.setAlpha(Color.BLACK, alpha))
+                ivImageFolderIndicator.rotation = 180f * value / mFolderHeight
             } else {
-                rvFolderPicker.translationY = -(value as Int).toFloat()
-                llFolder.setBackgroundColor(ColorUtils.setAlpha(Color.BLACK, 0.8f * (1 - (value / mFolderPickerHeight))))
-                ivImageFolderIndicator.rotation = 180 + (180f * value / mFolderPickerHeight)
-                if (value == rvFolderPicker.height) {
-                    llFolder.visibility = View.GONE
+                rvFolderPicker.translationY = -value.toFloat()
+                val alpha = (mFolderHeight - value) * 0.8f / mFolderHeight
+                llFolder.setBackgroundColor(ColorUtils.setAlpha(Color.BLACK, alpha))
+                ivImageFolderIndicator.rotation = 180 + (180f * value / mFolderHeight)
+                if (value == mFolderHeight) {
+                    llFolder.isGone = true
+                    data?.let { showImagePicker(data) }
                 }
             }
         }
-        valueAnimator.start()
+        animator.start()
     }
 
     private fun showImageTime() {
         if (showTime) {
             showTime = false
-            ObjectAnimator.ofFloat(mBinding.tvImagePickerTime, "alpha", 1f, 0f).setDuration(300).start()
+            ObjectAnimator.ofFloat(mBinding.tvImagePickerTime, "alpha", 1f, 0f)
+                .setDuration(300).start()
         }
     }
 
@@ -205,7 +231,8 @@ class ImagePickerActivity : XActivity<ActivityImagePickerBinding>(), ImagePicker
     private fun hideImageTime() {
         if (!showTime) {
             showTime = true
-            ObjectAnimator.ofFloat(mBinding.tvImagePickerTime, "alpha", 0f, 1f).setDuration(300).start()
+            ObjectAnimator.ofFloat(mBinding.tvImagePickerTime, "alpha", 0f, 1f)
+                .setDuration(300).start()
         }
     }
 
@@ -227,7 +254,7 @@ class ImagePickerActivity : XActivity<ActivityImagePickerBinding>(), ImagePicker
     // 打开相机
     override fun onCameraClick() {
         if (ImagePickerUtils.isSelectOutRange()) {
-            Toast.makeText(this, String.format(getString(R.string.image_picker_select_max), ImagePicker.getConfig().maxCount), Toast.LENGTH_SHORT).show()
+            ToastUtils.showShort(R.string.image_picker_select_max, ImagePicker.getConfig().maxCount)
             return
         }
         if (ImagePicker.getConfig().singleType) {
@@ -235,7 +262,7 @@ class ImagePickerActivity : XActivity<ActivityImagePickerBinding>(), ImagePicker
             if (ImagePickerUtils.selectMedias.isNotEmpty()) {
                 if (MediaFileUtil.isVideoFileType(ImagePickerUtils.selectMedias.first().path)) {
                     //如果存在视频，就不能拍照了
-                    Toast.makeText(this, getString(R.string.image_picker_single_type_choose), Toast.LENGTH_SHORT).show()
+                    ToastUtils.showShort(R.string.image_picker_single_type_choose)
                     return
                 }
             }
@@ -271,7 +298,7 @@ class ImagePickerActivity : XActivity<ActivityImagePickerBinding>(), ImagePicker
                 //判断选中集合中第一项是否为视频
                 if (!ImagePickerUtils.isCanAddSelectionPaths(data, ImagePickerUtils.selectMedias.first())) {
                     //类型不同
-                    Toast.makeText(this, getString(R.string.image_picker_single_type_choose), Toast.LENGTH_SHORT).show()
+                    ToastUtils.showShort(getString(R.string.image_picker_single_type_choose))
                     return
                 }
             }
@@ -291,7 +318,7 @@ class ImagePickerActivity : XActivity<ActivityImagePickerBinding>(), ImagePicker
             ImagePickerUtils.updatePreviewView(mBinding.tvPickerPreview)
             mImagePickerAdapter.notifyItemChanged(dataPosition + mImagePickerAdapter.getDifference())
         } else {
-            Toast.makeText(this, String.format(getString(R.string.image_picker_select_max), ImagePickerUtils.maxCount), Toast.LENGTH_SHORT).show()
+            ToastUtils.showShort(R.string.image_picker_select_max, ImagePicker.getConfig().maxCount)
         }
     }
 
