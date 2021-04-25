@@ -45,7 +45,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     override fun onBindData() {
         adapter.setHeaderHolder(object : ItemBindingHolder<ItemActivityBinding>() {
             override fun ItemActivityBinding.onBindHolder(holder: RecyclerHolder) {
-                tvTitle.setText("头布局")
+                tvTitle.text = "头布局"
             }
         })
         adapter.addData(ActivityItem("状  态  栏", StatusActivity::class.java))

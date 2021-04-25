@@ -305,6 +305,7 @@
     <declare-styleable name="TitleBar">
 
         <attr name="tbStatusBar" format="boolean" />
+        <attr name="tbCenterMiddle" format="boolean" />
 
     </declare-styleable>
 
@@ -610,7 +611,9 @@
             <enum name="subTitle" value="2" />
             <enum name="center" value="3" />
             <enum name="start" value="4" />
-            <enum name="end" value="5" />
+            <enum name="top" value="5" />
+            <enum name="end" value="6" />
+            <enum name="bottom" value="7" />
         </attr>
     </declare-styleable>
 

@@ -139,48 +139,26 @@ class RootLayout @JvmOverloads constructor(context: Context, attrs: AttributeSet
             measureChildWithMargins(it, widthMeasureSpec, 0, heightMeasureSpec, 0)
             heightUsed += it.measuredHeight + it.marginTop + it.marginBottom
         }
-        var contentMeasureWidth: Int = 0
-        var contentMeasureHeight: Int = 0
+        var contentWMS: Int = MeasureSpec.makeMeasureSpec(0, MeasureSpec.EXACTLY)
+        var contentHMS: Int = MeasureSpec.makeMeasureSpec(0, MeasureSpec.EXACTLY)
         contentView?.let {
-            measureChildWithMargins(
-                it,
-                widthMeasureSpec,
-                0,
-                MeasureSpec.makeMeasureSpec(sizeHeight - layoutHeight, MeasureSpec.EXACTLY),
-                heightUsed
-            )
-            contentMeasureWidth = it.measuredWidth
-            contentMeasureHeight = it.measuredHeight
+            val heightMS =
+                MeasureSpec.makeMeasureSpec(sizeHeight - layoutHeight, MeasureSpec.EXACTLY)
+            measureChildWithMargins(it, widthMeasureSpec, 0, heightMS, heightUsed)
+            contentWMS = MeasureSpec.makeMeasureSpec(it.measuredWidth, MeasureSpec.EXACTLY)
+            contentHMS = MeasureSpec.makeMeasureSpec(it.measuredHeight, MeasureSpec.EXACTLY)
         }
         loadingView?.let {
             if (it.visibility == View.GONE) return@let
-            measureChildWithMargins(
-                it,
-                MeasureSpec.makeMeasureSpec(contentMeasureWidth, MeasureSpec.EXACTLY),
-                0,
-                MeasureSpec.makeMeasureSpec(contentMeasureHeight, MeasureSpec.EXACTLY),
-                0
-            )
+            measureChildWithMargins(it, contentWMS, 0, contentHMS, 0)
         }
         emptyView?.let {
             if (it.visibility == View.GONE) return@let
-            measureChildWithMargins(
-                it,
-                MeasureSpec.makeMeasureSpec(contentMeasureWidth, MeasureSpec.EXACTLY),
-                0,
-                MeasureSpec.makeMeasureSpec(contentMeasureHeight, MeasureSpec.EXACTLY),
-                0
-            )
+            measureChildWithMargins(it, contentWMS, 0, contentHMS, 0)
         }
         errorView?.let {
             if (it.visibility == View.GONE) return@let
-            measureChildWithMargins(
-                it,
-                MeasureSpec.makeMeasureSpec(contentMeasureWidth, MeasureSpec.EXACTLY),
-                0,
-                MeasureSpec.makeMeasureSpec(contentMeasureHeight, MeasureSpec.EXACTLY),
-                0
-            )
+            measureChildWithMargins(it, contentWMS, 0, contentHMS, 0)
         }
         val count = childCount
         for (i in 0 until count) {

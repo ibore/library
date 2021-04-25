@@ -25,7 +25,9 @@ class TitleBar @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
         const val SUBTITLE = 2
         const val CENTER = 3
         const val START = 4
-        const val END = 5
+        const val TOP = 5
+        const val END = 6
+        const val BOTTOM = 7
     }
 
     @IntDef(NONE, TITLE, SUBTITLE, CENTER, START, END)
@@ -39,31 +41,44 @@ class TitleBar @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
             invalidate()
         }
 
+    var centerMiddle = true
+        set(value) {
+            if (field == value) return
+            field = value
+            invalidate()
+        }
+
     private val statusBarHeight: Int
         get() = if (statusBar) BarUtils.getStatusBarHeight(context) else 0
 
     init {
         val ta = context.obtainStyledAttributes(attrs, R.styleable.TitleBar, defStyleAttr, 0)
         statusBar = ta.getBoolean(R.styleable.TitleBar_tbStatusBar, statusBar)
+        centerMiddle = ta.getBoolean(R.styleable.TitleBar_tbCenterMiddle, centerMiddle)
         ta.recycle()
     }
-
 
     private var titleView: View? = null
     private var subTitleView: View? = null
     private var centerView: View? = null
     private var startViews: MutableList<View> = ArrayList()
+    private var topViews: MutableList<View> = ArrayList()
     private var endViews: MutableList<View> = ArrayList()
-    private var startEndWidth: Int = 0
+    private var bottomViews: MutableList<View> = ArrayList()
+    private var startWidth: Int = 0
+    private var endWidth: Int = 0
+    private var topHeight: Int = 0
+    private var bottomHeight: Int = 0
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         val width = getMeasureSize(widthMeasureSpec, 0)
         val height = getMeasureSize(heightMeasureSpec, dp2px(48F))
         startViews.clear()
         endViews.clear()
-        var startWidth = 0
-        var endWidth = 0
-
+        startWidth = 0
+        endWidth = 0
+        topHeight = 0
+        bottomHeight = 0
         for (i in 0 until childCount) {
             val child = getChildAt(i)
             when ((child.layoutParams as LayoutParams).titleType) {
@@ -76,7 +91,14 @@ class TitleBar @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
                         child, widthMeasureSpec, 0,
                         MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY), 0
                     )
-                    startWidth += measureStartEndWidth(child)
+                    startWidth += measureWidthMargin(child)
+                }
+                TOP -> {
+                    topViews.add(child)
+                    measureChildWithMargins(
+                        child, widthMeasureSpec, 0, heightMeasureSpec, 0
+                    )
+                    topHeight += measureHeightMargin(child)
                 }
                 END -> {
                     endViews.add(child)
@@ -84,7 +106,14 @@ class TitleBar @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
                         child, widthMeasureSpec, 0,
                         MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY), 0
                     )
-                    endWidth += measureStartEndWidth(child)
+                    endWidth += measureWidthMargin(child)
+                }
+                BOTTOM -> {
+                    bottomViews.add(child)
+                    measureChildWithMargins(
+                        child, widthMeasureSpec, 0, heightMeasureSpec, 0
+                    )
+                    bottomHeight += measureHeightMargin(child)
                 }
                 NONE -> {
                     measureChildWithMargins(
@@ -94,23 +123,33 @@ class TitleBar @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
                 }
             }
         }
-        startEndWidth = startWidth.coerceAtLeast(endWidth)
+        if (centerMiddle) {
+            val startEndWidth = startWidth.coerceAtLeast(endWidth)
+            startWidth = startEndWidth
+            endWidth = startEndWidth
+        }
         measureCenterView(titleView, width, height)
         measureCenterView(subTitleView, width, height)
         measureCenterView(centerView, width, height)
-        setMeasuredDimension(width, height + statusBarHeight)
+        setMeasuredDimension(width, statusBarHeight + topHeight + height + bottomHeight)
     }
 
-    private fun measureStartEndWidth(child: View): Int {
+    private fun measureWidthMargin(child: View): Int {
         return if (child.visibility != GONE) {
             child.marginLeft + child.measuredWidth + child.marginRight
+        } else 0
+    }
+
+    private fun measureHeightMargin(child: View): Int {
+        return if (child.visibility != GONE) {
+            child.marginTop + child.measuredHeight + child.marginBottom
         } else 0
     }
 
     private fun measureCenterView(view: View?, width: Int, height: Int) {
         view?.let {
             measureChildWithMargins(
-                it, MeasureSpec.makeMeasureSpec(width - startEndWidth * 2, MeasureSpec.EXACTLY),
+                it, MeasureSpec.makeMeasureSpec(width - startWidth - endWidth, MeasureSpec.EXACTLY),
                 0, MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY), 0
             )
         }
@@ -123,17 +162,10 @@ class TitleBar @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
 
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
         val left = paddingLeft
-        val top = statusBarHeight + paddingTop
+        var top = paddingTop + statusBarHeight
         val right = r - l - paddingRight
-        val bottom = b - t - paddingBottom
-        if (TextUtilsCompat.getLayoutDirectionFromLocale(Locale.getDefault()) == ViewCompat.LAYOUT_DIRECTION_RTL) {
-            onLayoutLeftRightViews(endViews, true, left, top, right, bottom)
-            onLayoutLeftRightViews(startViews, false, left, top, right, bottom)
-        } else {
-            onLayoutLeftRightViews(startViews, true, left, top, right, bottom)
-            onLayoutLeftRightViews(endViews, false, left, top, right, bottom)
-        }
-        onLayoutCenterViews(left, top, right, bottom)
+        var bottom = b - t - paddingBottom
+        // 摆放None的view
         for (i in 0 until childCount) {
             val child = getChildAt(i)
             if ((child.layoutParams as LayoutParams).titleType == NONE
@@ -142,17 +174,48 @@ class TitleBar @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
                 child.layout(left, top, right, bottom)
             }
         }
+        onLayoutTopBottomViews(topViews, left, top, right, top + topHeight)
+        onLayoutTopBottomViews(bottomViews, left, bottom - bottomHeight, right, bottom)
+        top += topHeight
+        bottom -= bottomHeight
+        if (TextUtilsCompat.getLayoutDirectionFromLocale(Locale.getDefault()) ==
+            ViewCompat.LAYOUT_DIRECTION_RTL
+        ) {
+            onLayoutLeftRightViews(endViews, true, left, top, right, bottom)
+            onLayoutLeftRightViews(startViews, false, left, top, right, bottom)
+        } else {
+            onLayoutLeftRightViews(startViews, true, left, top, right, bottom)
+            onLayoutLeftRightViews(endViews, false, left, top, right, bottom)
+        }
+        onLayoutCenterViews(left, top, right, bottom)
+
     }
+
+
+    private fun onLayoutTopBottomViews(
+        views: MutableList<View>, left: Int, top: Int, right: Int, bottom: Int
+    ) {
+        var temp = top
+        for (child in views) {
+            if (child.visibility != GONE) {
+                temp += child.marginTop
+                child.layout(left + child.marginLeft, top,
+                    right - child.marginRight, temp + child.measuredHeight)
+                temp += child.measuredHeight + child.marginBottom
+            }
+        }
+    }
+
 
     private fun onLayoutCenterViews(left: Int, top: Int, right: Int, bottom: Int) {
         centerView?.let {
             if (it.visibility == GONE) return@let
             val diffHeight = getDiffHeight(it, top, bottom)
-            val diffWidth = getDiffWidth(it, left, right, startEndWidth * 2)
+            val diffWidth = getDiffWidth(it, left, right, startWidth + endWidth)
             it.layout(
-                left + startEndWidth + it.marginLeft + diffWidth,
+                left + startWidth + it.marginLeft + diffWidth,
                 top + it.marginTop + diffHeight,
-                right - startEndWidth - it.marginRight - diffWidth,
+                right - endWidth - it.marginRight - diffWidth,
                 bottom - it.marginBottom - diffHeight
             )
         }
@@ -170,26 +233,25 @@ class TitleBar @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
         titleView?.let {
             if (it.visibility == GONE) return@let
             val diffHeight = getDiffHeight(it, top, bottom) - subTitleViewHeight / 2
-            val diffWidth = getDiffWidth(it, left, right, startEndWidth * 2)
+            val diffWidth = getDiffWidth(it, left, right, startWidth + endWidth)
             it.layout(
-                left + startEndWidth + it.marginLeft + diffWidth,
+                left + startWidth + it.marginLeft + diffWidth,
                 top + it.marginTop + diffHeight,
-                right - startEndWidth - it.marginRight - diffWidth,
+                right - endWidth - it.marginRight - diffWidth,
                 top + it.marginTop + diffHeight + it.measuredHeight
             )
         }
         subTitleView?.let {
             if (it.visibility == GONE) return@let
             val diffHeight = getDiffHeight(it, top, bottom) - titleViewHeight / 2
-            val diffWidth = getDiffWidth(it, left, right, startEndWidth * 2)
+            val diffWidth = getDiffWidth(it, left, right, startWidth + endWidth)
             it.layout(
-                left + startEndWidth + it.marginLeft + diffWidth,
+                left + startWidth + it.marginLeft + diffWidth,
                 bottom - it.marginBottom - diffHeight - it.measuredHeight,
-                right - startEndWidth - it.marginRight - diffWidth,
+                right - endWidth - it.marginRight - diffWidth,
                 bottom - it.marginBottom - diffHeight
             )
         }
-
     }
 
     private fun onLayoutLeftRightViews(
