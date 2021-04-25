@@ -56,26 +56,6 @@
             android:textSize="14sp"
             app:layout_titleType="end" />
 
-        <TextView
-            android:text="测试测试"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="20dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
-            android:layout_width="wrap_content"
-            android:layout_height="20dp"
-            app:layout_titleType="top" />
-
-        <TextView
-            android:text="12333"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="20dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_titleType="bottom" />
-
     </me.ibore.widget.TitleBar>
 
     <LinearLayout

@@ -19,10 +19,37 @@
         tools:listitem="@layout/item_activity" />
 
     <me.ibore.widget.TitleBar
+        android:layout_width="wrap_content"
         android:id="@+id/title_bar"
         style="@style/TitleBar">
 
         <include layout="@layout/title_bar" />
+
+        <TextView
+            android:text="TOP1"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_titleType="top" />
+        <TextView
+            android:text="TOP2"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_titleType="top" />
+
+        <TextView
+            android:text="BOTTOM1"
+            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_titleType="bottom" />
+        <TextView
+            android:text="BOTTOM2"
+            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_titleType="bottom" />
 
     </me.ibore.widget.TitleBar>
 

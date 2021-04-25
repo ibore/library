@@ -41,6 +41,13 @@ class TitleBar @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
             invalidate()
         }
 
+    var barHeight = dp2px(48F)
+        set(value) {
+            if (field == value) return
+            field = value
+            invalidate()
+        }
+
     var centerMiddle = true
         set(value) {
             if (field == value) return
@@ -54,6 +61,7 @@ class TitleBar @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
     init {
         val ta = context.obtainStyledAttributes(attrs, R.styleable.TitleBar, defStyleAttr, 0)
         statusBar = ta.getBoolean(R.styleable.TitleBar_tbStatusBar, statusBar)
+        barHeight = ta.getDimensionPixelSize(R.styleable.TitleBar_tbHeight, barHeight)
         centerMiddle = ta.getBoolean(R.styleable.TitleBar_tbCenterMiddle, centerMiddle)
         ta.recycle()
     }
@@ -71,56 +79,47 @@ class TitleBar @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
     private var bottomHeight: Int = 0
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        val width = getMeasureSize(widthMeasureSpec, 0)
-        val height = getMeasureSize(heightMeasureSpec, dp2px(48F))
+
         startViews.clear()
+        topViews.clear()
         endViews.clear()
+        bottomViews.clear()
         startWidth = 0
         endWidth = 0
         topHeight = 0
         bottomHeight = 0
+
+        if (MeasureSpec.getMode(heightMeasureSpec) == MeasureSpec.EXACTLY) {
+            throw RuntimeException("不能设置成MATH_PARENT或者具体高度")
+        }
+        val parentHMS = MeasureSpec.makeMeasureSpec(barHeight, MeasureSpec.EXACTLY)
         for (i in 0 until childCount) {
             val child = getChildAt(i)
-            when ((child.layoutParams as LayoutParams).titleType) {
-                TITLE -> titleView = child
-                SUBTITLE -> subTitleView = child
-                CENTER -> centerView = child
-                START -> {
-                    startViews.add(child)
-                    measureChildWithMargins(
-                        child, widthMeasureSpec, 0,
-                        MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY), 0
-                    )
-                    startWidth += measureWidthMargin(child)
-                }
-                TOP -> {
-                    topViews.add(child)
-                    measureChildWithMargins(
-                        child, widthMeasureSpec, 0, heightMeasureSpec, 0
-                    )
-                    topHeight += measureHeightMargin(child)
-                }
-                END -> {
-                    endViews.add(child)
-                    measureChildWithMargins(
-                        child, widthMeasureSpec, 0,
-                        MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY), 0
-                    )
-                    endWidth += measureWidthMargin(child)
-                }
-                BOTTOM -> {
-                    bottomViews.add(child)
-                    measureChildWithMargins(
-                        child, widthMeasureSpec, 0, heightMeasureSpec, 0
-                    )
-                    bottomHeight += measureHeightMargin(child)
-                }
-                NONE -> {
-                    measureChildWithMargins(
-                        child, widthMeasureSpec, 0,
-                        MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY), 0
-                    )
-                }
+            val titleType = (child.layoutParams as LayoutParams).titleType
+            if (titleType == TITLE) {
+                titleView = child
+            } else if (titleType == SUBTITLE) {
+                subTitleView = child
+            } else if (titleType == CENTER) {
+                centerView = child
+            } else if (titleType == START) {
+                startViews.add(child)
+                measureChildWithMargins(child, widthMeasureSpec, 0, parentHMS, 0)
+                startWidth += measureWidthMargin(child)
+            } else if (titleType == TOP) {
+                topViews.add(child)
+                measureChildWithMargins(child, widthMeasureSpec, 0, heightMeasureSpec, 0)
+                topHeight += measureHeightMargin(child)
+            } else if (titleType == END) {
+                endViews.add(child)
+                measureChildWithMargins(child, widthMeasureSpec, 0, parentHMS, 0)
+                endWidth += measureWidthMargin(child)
+            } else if (titleType == BOTTOM) {
+                bottomViews.add(child)
+                measureChildWithMargins(child, widthMeasureSpec, 0, heightMeasureSpec, 0)
+                bottomHeight += measureHeightMargin(child)
+            } else if (titleType == NONE) {
+                measureChildWithMargins(child, widthMeasureSpec, 0, parentHMS, 0)
             }
         }
         if (centerMiddle) {
@@ -128,10 +127,19 @@ class TitleBar @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
             startWidth = startEndWidth
             endWidth = startEndWidth
         }
-        measureCenterView(titleView, width, height)
-        measureCenterView(subTitleView, width, height)
-        measureCenterView(centerView, width, height)
-        setMeasuredDimension(width, statusBarHeight + topHeight + height + bottomHeight)
+        val widthUsed = startWidth + endWidth
+        if (null != titleView && !titleView!!.isGone) {
+            measureChildWithMargins(titleView!!, widthMeasureSpec, widthUsed, parentHMS, 0)
+        }
+        if (null != subTitleView && !subTitleView!!.isGone) {
+            measureChildWithMargins(subTitleView!!, widthMeasureSpec, widthUsed, parentHMS, 0)
+        }
+        if (null != centerView && !centerView!!.isGone) {
+            measureChildWithMargins(centerView!!, widthMeasureSpec, widthUsed, parentHMS, 0)
+        }
+        val measuredWidth = MeasureSpec.getSize(widthMeasureSpec)
+        val measuredHeight = statusBarHeight + topHeight + barHeight + bottomHeight
+        setMeasuredDimension(measuredWidth, measuredHeight)
     }
 
     private fun measureWidthMargin(child: View): Int {
@@ -144,20 +152,6 @@ class TitleBar @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
         return if (child.visibility != GONE) {
             child.marginTop + child.measuredHeight + child.marginBottom
         } else 0
-    }
-
-    private fun measureCenterView(view: View?, width: Int, height: Int) {
-        view?.let {
-            measureChildWithMargins(
-                it, MeasureSpec.makeMeasureSpec(width - startWidth - endWidth, MeasureSpec.EXACTLY),
-                0, MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY), 0
-            )
-        }
-    }
-
-    private fun getMeasureSize(measureSpec: Int, defaultSize: Int): Int {
-        return if (MeasureSpec.getMode(measureSpec) == MeasureSpec.EXACTLY)
-            MeasureSpec.getSize(measureSpec) else defaultSize
     }
 
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
@@ -199,8 +193,10 @@ class TitleBar @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
         for (child in views) {
             if (child.visibility != GONE) {
                 temp += child.marginTop
-                child.layout(left + child.marginLeft, top,
-                    right - child.marginRight, temp + child.measuredHeight)
+                child.layout(
+                    left + child.marginLeft, temp,
+                    right - child.marginRight, temp + child.measuredHeight
+                )
                 temp += child.measuredHeight + child.marginBottom
             }
         }

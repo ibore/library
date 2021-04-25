@@ -305,6 +305,7 @@
     <declare-styleable name="TitleBar">
 
         <attr name="tbStatusBar" format="boolean" />
+        <attr name="tbHeight" format="dimension" />
         <attr name="tbCenterMiddle" format="boolean" />
 
     </declare-styleable>
