@@ -8,7 +8,6 @@ import me.ibore.demo.adapter.ActivityAdapter
 import me.ibore.demo.audio.AudioActivity
 import me.ibore.demo.base.BaseActivity
 import me.ibore.demo.databinding.ActivityMainBinding
-import me.ibore.demo.databinding.ItemActivityBinding
 import me.ibore.demo.databinding.TitleBarBinding
 import me.ibore.demo.dialog.DialogActivity
 import me.ibore.demo.http.HttpActivity
@@ -18,15 +17,13 @@ import me.ibore.demo.permissions.PermissionsActivity
 import me.ibore.demo.qrcode.QrCodeActivity
 import me.ibore.demo.recycler.RecyclerActivity
 import me.ibore.demo.refresh.RefreshActivity
-import me.ibore.demo.status.StatusActivity
+import me.ibore.demo.title_bar.TitleBarActivity
 import me.ibore.demo.theme.ThemeActivity
 import me.ibore.demo.update.UpdateActivity
 import me.ibore.demo.utils.UtilsActivity
 import me.ibore.demo.video.VideoActivity
 import me.ibore.demo.view.ViewActivity
 import me.ibore.demo.web.WebActivity
-import me.ibore.recycler.holder.ItemBindingHolder
-import me.ibore.recycler.holder.RecyclerHolder
 
 @SuppressLint("NonConstantResourceId")
 class MainActivity : BaseActivity<ActivityMainBinding>() {
@@ -43,12 +40,12 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     }
 
     override fun onBindData() {
-        adapter.setHeaderHolder(object : ItemBindingHolder<ItemActivityBinding>() {
-            override fun ItemActivityBinding.onBindHolder(holder: RecyclerHolder) {
-                tvTitle.text = "头布局"
-            }
-        })
-        adapter.addData(ActivityItem("状  态  栏", StatusActivity::class.java))
+//        adapter.setHeaderHolder(object : ItemBindingHolder<ItemActivityBinding>() {
+//            override fun ItemActivityBinding.onBindHolder(holder: RecyclerHolder) {
+//                tvTitle.text = "头布局"
+//            }
+//        })
+        adapter.addData(ActivityItem("标  题  栏", TitleBarActivity::class.java))
         adapter.addData(ActivityItem("网络请求", HttpActivity::class.java))
         adapter.addData(ActivityItem("对  话  框", DialogActivity::class.java))
         adapter.addData(ActivityItem("图片相关", ImageActivity::class.java))

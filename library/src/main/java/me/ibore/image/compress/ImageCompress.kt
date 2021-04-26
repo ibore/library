@@ -37,21 +37,17 @@ object ImageCompress {
         }
     }
 
-    fun compress(file: File): CompressSingle {
-        return CompressSingle(file, getDefaultCacheDir())
-    }
-
-    fun compress(files: MutableList<File>): CompressMulti {
-        return CompressMulti(files, getDefaultCacheDir())
-    }
-
     // file 要压缩的单个文件 cacheDir 压缩完文件的存储路径
-    fun compress(file: File, cacheDir: File): CompressSingle {
+    @JvmStatic
+    @JvmOverloads
+    fun compress(file: File, cacheDir: File = getDefaultCacheDir()): CompressSingle {
         require(isCacheDirValid(cacheDir)) { "The cacheDir must be Directory" }
         return CompressSingle(file, cacheDir)
     }
 
-    fun compress(files: MutableList<File>, cacheDir: File): CompressMulti {
+    @JvmStatic
+    @JvmOverloads
+    fun compress(files: MutableList<File>, cacheDir: File = getDefaultCacheDir()): CompressMulti {
         require(isCacheDirValid(cacheDir)) { "The cacheDir must be Directory" }
         return CompressMulti(files, cacheDir)
     }
@@ -139,7 +135,6 @@ object ImageCompress {
         private var compressFormat = Bitmap.CompressFormat.JPEG
         private var gear: Int = GEAR.LOW
         private var mByteArrayOutputStream: ByteArrayOutputStream? = null
-
 
         /**
          * 自定义压缩模式 LOW、HIGH、CUSTOM

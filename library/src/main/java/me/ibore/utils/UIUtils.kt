@@ -133,16 +133,5 @@ object UIUtils {
         return ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT)
     }
 
-    fun getActivity(context: Context): Activity? {
-        var temp = context
-        while (temp is ContextWrapper) {
-            if (temp is Activity) {
-                return temp
-            }
-            temp = temp.baseContext
-        }
-        return null
-    }
-
 
 }

@@ -9,6 +9,7 @@ import androidx.annotation.IntDef
 import androidx.core.text.TextUtilsCompat
 import androidx.core.view.*
 import me.ibore.R
+import me.ibore.ktx.activity
 import me.ibore.ktx.dp2px
 import me.ibore.utils.BarUtils
 import java.util.*
@@ -96,9 +97,7 @@ class TitleBar @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
             val childLp = child.layoutParams as LayoutParams
             val titleBackPress = childLp.titleBackPress
             if (titleBackPress ) {
-                child.setOnClickListener {
-                    context
-                }
+                context.activity?.apply { child.setOnClickListener { onBackPressed() } }
             }
             val titleType = childLp.titleType
             if (titleType == TITLE) {
@@ -166,9 +165,8 @@ class TitleBar @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
         // 摆放None的view
         for (i in 0 until childCount) {
             val child = getChildAt(i)
-            if ((child.layoutParams as LayoutParams).titleType == NONE
-                && child.visibility != View.GONE
-            ) {
+            val titleType = (child.layoutParams as LayoutParams).titleType
+            if (titleType == NONE && child.visibility != View.GONE) {
                 child.layout(left, top, right, bottom)
             }
         }
@@ -176,9 +174,8 @@ class TitleBar @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
         onLayoutTopBottomViews(bottomViews, left, bottom - bottomHeight, right, bottom)
         top += topHeight
         bottom -= bottomHeight
-        if (TextUtilsCompat.getLayoutDirectionFromLocale(Locale.getDefault()) ==
-            ViewCompat.LAYOUT_DIRECTION_RTL
-        ) {
+        val layoutDirection = TextUtilsCompat.getLayoutDirectionFromLocale(Locale.getDefault())
+        if (layoutDirection == ViewCompat.LAYOUT_DIRECTION_RTL) {
             onLayoutLeftRightViews(endViews, true, left, top, right, bottom)
             onLayoutLeftRightViews(startViews, false, left, top, right, bottom)
         } else {
@@ -186,7 +183,6 @@ class TitleBar @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
             onLayoutLeftRightViews(endViews, false, left, top, right, bottom)
         }
         onLayoutCenterViews(left, top, right, bottom)
-
     }
 
 
@@ -195,28 +191,26 @@ class TitleBar @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
     ) {
         var temp = top
         for (child in views) {
-            if (child.visibility != GONE) {
-                temp += child.marginTop
-                child.layout(
-                    left + child.marginLeft, temp,
-                    right - child.marginRight, temp + child.measuredHeight
-                )
-                temp += child.measuredHeight + child.marginBottom
-            }
+            if (child.isGone) continue
+            temp += child.marginTop
+            child.layout(left + child.marginLeft, temp,
+                right - child.marginRight, temp + child.measuredHeight
+            )
+            temp += child.measuredHeight + child.marginBottom
         }
     }
 
 
     private fun onLayoutCenterViews(left: Int, top: Int, right: Int, bottom: Int) {
-        centerView?.let {
-            if (it.visibility == GONE) return@let
-            val diffHeight = getDiffHeight(it, top, bottom)
-            val diffWidth = getDiffWidth(it, left, right, startWidth + endWidth)
-            it.layout(
-                left + startWidth + it.marginLeft + diffWidth,
-                top + it.marginTop + diffHeight,
-                right - endWidth - it.marginRight - diffWidth,
-                bottom - it.marginBottom - diffHeight
+        centerView?.run {
+            if (isGone) return
+            val diffHeight = getDiffHeight(this, top, bottom)
+            val diffWidth = getDiffWidth(this, left, right, startWidth + endWidth)
+            layout(
+                left + startWidth + marginLeft + diffWidth,
+                top + marginTop + diffHeight,
+                right - endWidth - marginRight - diffWidth,
+                bottom - marginBottom - diffHeight
             )
         }
         var titleViewHeight = 0

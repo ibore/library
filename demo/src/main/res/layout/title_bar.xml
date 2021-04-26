@@ -17,7 +17,7 @@
         android:visibility="visible"
         app:layout_titleBackPress="true"
         app:layout_titleType="title"
-        tools:text="标题标" />
+        tools:text="标题" />
 
     <TextView
         android:visibility="gone"
@@ -31,7 +31,6 @@
         app:layout_titleType="subTitle" />
 
     <ImageView
-        android:background="@color/antiquewhite"
         android:id="@+id/iv_back"
         android:layout_width="48dp"
         android:layout_height="match_parent"

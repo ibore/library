@@ -9,6 +9,7 @@ import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import me.ibore.ktx.ViewClickDelay.SPACE_TIME
 import me.ibore.ktx.ViewClickDelay.hash
 import me.ibore.ktx.ViewClickDelay.lastClickTime
@@ -56,6 +57,15 @@ fun View.widthAndHeight(width: Int, height: Int): View {
     layoutParams = params
     return this
 }
+
+fun View.hideSoftInputKeyBoard() {
+    val binder = windowToken
+    if (binder != null) {
+        val imd = this.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imd.hideSoftInputFromWindow(binder, InputMethodManager.HIDE_IMPLICIT_ONLY)
+    }
+}
+
 
 /**
  * 设置宽度，带有过渡动画

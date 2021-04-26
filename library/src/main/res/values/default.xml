@@ -59,17 +59,6 @@
     <!--selector动画时长-->
     <integer name="selector_duration">0</integer>
 
-
-
-
-
-
-
-
-
-
-
-
     <!--项目核心颜色-->
     <!--建议在您的项目中自定义主色-->
     <color name="colorPrimary"></color>

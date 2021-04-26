@@ -29,37 +29,11 @@ class DialogActivity : BaseActivity<ActivityDialogBinding>() {
     @SuppressLint("SetTextI18n")
     override fun ActivityDialogBinding.onBindView(bundle: Bundle?, savedInstanceState: Bundle?) {
         setTitleBar(TitleBarBinding.bind(mBinding.titleBar), bundle?.getString("title"))
-//        binding.titleBar.tvSubTitle.visibility = View.VISIBLE
-//        binding.titleBar.tvSubTitle.text = "副标题"
         recyclerView.layoutManager = GridLayoutManager(getXActivity(), 3)
         recyclerView.adapter = adapter
     }
 
     override fun onBindData() {
-        val delegateHolders: MutableList<DelegateHolder> = ArrayList()
-        delegateHolders.add(object : DelegateBindingHolder<ItemActivityBinding, TitleModel>(100) {
-            override fun ItemActivityBinding.onBindHolder(
-                holder: RecyclerHolder, data: TitleModel
-            ) {
-                tvTitle.text = "delegate" + data.delegateType + "----" + data.dataString
-            }
-        })
-        delegateHolders.add(object : DelegateBindingHolder<ItemActivityBinding, TitleModel>(101) {
-            override fun ItemActivityBinding.onBindHolder(
-                holder: RecyclerHolder, data: TitleModel
-            ) {
-                tvTitle.text = "delegate" + data.delegateType + "----" + data.dataString
-            }
-        })
-        val delegateAdapter = DelegateAdapter(delegateHolders)
-        delegateAdapter.addData(TitleModel(100, "111111111111111"))
-        delegateAdapter.addData(TitleModel(101, "222222222222222"))
-        delegateAdapter.addData(TitleModel(100, "333333333333333"))
-        delegateAdapter.addData(TitleModel(100, "444444444444444"))
-        delegateAdapter.addData(TitleModel(100, "555555555555555"))
-        mBinding.recyclerView.layoutManager = LinearLayoutManager(getXActivity())
-        mBinding.recyclerView.adapter = delegateAdapter
-
 
         adapter.addData(TitleItem("普通内容") {
             ToastUtils.showShort("普通内容")
