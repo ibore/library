@@ -1,82 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <me.ibore.widget.RootLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_f4f5f7">
+    android:background="@color/bg_page">
 
-    <androidx.core.widget.NestedScrollView
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_rootType="content">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <TextView
-                style="@style/Title"
-                android:text="普通GET请求" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="5dp">
-
-                <TextView
-                    android:id="@+id/btn_get_string"
-                    style="@style/Item_Small"
-                    android:text="返回String" />
-
-                <TextView
-                    android:id="@+id/btn_get_model"
-                    style="@style/Item_Small"
-                    android:text="返回Model" />
-
-                <TextView
-                    android:id="@+id/btn_get_image"
-                    style="@style/Item_Small"
-                    android:text="展示图片" />
-
-                <TextView
-                    android:id="@+id/btn_get_file"
-                    style="@style/Item_Small"
-                    android:text="下载文件" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="5dp">
-
-                <TextView
-                    android:id="@+id/btn_upload_file"
-                    style="@style/Item_Small"
-                    android:text="上传文件" />
-
-                <TextView
-                    style="@style/Item_Small"
-                    android:text="" />
-
-                <TextView
-                    style="@style/Item_Small"
-                    android:text="" />
-
-                <TextView
-                    style="@style/Item_Small"
-                    android:text="" />
-
-            </LinearLayout>
-
-            <ImageView
-                android:id="@+id/iv_image"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
-
-    </androidx.core.widget.NestedScrollView>
+        android:clipToPadding="false"
+        android:padding="5dp"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        app:layout_rootType="content"
+        app:spanCount="3"
+        tools:itemCount="11"
+        tools:listitem="@layout/item_activity" />
 
     <me.ibore.widget.TitleBar
         android:id="@+id/title_bar"
