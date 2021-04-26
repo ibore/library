@@ -79,7 +79,6 @@ class TitleBar @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
     private var bottomHeight: Int = 0
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-
         startViews.clear()
         topViews.clear()
         endViews.clear()
@@ -88,14 +87,20 @@ class TitleBar @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
         endWidth = 0
         topHeight = 0
         bottomHeight = 0
-
         if (MeasureSpec.getMode(heightMeasureSpec) == MeasureSpec.EXACTLY) {
             throw RuntimeException("不能设置成MATH_PARENT或者具体高度")
         }
         val parentHMS = MeasureSpec.makeMeasureSpec(barHeight, MeasureSpec.EXACTLY)
         for (i in 0 until childCount) {
             val child = getChildAt(i)
-            val titleType = (child.layoutParams as LayoutParams).titleType
+            val childLp = child.layoutParams as LayoutParams
+            val titleBackPress = childLp.titleBackPress
+            if (titleBackPress ) {
+                child.setOnClickListener {
+                    context
+                }
+            }
+            val titleType = childLp.titleType
             if (titleType == TITLE) {
                 titleView = child
             } else if (titleType == SUBTITLE) {
@@ -123,9 +128,8 @@ class TitleBar @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
             }
         }
         if (centerMiddle) {
-            val startEndWidth = startWidth.coerceAtLeast(endWidth)
-            startWidth = startEndWidth
-            endWidth = startEndWidth
+            startWidth = startWidth.coerceAtLeast(endWidth)
+            endWidth = startWidth.coerceAtLeast(endWidth)
         }
         val widthUsed = startWidth + endWidth
         if (null != titleView && !titleView!!.isGone) {
@@ -300,10 +304,13 @@ class TitleBar @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
     open class LayoutParams : MarginLayoutParams {
 
         var titleType: Int = NONE
+        var titleBackPress: Boolean = false
 
         constructor(c: Context, attrs: AttributeSet?) : super(c, attrs) {
             val a = c.obtainStyledAttributes(attrs, R.styleable.TitleBar_Layout)
             titleType = a.getInt(R.styleable.TitleBar_Layout_layout_titleType, NONE)
+            titleBackPress =
+                a.getBoolean(R.styleable.TitleBar_Layout_layout_titleBackPress, titleBackPress)
             a.recycle()
         }
 
