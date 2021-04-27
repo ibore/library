@@ -28,9 +28,7 @@ object LocationUtils {
          * @param location 坐标
          */
         override fun onLocationChanged(location: Location) {
-            if (mListener != null) {
-                mListener!!.onLocationChanged(location)
-            }
+            mListener?.onLocationChanged(location)
         }
 
         /**
@@ -41,9 +39,7 @@ object LocationUtils {
          * @param extras   provider可选包
          */
         override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {
-            if (mListener != null) {
-                mListener!!.onStatusChanged(provider, status, extras)
-            }
+            mListener?.onStatusChanged(provider, status, extras)
             when (status) {
                 LocationProvider.AVAILABLE -> Log.d("LocationUtils", "当前GPS状态为可见状态")
                 LocationProvider.OUT_OF_SERVICE -> Log.d("LocationUtils", "当前GPS状态为服务区外状态")
@@ -97,6 +93,7 @@ object LocationUtils {
      *
      * @return `true`: 是<br></br>`false`: 否
      */
+    @JvmStatic
     val isGpsEnabled: Boolean
         get() {
             val lm: LocationManager =
@@ -109,6 +106,7 @@ object LocationUtils {
      *
      * @return `true`: 是<br></br>`false`: 否
      */
+    @JvmStatic
     val isLocationEnabled: Boolean
         get() {
             val lm: LocationManager =
@@ -120,6 +118,7 @@ object LocationUtils {
     /**
      * 打开Gps设置界面
      */
+    @JvmStatic
     fun openGpsSettings() {
         val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
         Utils.app.startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
@@ -147,49 +146,43 @@ object LocationUtils {
      * @param listener    位置刷新的回调接口
      * @return `true`: 初始化成功<br></br>`false`: 初始化失败
      */
+    @JvmStatic
     @RequiresPermission(Manifest.permission.ACCESS_FINE_LOCATION)
-    fun register(
-        minTime: Long,
-        minDistance: Long,
-        listener: OnLocationChangeListener
-    ): Boolean {
-        mLocationManager =
-            Utils.app.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        if (!mLocationManager!!.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
-            && !mLocationManager!!.isProviderEnabled(LocationManager.GPS_PROVIDER)
-        ) {
-            Log.d("LocationUtils", "无法定位，请打开定位服务")
-            return false
+    fun register(minTime: Long, minDistance: Long, listener: OnLocationChangeListener): Boolean {
+        mLocationManager = Utils.app.getSystemService(Context.LOCATION_SERVICE) as LocationManager?
+        mLocationManager?.run {
+            if (!isProviderEnabled(LocationManager.NETWORK_PROVIDER)
+                && !isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                Log.d("LocationUtils", "无法定位，请打开定位服务")
+                return false
+            }
+            mListener = listener
+            val provider: String = getBestProvider(criteria, true)!!
+            val location: Location? = getLastKnownLocation(provider)
+            if (location != null) listener.getLastKnownLocation(location)
+            if (myLocationListener == null) myLocationListener = MyLocationListener()
+            mLocationManager?.run {
+                requestLocationUpdates(provider, minTime, minDistance.toFloat(), myLocationListener!!)
+            }
+            return true
         }
-        mListener = listener
-        val provider: String = mLocationManager!!.getBestProvider(criteria, true)!!
-        val location: Location? = mLocationManager!!.getLastKnownLocation(provider)
-        if (location != null) listener.getLastKnownLocation(location)
-        if (myLocationListener == null) myLocationListener = MyLocationListener()
-        mLocationManager!!.requestLocationUpdates(
-            provider,
-            minTime,
-            minDistance.toFloat(),
-            myLocationListener!!
-        )
-        return true
+        return false
     }
 
     /**
      * 注销
      */
+    @JvmStatic
     @RequiresPermission(Manifest.permission.ACCESS_COARSE_LOCATION)
     fun unregister() {
-        if (mLocationManager != null) {
-            if (myLocationListener != null) {
-                mLocationManager!!.removeUpdates(myLocationListener!!)
+        mLocationManager?.let {
+            myLocationListener?.run {
+                it.removeUpdates(this)
                 myLocationListener = null
             }
-            mLocationManager = null
         }
-        if (mListener != null) {
-            mListener = null
-        }
+        mLocationManager = null
+        mListener = null
     }
     // 设置定位精确度 Criteria.ACCURACY_COARSE比较粗略，Criteria.ACCURACY_FINE则比较精细
     // 设置是否要求速度
@@ -202,6 +195,7 @@ object LocationUtils {
      *
      * @return [Criteria]
      */
+    @JvmStatic
     private val criteria: Criteria
         get() {
             val criteria = Criteria()
@@ -227,6 +221,7 @@ object LocationUtils {
      * @param longitude 经度
      * @return [Address]
      */
+    @JvmStatic
     fun getAddress(latitude: Double, longitude: Double): Address? {
         val geocoder = Geocoder(Utils.app, Locale.getDefault())
         try {
@@ -245,6 +240,7 @@ object LocationUtils {
      * @param longitude 经度
      * @return 所在国家
      */
+    @JvmStatic
     fun getCountryName(latitude: Double, longitude: Double): String {
         val address = getAddress(latitude, longitude)
         return if (address == null) "unknown" else address.countryName
@@ -257,6 +253,7 @@ object LocationUtils {
      * @param longitude 经度
      * @return 所在地
      */
+    @JvmStatic
     fun getLocality(latitude: Double, longitude: Double): String {
         val address = getAddress(latitude, longitude)
         return if (address == null) "unknown" else address.locality
@@ -269,6 +266,7 @@ object LocationUtils {
      * @param longitude 经度
      * @return 所在街道
      */
+    @JvmStatic
     fun getStreet(latitude: Double, longitude: Double): String {
         val address = getAddress(latitude, longitude)
         return if (address == null) "unknown" else address.getAddressLine(0)
@@ -281,6 +279,7 @@ object LocationUtils {
      * @param currentBestLocation The current Location fix, to which you want to compare the new one
      * @return `true`: 是<br></br>`false`: 否
      */
+    @JvmStatic
     fun isBetterLocation(newLocation: Location, currentBestLocation: Location?): Boolean {
         if (currentBestLocation == null) {
             // A new location is always better than no location
@@ -330,7 +329,8 @@ object LocationUtils {
      * @param provider1 提供者2
      * @return `true`: 是<br></br>`false`: 否
      */
-    fun isSameProvider(provider0: String?, provider1: String?): Boolean {
+    @JvmStatic
+    private fun isSameProvider(provider0: String?, provider1: String?): Boolean {
         return if (provider0 == null) {
             provider1 == null
         } else provider0 == provider1

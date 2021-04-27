@@ -30,7 +30,7 @@ object EncryptUtils {
      * @param data 待加密数据
      * @return MD2 加密后的数据
      */
-    fun encryptMD2(data: ByteArray?): ByteArray? {
+    fun md2(data: ByteArray): ByteArray {
         return hashTemplate(data, "MD2")
     }
 
@@ -39,8 +39,8 @@ object EncryptUtils {
      * @param data 待加密数据
      * @return MD2 加密后的十六进制字符串
      */
-    fun encryptMD2ToHexString(data: String?): String? {
-        return if (data.isNullOrEmpty()) null else encryptMD2ToHexString(data.toByteArray())
+    fun md2String(data: String): String {
+        return md2String(data.toByteArray())
     }
 
     /**
@@ -48,8 +48,8 @@ object EncryptUtils {
      * @param data 待加密数据
      * @return MD2 加密后的十六进制字符串
      */
-    fun encryptMD2ToHexString(data: ByteArray?): String {
-        return ConvertUtils.bytes2HexString(encryptMD2(data))
+    fun md2String(data: ByteArray): String {
+        return ConvertUtils.bytes2HexString(md2(data))
     }
     // =
     /**
@@ -57,17 +57,8 @@ object EncryptUtils {
      * @param data 待加密数据
      * @return MD5 加密后的数据
      */
-    fun encryptMD5(data: ByteArray?): ByteArray? {
+    fun md5(data: ByteArray): ByteArray {
         return hashTemplate(data, "MD5")
-    }
-
-    /**
-     * MD5 加密
-     * @param data 待加密数据
-     * @return MD5 加密后的十六进制字符串
-     */
-    fun encryptMD5ToHexString(data: String?): String? {
-        return if (data.isNullOrEmpty()) null else encryptMD5ToHexString(data.toByteArray())
     }
 
     /**
@@ -76,15 +67,10 @@ object EncryptUtils {
      * @param salt salt
      * @return MD5 加密后的十六进制字符串
      */
-    fun encryptMD5ToHexString(
-        data: String?,
-        salt: String?
-    ): String? {
-        if (data == null && salt == null) return null
-        if (salt == null) return ConvertUtils.bytes2HexString(encryptMD5(data!!.toByteArray()))
-        return if (data == null) ConvertUtils.bytes2HexString(encryptMD5(salt.toByteArray())) else ConvertUtils.bytes2HexString(
-            encryptMD5((data + salt).toByteArray())
-        )
+    @JvmStatic
+    @JvmOverloads
+    fun md5String(data: String, salt: String? = null): String {
+        return ConvertUtils.bytes2HexString(md5((data + salt).toByteArray()))
     }
     // =
     /**
@@ -92,8 +78,8 @@ object EncryptUtils {
      * @param data 待加密数据
      * @return MD5 加密后的十六进制字符串
      */
-    fun encryptMD5ToHexString(data: ByteArray?): String {
-        return ConvertUtils.bytes2HexString(encryptMD5(data))
+    fun md5String(data: ByteArray): String {
+        return ConvertUtils.bytes2HexString(md5(data))
     }
 
     /**
@@ -102,16 +88,12 @@ object EncryptUtils {
      * @param salt salt
      * @return MD5 加密后的十六进制字符串
      */
-    fun encryptMD5ToHexString(
-        data: ByteArray?,
-        salt: ByteArray?
-    ): String? {
-        if (data == null && salt == null) return null
-        if (salt == null) return ConvertUtils.bytes2HexString(encryptMD5(data))
-        if (data == null) return ConvertUtils.bytes2HexString(encryptMD5(salt))
+    fun md5String(data: ByteArray, salt: ByteArray? = null): String {
+        if (salt == null) return ConvertUtils.bytes2HexString(md5(data))
+        if (data == null) return ConvertUtils.bytes2HexString(md5(salt))
         // 拼接数据
-        val bytes: ByteArray? = ArrayUtils.add(data, salt)
-        return ConvertUtils.bytes2HexString(encryptMD5(bytes))
+        val bytes: ByteArray = ArrayUtils.add(data, salt)
+        return ConvertUtils.bytes2HexString(md5(bytes))
     }
     // =
     /**
@@ -174,7 +156,7 @@ object EncryptUtils {
      * @param data 待加密数据
      * @return SHA1 加密后的数据
      */
-    fun encryptSHA1(data: ByteArray?): ByteArray? {
+    fun encryptSHA1(data: ByteArray): ByteArray {
         return hashTemplate(data, "SHA-1")
     }
 
@@ -192,7 +174,7 @@ object EncryptUtils {
      * @param data 待加密数据
      * @return SHA1 加密后的数据转十六进制字符串
      */
-    fun encryptSHA1ToHexString(data: ByteArray?): String {
+    fun encryptSHA1ToHexString(data: ByteArray): String {
         return ConvertUtils.bytes2HexString(encryptSHA1(data))
     }
     // =
@@ -201,7 +183,7 @@ object EncryptUtils {
      * @param data 待加密数据
      * @return SHA224 加密后的数据
      */
-    fun encryptSHA224(data: ByteArray?): ByteArray? {
+    fun encryptSHA224(data: ByteArray): ByteArray {
         return hashTemplate(data, "SHA224")
     }
 
@@ -219,7 +201,7 @@ object EncryptUtils {
      * @param data 待加密数据
      * @return SHA224 加密后的数据转十六进制字符串
      */
-    fun encryptSHA224ToHexString(data: ByteArray?): String {
+    fun encryptSHA224ToHexString(data: ByteArray): String {
         return ConvertUtils.bytes2HexString(encryptSHA224(data))
     }
     // =
@@ -228,7 +210,7 @@ object EncryptUtils {
      * @param data 待加密数据
      * @return SHA256 加密后的数据
      */
-    fun encryptSHA256(data: ByteArray?): ByteArray? {
+    fun encryptSHA256(data: ByteArray): ByteArray {
         return hashTemplate(data, "SHA-256")
     }
 
@@ -246,7 +228,7 @@ object EncryptUtils {
      * @param data 待加密数据
      * @return SHA256 加密后的数据转十六进制
      */
-    fun encryptSHA256ToHexString(data: ByteArray?): String {
+    fun encryptSHA256ToHexString(data: ByteArray): String {
         return ConvertUtils.bytes2HexString(encryptSHA256(data))
     }
     // =
@@ -255,7 +237,7 @@ object EncryptUtils {
      * @param data 待加密数据
      * @return SHA384 加密后的数据
      */
-    fun encryptSHA384(data: ByteArray?): ByteArray? {
+    fun encryptSHA384(data: ByteArray): ByteArray {
         return hashTemplate(data, "SHA-384")
     }
 
@@ -275,7 +257,7 @@ object EncryptUtils {
      * @param data 待加密数据
      * @return SHA384 加密后的数据转十六进制
      */
-    fun encryptSHA384ToHexString(data: ByteArray?): String {
+    fun encryptSHA384ToHexString(data: ByteArray): String {
         return ConvertUtils.bytes2HexString(encryptSHA384(data))
     }
     // =
@@ -284,7 +266,7 @@ object EncryptUtils {
      * @param data 待加密数据
      * @return SHA512 加密后的数据
      */
-    fun encryptSHA512(data: ByteArray?): ByteArray? {
+    fun encryptSHA512(data: ByteArray): ByteArray {
         return hashTemplate(data, "SHA-512")
     }
 
@@ -313,14 +295,9 @@ object EncryptUtils {
      * @return 指定加密算法加密后的数据
      */
     fun hashTemplate(data: ByteArray, algorithm: String): ByteArray {
-        return if (data.isEmpty()) null else try {
-            val digest = MessageDigest.getInstance(algorithm)
-            digest.update(data)
-            digest.digest()
-        } catch (e: Exception) {
-            LogUtils.d(e)
-            null
-        }
+        val digest = MessageDigest.getInstance(algorithm)
+        digest.update(data)
+        return digest.digest()
     }
     // =
     /**
@@ -329,10 +306,7 @@ object EncryptUtils {
      * @param key  密钥
      * @return HmacMD5 加密后的数据
      */
-    fun encryptHmacMD5(
-        data: ByteArray?,
-        key: ByteArray?
-    ): ByteArray? {
+    fun encryptHmacMD5(data: ByteArray, key: ByteArray): ByteArray {
         return hmacTemplate(data, key, "HmacMD5")
     }
 
@@ -359,8 +333,8 @@ object EncryptUtils {
      * @return HmacMD5 加密后的数据转十六进制
      */
     fun encryptHmacMD5ToHexString(
-        data: ByteArray?,
-        key: ByteArray?
+        data: ByteArray,
+        key: ByteArray
     ): String {
         return ConvertUtils.bytes2HexString(encryptHmacMD5(data, key))
     }
@@ -400,10 +374,7 @@ object EncryptUtils {
      * @param key  密钥
      * @return HmacSHA1 加密后的数据转十六进制
      */
-    fun encryptHmacSHA1ToHexString(
-        data: ByteArray?,
-        key: ByteArray?
-    ): String {
+    fun encryptHmacSHA1ToHexString(data: ByteArra, key: ByteArray): String {
         return ConvertUtils.bytes2HexString(encryptHmacSHA1(data, key))
     }
     // =
@@ -442,10 +413,7 @@ object EncryptUtils {
      * @param key  密钥
      * @return HmacSHA224 加密后的数据转十六进制
      */
-    fun encryptHmacSHA224ToHexString(
-        data: ByteArray?,
-        key: ByteArray?
-    ): String {
+    fun encryptHmacSHA224ToHexString(data: ByteArray, key: ByteArray): String {
         return ConvertUtils.bytes2HexString(encryptHmacSHA224(data, key))
     }
     // =
@@ -484,10 +452,7 @@ object EncryptUtils {
      * @param key  密钥
      * @return HmacSHA256 加密后的数据转十六进制
      */
-    fun encryptHmacSHA256ToHexString(
-        data: ByteArray?,
-        key: ByteArray?
-    ): String {
+    fun encryptHmacSHA256ToHexString(data: ByteArray, key: ByteArray): String {
         return ConvertUtils.bytes2HexString(encryptHmacSHA256(data, key))
     }
     // =
@@ -497,10 +462,7 @@ object EncryptUtils {
      * @param key  密钥
      * @return HmacSHA384 加密后的数据
      */
-    fun encryptHmacSHA384(
-        data: ByteArray?,
-        key: ByteArray?
-    ): ByteArray? {
+    fun encryptHmacSHA384(data: ByteArray, key: ByteArray): ByteArray {
         return hmacTemplate(data, key, "HmacSHA384")
     }
 
@@ -526,10 +488,7 @@ object EncryptUtils {
      * @param key  密钥
      * @return HmacSHA384 加密后的数据转十六进制
      */
-    fun encryptHmacSHA384ToHexString(
-        data: ByteArray?,
-        key: ByteArray?
-    ): String {
+    fun encryptHmacSHA384ToHexString(data: ByteArray?, key: ByteArray?): String {
         return ConvertUtils.bytes2HexString(encryptHmacSHA384(data, key))
     }
     // =
@@ -539,10 +498,7 @@ object EncryptUtils {
      * @param key  密钥
      * @return HmacSHA512 加密后的数据
      */
-    fun encryptHmacSHA512(
-        data: ByteArray?,
-        key: ByteArray?
-    ): ByteArray? {
+    fun encryptHmacSHA512(data: ByteArray, key: ByteArray): ByteArray {
         return hmacTemplate(data, key, "HmacSHA512")
     }
 
@@ -552,14 +508,9 @@ object EncryptUtils {
      * @param key  密钥
      * @return HmacSHA512 加密后的数据转十六进制
      */
-    fun encryptHmacSHA512ToHexString(
-        data: String?,
-        key: String?
-    ): String? {
-        return if (data.isNullOrEmpty() || key.isNullOrEmpty()) null else encryptHmacSHA512ToHexString(
-            data.toByteArray(),
-            key.toByteArray()
-        )
+    fun encryptHmacSHA512ToHexString(data: String, key: String): String {
+        return if (data.isEmpty() || key.isEmpty()) ""
+        else encryptHmacSHA512ToHexString(data.toByteArray(), key.toByteArray())
     }
 
     /**
@@ -568,10 +519,7 @@ object EncryptUtils {
      * @param key  密钥
      * @return HmacSHA512 加密后的数据转十六进制
      */
-    fun encryptHmacSHA512ToHexString(
-        data: ByteArray?,
-        key: ByteArray?
-    ): String {
+    fun encryptHmacSHA512ToHexString(data: ByteArray, key: ByteArray): String {
         return ConvertUtils.bytes2HexString(encryptHmacSHA512(data, key))
     }
 
@@ -583,18 +531,18 @@ object EncryptUtils {
      * @return 指定加密算法和密钥, 加密后的数据
      */
     fun hmacTemplate(
-        data: ByteArray?,
-        key: ByteArray?,
-        algorithm: String?
-    ): ByteArray? {
-        return if (data == null || data.isEmpty() || key == null || key.size == 0) null else try {
+        data: ByteArray,
+        key: ByteArray,
+        algorithm: String
+    ): ByteArray {
+        return if (data.isEmpty() || key.isEmpty()) ByteArray(0) else try {
             val secretKey = SecretKeySpec(key, algorithm)
             val mac = Mac.getInstance(algorithm)
             mac.init(secretKey)
             mac.doFinal(data)
         } catch (e: Exception) {
             LogUtils.d(e)
-            null
+            ByteArray(0)
         }
     }
     // =
@@ -606,12 +554,7 @@ object EncryptUtils {
      * @param iv             算法参数 [AlgorithmParameterSpec]
      * @return DES 加密后的数据
      */
-    fun encryptDES(
-        data: ByteArray?,
-        key: ByteArray?,
-        transformation: String?,
-        iv: ByteArray?
-    ): ByteArray? {
+    fun encryptDES(data: ByteArray, key: ByteArray, transformation: String, iv: ByteArray): ByteArray? {
         return symmetricTemplate(data, key, "DES", transformation, iv, true)
     }
 
@@ -641,10 +584,10 @@ object EncryptUtils {
      * @return DES 加密后的数据转十六进制
      */
     fun encryptDESToHexString(
-        data: ByteArray?,
-        key: ByteArray?,
-        transformation: String?,
-        iv: ByteArray?
+        data: ByteArray,
+        key: ByteArray,
+        transformation: String,
+        iv: ByteArray
     ): String {
         return ConvertUtils.bytes2HexString(encryptDES(data, key, transformation, iv))
     }

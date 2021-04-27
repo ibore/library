@@ -153,7 +153,7 @@ internal object UtilsBridge {
     // ConvertUtils
     ///////////////////////////////////////////////////////////////////////////
     @JvmStatic
-    fun bytes2HexString(bytes: ByteArray?): String {
+    fun bytes2HexString(bytes: ByteArray): String {
         return ConvertUtils.bytes2HexString(bytes)
     }
 
@@ -397,10 +397,7 @@ internal object UtilsBridge {
         return IntentUtils.getInstallAppIntent(file)
     }
 
-    @JvmStatic
-    fun getInstallAppIntent(uri: Uri?): Intent {
-        return IntentUtils.getInstallAppIntent(uri)
-    }
+
 
     @JvmStatic
     fun getUninstallAppIntent(pkgName: String?): Intent {

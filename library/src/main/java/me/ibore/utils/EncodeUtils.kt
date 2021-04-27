@@ -58,8 +58,8 @@ object EncodeUtils  {
      * @return Base64-encode bytes
      */
     @JvmStatic
-    fun base64Encode(input: String): ByteArray {
-        return base64Encode(input.toByteArray())
+    fun base64Encode(input: String?): ByteArray {
+        return base64Encode(input?.toByteArray())
     }
 
     /**
@@ -70,10 +70,8 @@ object EncodeUtils  {
      */
     @JvmStatic
     fun base64Encode(input: ByteArray?): ByteArray {
-        return if (input == null || input.isEmpty()) ByteArray(0) else Base64.encode(
-            input,
-            Base64.NO_WRAP
-        )
+        return if (input == null || input.isEmpty()) ByteArray(0)
+        else Base64.encode(input, Base64.NO_WRAP)
     }
 
     /**
@@ -84,10 +82,8 @@ object EncodeUtils  {
      */
     @JvmStatic
     fun base64Encode2String(input: ByteArray?): String {
-        return if (input == null || input.isEmpty()) "" else Base64.encodeToString(
-            input,
-            Base64.NO_WRAP
-        )
+        return if (input == null || input.isEmpty()) ""
+        else Base64.encodeToString(input, Base64.NO_WRAP)
     }
 
     /**
@@ -98,10 +94,8 @@ object EncodeUtils  {
      */
     @JvmStatic
     fun base64Decode(input: String?): ByteArray {
-        return if (input == null || input.isEmpty()) ByteArray(0) else Base64.decode(
-            input,
-            Base64.NO_WRAP
-        )
+        return if (input == null || input.isEmpty()) ByteArray(0)
+        else Base64.decode(input, Base64.NO_WRAP)
     }
 
     /**
@@ -112,10 +106,8 @@ object EncodeUtils  {
      */
     @JvmStatic
     fun base64Decode(input: ByteArray?): ByteArray {
-        return if (input == null || input.isEmpty()) ByteArray(0) else Base64.decode(
-            input,
-            Base64.NO_WRAP
-        )
+        return if (input == null || input.isEmpty()) ByteArray(0)
+        else Base64.decode(input, Base64.NO_WRAP)
     }
 
     /**

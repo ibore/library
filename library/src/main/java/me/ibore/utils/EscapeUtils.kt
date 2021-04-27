@@ -1,8 +1,7 @@
 package me.ibore.utils
 
 /**
- * detail: 字符串 ( 编解码 ) 工具类
- * @author Ttt
+ * 字符串 ( 编解码 ) 工具类
  */
 object EscapeUtils {
     /**
@@ -10,8 +9,7 @@ object EscapeUtils {
      * @param data 待编码数据
      * @return 编码后的字符串
      */
-    fun escape(data: String?): String? {
-        if (data == null) return null
+    fun escape(data: String): String {
         val builder = StringBuilder()
         var i = 0
         val len = data.length
@@ -47,8 +45,7 @@ object EscapeUtils {
      * @param data 待解码数据
      * @return 解码后的字符串
      */
-    fun unescape(data: String?): String? {
-        if (data == null) return null
+    fun unescape(data: String): String {
         val builder = StringBuilder()
         var i = 0
         val len = data.length

@@ -41,10 +41,7 @@ object MetaDataUtils {
      * @param key      The key of meta-data.
      * @return the value of meta-data in activity
      */
-    fun getMetaDataInActivity(
-        activity: Activity,
-        key: String
-    ): String {
+    fun getMetaDataInActivity(activity: Activity, key: String): String {
         return getMetaDataInActivity(activity.javaClass, key)
     }
 
@@ -55,10 +52,7 @@ object MetaDataUtils {
      * @param key The key of meta-data.
      * @return the value of meta-data in activity
      */
-    fun getMetaDataInActivity(
-        clz: Class<out Activity?>,
-        key: String
-    ): String {
+    fun getMetaDataInActivity(clz: Class<out Activity?>, key: String): String {
         var value = ""
         val pm = Utils.app.packageManager
         val componentName = ComponentName(Utils.app, clz)
@@ -78,10 +72,7 @@ object MetaDataUtils {
      * @param key     The key of meta-data.
      * @return the value of meta-data in service
      */
-    fun getMetaDataInService(
-        service: Service,
-        key: String
-    ): String {
+    fun getMetaDataInService(service: Service,key: String): String {
         return getMetaDataInService(service.javaClass, key)
     }
 
@@ -92,10 +83,7 @@ object MetaDataUtils {
      * @param key The key of meta-data.
      * @return the value of meta-data in service
      */
-    fun getMetaDataInService(
-        clz: Class<out Service?>,
-        key: String
-    ): String {
+    fun getMetaDataInService(clz: Class<out Service?>, key: String): String {
         var value = ""
         val pm = Utils.app.packageManager
         val componentName = ComponentName(Utils.app, clz)
@@ -115,11 +103,8 @@ object MetaDataUtils {
      * @param key      The key of meta-data.
      * @return the value of meta-data in receiver
      */
-    fun getMetaDataInReceiver(
-        receiver: BroadcastReceiver,
-        key: String
-    ): String {
-        return getMetaDataInReceiver(receiver, key)
+    fun getMetaDataInReceiver(receiver: BroadcastReceiver, key: String): String {
+        return getMetaDataInReceiver(receiver.javaClass, key)
     }
 
     /**
@@ -129,10 +114,7 @@ object MetaDataUtils {
      * @param key The key of meta-data.
      * @return the value of meta-data in receiver
      */
-    fun getMetaDataInReceiver(
-        clz: Class<out BroadcastReceiver?>,
-        key: String
-    ): String {
+    fun getMetaDataInReceiver(clz: Class<out BroadcastReceiver?>, key: String): String {
         var value = ""
         val pm = Utils.app.packageManager
         val componentName = ComponentName(Utils.app, clz)

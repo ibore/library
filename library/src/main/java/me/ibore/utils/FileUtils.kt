@@ -32,8 +32,8 @@ object FileUtils {
      * @return the file
      */
     @JvmStatic
-    fun getFileByPath(filePath: String?): File? {
-        return if (UtilsBridge.isSpace(filePath)) null else File(filePath!!)
+    fun getFileByPath(filePath: String): File? {
+        return if (filePath.isEmpty()) null else File(filePath)
     }
 
     /**
@@ -42,11 +42,10 @@ object FileUtils {
      * @param file The file.
      * @return `true`: yes<br></br>`false`: no
      */
-    fun isFileExists(file: File?): Boolean {
-        if (file == null) return false
-        return if (file.exists()) {
-            true
-        } else isFileExists(file.absolutePath)
+    @JvmStatic
+    fun isFileExists(file: File): Boolean {
+        return if (file.exists()) true
+        else isFileExists(file.absolutePath)
     }
 
     /**
@@ -55,13 +54,15 @@ object FileUtils {
      * @param filePath The path of file.
      * @return `true`: yes<br></br>`false`: no
      */
-    fun isFileExists(filePath: String?): Boolean {
+    @JvmStatic
+    fun isFileExists(filePath: String): Boolean {
         val file = getFileByPath(filePath) ?: return false
         return if (file.exists()) {
             true
         } else isFileExistsApi29(filePath)
     }
 
+    @JvmStatic
     private fun isFileExistsApi29(filePath: String?): Boolean {
         if (Build.VERSION.SDK_INT >= 29) {
             try {
@@ -87,8 +88,9 @@ object FileUtils {
      * @param newName  The new name of file.
      * @return `true`: success<br></br>`false`: fail
      */
-    fun rename(filePath: String?, newName: String): Boolean {
-        return rename(getFileByPath(filePath), newName)
+    @JvmStatic
+    fun rename(filePath: String, newName: String): Boolean {
+        return rename(getFileByPath(filePath) ?: return false, newName)
     }
 
     /**
@@ -98,9 +100,8 @@ object FileUtils {
      * @param newName The new name of file.
      * @return `true`: success<br></br>`false`: fail
      */
-    fun rename(file: File?, newName: String): Boolean {
-        // file is null then return false
-        if (file == null) return false
+    @JvmStatic
+    fun rename(file: File, newName: String): Boolean {
         // file doesn't exist then return false
         if (!file.exists()) return false
         // the new name is space then return false
@@ -119,8 +120,9 @@ object FileUtils {
      * @param dirPath The path of directory.
      * @return `true`: yes<br></br>`false`: no
      */
-    fun isDir(dirPath: String?): Boolean {
-        return isDir(getFileByPath(dirPath))
+    @JvmStatic
+    fun isDir(dirPath: String): Boolean {
+        return isDir(getFileByPath(dirPath) ?: return false)
     }
 
     /**
@@ -129,8 +131,9 @@ object FileUtils {
      * @param file The file.
      * @return `true`: yes<br></br>`false`: no
      */
-    fun isDir(file: File?): Boolean {
-        return file != null && file.exists() && file.isDirectory
+    @JvmStatic
+    fun isDir(file: File): Boolean {
+        return file.exists() && file.isDirectory
     }
 
     /**
@@ -139,8 +142,9 @@ object FileUtils {
      * @param filePath The path of file.
      * @return `true`: yes<br></br>`false`: no
      */
-    fun isFile(filePath: String?): Boolean {
-        return isFile(getFileByPath(filePath))
+    @JvmStatic
+    fun isFile(filePath: String): Boolean {
+        return isFile(getFileByPath(filePath) ?: return false)
     }
 
     /**
@@ -149,8 +153,9 @@ object FileUtils {
      * @param file The file.
      * @return `true`: yes<br></br>`false`: no
      */
-    fun isFile(file: File?): Boolean {
-        return file != null && file.exists() && file.isFile
+    @JvmStatic
+    fun isFile(file: File): Boolean {
+        return file.exists() && file.isFile
     }
 
     /**
@@ -159,8 +164,9 @@ object FileUtils {
      * @param dirPath The path of directory.
      * @return `true`: exists or creates successfully<br></br>`false`: otherwise
      */
-    fun createOrExistsDir(dirPath: String?): Boolean {
-        return createOrExistsDir(getFileByPath(dirPath))
+    @JvmStatic
+    fun createOrExistsDir(dirPath: String): Boolean {
+        return createOrExistsDir(getFileByPath(dirPath) ?: return false)
     }
 
     /**
@@ -170,8 +176,8 @@ object FileUtils {
      * @return `true`: exists or creates successfully<br></br>`false`: otherwise
      */
     @JvmStatic
-    fun createOrExistsDir(file: File?): Boolean {
-        return file != null && if (file.exists()) file.isDirectory else file.mkdirs()
+    fun createOrExistsDir(file: File): Boolean {
+        return if (file.exists()) file.isDirectory else file.mkdirs()
     }
 
     /**
@@ -180,8 +186,9 @@ object FileUtils {
      * @param filePath The path of file.
      * @return `true`: exists or creates successfully<br></br>`false`: otherwise
      */
-    fun createOrExistsFile(filePath: String?): Boolean {
-        return createOrExistsFile(getFileByPath(filePath))
+    @JvmStatic
+    fun createOrExistsFile(filePath: String): Boolean {
+        return createOrExistsFile(getFileByPath(filePath) ?: return false)
     }
 
     /**
@@ -191,8 +198,7 @@ object FileUtils {
      * @return `true`: exists or creates successfully<br></br>`false`: otherwise
      */
     @JvmStatic
-    fun createOrExistsFile(file: File?): Boolean {
-        if (file == null) return false
+    fun createOrExistsFile(file: File): Boolean {
         if (file.exists()) return file.isFile
         return if (!createOrExistsDir(file.parentFile)) false else try {
             file.createNewFile()
@@ -208,8 +214,9 @@ object FileUtils {
      * @param filePath The path of file.
      * @return `true`: success<br></br>`false`: fail
      */
-    fun createFileByDeleteOldFile(filePath: String?): Boolean {
-        return createFileByDeleteOldFile(getFileByPath(filePath))
+    @JvmStatic
+    fun createFileByDeleteOldFile(filePath: String): Boolean {
+        return createFileByDeleteOldFile(getFileByPath(filePath) ?: return false)
     }
 
     /**
@@ -219,8 +226,7 @@ object FileUtils {
      * @return `true`: success<br></br>`false`: fail
      */
     @JvmStatic
-    fun createFileByDeleteOldFile(file: File?): Boolean {
-        if (file == null) return false
+    fun createFileByDeleteOldFile(file: File): Boolean {
         // file exists and unsuccessfully delete then return false
         if (file.exists() && !file.delete()) return false
         return if (!createOrExistsDir(file.parentFile)) false else try {
@@ -236,29 +242,16 @@ object FileUtils {
      *
      * @param srcPath  The path of source.
      * @param destPath The path of destination.
-     * @return `true`: success<br></br>`false`: fail
-     */
-    fun copy(
-        srcPath: String?,
-        destPath: String?
-    ): Boolean {
-        return copy(getFileByPath(srcPath), getFileByPath(destPath), null)
-    }
-
-    /**
-     * Copy the directory or file.
-     *
-     * @param srcPath  The path of source.
-     * @param destPath The path of destination.
      * @param listener The replace listener.
      * @return `true`: success<br></br>`false`: fail
      */
-    fun copy(
-        srcPath: String?,
-        destPath: String?,
-        listener: OnReplaceListener?
-    ): Boolean {
-        return copy(getFileByPath(srcPath), getFileByPath(destPath), listener)
+    @JvmStatic
+    @JvmOverloads
+    fun copy(srcPath: String, destPath: String, listener: OnReplaceListener? = null): Boolean {
+        return copy(
+            getFileByPath(srcPath) ?: return false,
+            getFileByPath(destPath) ?: return false, listener
+        )
     }
 
     /**
@@ -269,13 +262,9 @@ object FileUtils {
      * @param listener The replace listener.
      * @return `true`: success<br></br>`false`: fail
      */
+    @JvmStatic
     @JvmOverloads
-    fun copy(
-        src: File?,
-        dest: File?,
-        listener: OnReplaceListener? = null
-    ): Boolean {
-        if (src == null) return false
+    fun copy(src: File, dest: File, listener: OnReplaceListener? = null): Boolean {
         return if (src.isDirectory) {
             copyDir(src, dest, listener)
         } else copyFile(src, dest, listener)
@@ -289,11 +278,9 @@ object FileUtils {
      * @param listener The replace listener.
      * @return `true`: success<br></br>`false`: fail
      */
-    private fun copyDir(
-        srcDir: File,
-        destDir: File?,
-        listener: OnReplaceListener?
-    ): Boolean {
+    @JvmStatic
+    @JvmOverloads
+    private fun copyDir(srcDir: File, destDir: File, listener: OnReplaceListener? = null): Boolean {
         return copyOrMoveDir(srcDir, destDir, listener, false)
     }
 
@@ -305,26 +292,12 @@ object FileUtils {
      * @param listener The replace listener.
      * @return `true`: success<br></br>`false`: fail
      */
+    @JvmStatic
+    @JvmOverloads
     private fun copyFile(
-        srcFile: File,
-        destFile: File?,
-        listener: OnReplaceListener?
+        srcFile: File, destFile: File, listener: OnReplaceListener? = null
     ): Boolean {
         return copyOrMoveFile(srcFile, destFile, listener, false)
-    }
-
-    /**
-     * Move the directory or file.
-     *
-     * @param srcPath  The path of source.
-     * @param destPath The path of destination.
-     * @return `true`: success<br></br>`false`: fail
-     */
-    fun move(
-        srcPath: String?,
-        destPath: String?
-    ): Boolean {
-        return move(getFileByPath(srcPath), getFileByPath(destPath), null)
     }
 
     /**
@@ -335,12 +308,13 @@ object FileUtils {
      * @param listener The replace listener.
      * @return `true`: success<br></br>`false`: fail
      */
-    fun move(
-        srcPath: String?,
-        destPath: String?,
-        listener: OnReplaceListener?
-    ): Boolean {
-        return move(getFileByPath(srcPath), getFileByPath(destPath), listener)
+    @JvmStatic
+    @JvmOverloads
+    fun move(srcPath: String, destPath: String, listener: OnReplaceListener? = null): Boolean {
+        return move(
+            getFileByPath(srcPath) ?: return false,
+            getFileByPath(destPath) ?: return false, listener
+        )
     }
 
     /**
@@ -351,13 +325,9 @@ object FileUtils {
      * @param listener The replace listener.
      * @return `true`: success<br></br>`false`: fail
      */
+    @JvmStatic
     @JvmOverloads
-    fun move(
-        src: File?,
-        dest: File?,
-        listener: OnReplaceListener? = null
-    ): Boolean {
-        if (src == null) return false
+    fun move(src: File, dest: File, listener: OnReplaceListener? = null): Boolean {
         return if (src.isDirectory) {
             moveDir(src, dest, listener)
         } else moveFile(src, dest, listener)
@@ -371,11 +341,9 @@ object FileUtils {
      * @param listener The replace listener.
      * @return `true`: success<br></br>`false`: fail
      */
-    fun moveDir(
-        srcDir: File?,
-        destDir: File?,
-        listener: OnReplaceListener?
-    ): Boolean {
+    @JvmStatic
+    @JvmOverloads
+    fun moveDir(srcDir: File, destDir: File, listener: OnReplaceListener? = null): Boolean {
         return copyOrMoveDir(srcDir, destDir, listener, true)
     }
 
@@ -387,21 +355,18 @@ object FileUtils {
      * @param listener The replace listener.
      * @return `true`: success<br></br>`false`: fail
      */
-    fun moveFile(
-        srcFile: File?,
-        destFile: File?,
-        listener: OnReplaceListener?
-    ): Boolean {
+    @JvmStatic
+    @JvmOverloads
+    fun moveFile(srcFile: File, destFile: File, listener: OnReplaceListener? = null): Boolean {
         return copyOrMoveFile(srcFile, destFile, listener, true)
     }
 
+    @JvmStatic
+    @JvmOverloads
     private fun copyOrMoveDir(
-        srcDir: File?,
-        destDir: File?,
-        listener: OnReplaceListener?,
-        isMove: Boolean
+        srcDir: File, destDir: File,
+        listener: OnReplaceListener? = null, isMove: Boolean
     ): Boolean {
-        if (srcDir == null || destDir == null) return false
         // destDir's path locate in srcDir's path then return false
         val srcPath = srcDir.path + File.separator
         val destPath = destDir.path + File.separator
@@ -422,13 +387,14 @@ object FileUtils {
         return !isMove || deleteDir(srcDir)
     }
 
+    @JvmStatic
+    @JvmOverloads
     private fun copyOrMoveFile(
-        srcFile: File?,
-        destFile: File?,
-        listener: OnReplaceListener?,
+        srcFile: File,
+        destFile: File,
+        listener: OnReplaceListener? = null,
         isMove: Boolean
     ): Boolean {
-        if (srcFile == null || destFile == null) return false
         // srcFile equals destFile then return false
         if (srcFile == destFile) return false
         // srcFile doesn't exist or isn't a file then return false
@@ -461,8 +427,9 @@ object FileUtils {
      * @param filePath The path of file.
      * @return `true`: success<br></br>`false`: fail
      */
-    fun delete(filePath: String?): Boolean {
-        return delete(getFileByPath(filePath))
+    @JvmStatic
+    fun delete(filePath: String): Boolean {
+        return delete(getFileByPath(filePath) ?: return false)
     }
 
     /**
@@ -471,11 +438,10 @@ object FileUtils {
      * @param file The file.
      * @return `true`: success<br></br>`false`: fail
      */
-    fun delete(file: File?): Boolean {
-        if (file == null) return false
-        return if (file.isDirectory) {
-            deleteDir(file)
-        } else deleteFile(file)
+    @JvmStatic
+    fun delete(file: File): Boolean {
+        return if (file.isDirectory) deleteDir(file)
+        else deleteFile(file)
     }
 
     /**
@@ -484,8 +450,8 @@ object FileUtils {
      * @param dir The directory.
      * @return `true`: success<br></br>`false`: fail
      */
-    private fun deleteDir(dir: File?): Boolean {
-        if (dir == null) return false
+    @JvmStatic
+    private fun deleteDir(dir: File): Boolean {
         // dir doesn't exist then return true
         if (!dir.exists()) return true
         // dir isn't a directory then return false
@@ -509,8 +475,9 @@ object FileUtils {
      * @param file The file.
      * @return `true`: success<br></br>`false`: fail
      */
-    private fun deleteFile(file: File?): Boolean {
-        return file != null && (!file.exists() || file.isFile && file.delete())
+    @JvmStatic
+    private fun deleteFile(file: File): Boolean {
+        return !file.exists() || file.isFile && file.delete()
     }
 
     /**
@@ -519,7 +486,8 @@ object FileUtils {
      * @param dirPath The path of directory.
      * @return `true`: success<br></br>`false`: fail
      */
-    fun deleteAllInDir(dirPath: String?): Boolean {
+    @JvmStatic
+    fun deleteAllInDir(dirPath: String): Boolean {
         return deleteAllInDir(getFileByPath(dirPath))
     }
 
@@ -530,8 +498,8 @@ object FileUtils {
      * @return `true`: success<br></br>`false`: fail
      */
     @JvmStatic
-    fun deleteAllInDir(dir: File?): Boolean {
-        return deleteFilesInDirWithFilter(dir) { true }
+    fun deleteAllInDir(dir: File): Boolean {
+        return deleteFilesInDirWithFilter(dir)
     }
 
     /**
@@ -540,8 +508,9 @@ object FileUtils {
      * @param dirPath The path of directory.
      * @return `true`: success<br></br>`false`: fail
      */
-    fun deleteFilesInDir(dirPath: String?): Boolean {
-        return deleteFilesInDir(getFileByPath(dirPath))
+    @JvmStatic
+    fun deleteFilesInDir(dirPath: String): Boolean {
+        return deleteFilesInDir(getFileByPath(dirPath)?:return false)
     }
 
     /**
@@ -550,7 +519,7 @@ object FileUtils {
      * @param dir The directory.
      * @return `true`: success<br></br>`false`: fail
      */
-    fun deleteFilesInDir(dir: File?): Boolean {
+    fun deleteFilesInDir(dir: File): Boolean {
         return deleteFilesInDirWithFilter(dir) { pathname -> pathname.isFile }
     }
 
@@ -561,11 +530,10 @@ object FileUtils {
      * @param filter  The filter.
      * @return `true`: success<br></br>`false`: fail
      */
-    fun deleteFilesInDirWithFilter(
-        dirPath: String?,
-        filter: FileFilter?
-    ): Boolean {
-        return deleteFilesInDirWithFilter(getFileByPath(dirPath), filter)
+    @JvmStatic
+    @JvmOverloads
+    fun deleteFilesInDirWithFilter(dirPath: String, filter: FileFilter?= null): Boolean {
+        return deleteFilesInDirWithFilter(getFileByPath(dirPath)?:return false, filter)
     }
 
     /**
@@ -575,8 +543,10 @@ object FileUtils {
      * @param filter The filter.
      * @return `true`: success<br></br>`false`: fail
      */
-    fun deleteFilesInDirWithFilter(dir: File?, filter: FileFilter?): Boolean {
-        if (dir == null || filter == null) return false
+    @JvmStatic
+    @JvmOverloads
+    fun deleteFilesInDirWithFilter(dir: File, filter: FileFilter?=null): Boolean {
+        if (filter == null) return false
         // dir doesn't exist then return true
         if (!dir.exists()) return true
         // dir isn't a directory then return false

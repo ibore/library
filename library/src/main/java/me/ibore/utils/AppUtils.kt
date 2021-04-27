@@ -28,8 +28,9 @@ object AppUtils  {
      *
      * @param listener The status of application changed listener
      */
+    @JvmStatic
     fun registerAppStatusChangedListener(listener: OnAppStatusChangedListener) {
-        UtilsBridge.addOnAppStatusChangedListener(listener)
+        UtilsActivityLifecycleImpl.INSTANCE.addOnAppStatusChangedListener(listener)
     }
 
     /**
@@ -37,8 +38,9 @@ object AppUtils  {
      *
      * @param listener The status of application changed listener
      */
+    @JvmStatic
     fun unregisterAppStatusChangedListener(listener: OnAppStatusChangedListener) {
-        UtilsBridge.removeOnAppStatusChangedListener(listener)
+        UtilsActivityLifecycleImpl.INSTANCE.removeOnAppStatusChangedListener(listener)
     }
 
     /**
@@ -49,8 +51,10 @@ object AppUtils  {
      *
      * @param filePath The path of file.
      */
-    fun installApp(filePath: String?) {
-        installApp(UtilsBridge.getFileByPath(filePath))
+    @JvmStatic
+    fun installApp(filePath: String) {
+        val file = FileUtils.getFileByPath(filePath)?:return
+        installApp(file)
     }
 
     /**
@@ -61,8 +65,9 @@ object AppUtils  {
      *
      * @param file The file.
      */
-    fun installApp(file: File?) {
-        val installAppIntent = UtilsBridge.getInstallAppIntent(file) ?: return
+    @JvmStatic
+    fun installApp(file: File) {
+        val installAppIntent = IntentUtils.getInstallAppIntent(file) ?: return
         Utils.app.startActivity(installAppIntent)
     }
 
@@ -74,8 +79,9 @@ object AppUtils  {
      *
      * @param uri The uri.
      */
-    fun installApp(uri: Uri?) {
-        val installAppIntent = UtilsBridge.getInstallAppIntent(uri) ?: return
+    @JvmStatic
+    fun installApp(uri: Uri) {
+        val installAppIntent = IntentUtils.getInstallAppIntent(uri) ?: return
         Utils.app.startActivity(installAppIntent)
     }
 
@@ -580,20 +586,14 @@ object AppUtils  {
     /**
      * Return the application's user-ID.
      *
-     * @return the application's signature for MD5 value
-     */
-    val appUid: Int
-        get() = getAppUid(Utils.app.packageName)
-
-    /**
-     * Return the application's user-ID.
-     *
      * @param pkgName The name of the package.
      * @return the application's signature for MD5 value
      */
-    fun getAppUid(pkgName: String?): Int {
+    @JvmStatic
+    @JvmOverloads
+    fun getAppUid(pkgName: String = Utils.app.packageName): Int {
         return try {
-            Utils.app.packageManager.getApplicationInfo(pkgName!!, 0).uid
+            Utils.app.packageManager.getApplicationInfo(pkgName, 0).uid
         } catch (e: Exception) {
             e.printStackTrace()
             -1

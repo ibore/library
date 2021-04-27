@@ -63,13 +63,13 @@ object IntentUtils {
      * @param file The file.
      * @return the intent of install app
      */
-    fun getInstallAppIntent(file: File?): Intent? {
-        if (!isFileExists(file)) return null
+    fun getInstallAppIntent(file: File): Intent? {
+        if (!FileUtils.isFileExists(file)) return null
         val uri: Uri = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
             Uri.fromFile(file)
         } else {
             val authority = Utils.app.packageName + ".utilcode.provider"
-            FileProvider.getUriForFile(Utils.app, authority, file!!)
+            FileProvider.getUriForFile(Utils.app, authority, file)
         }
         return getInstallAppIntent(uri)
     }
@@ -83,7 +83,7 @@ object IntentUtils {
      * @param uri The uri.
      * @return the intent of install app
      */
-    fun getInstallAppIntent(uri: Uri?): Intent {
+    fun getInstallAppIntent(uri: Uri): Intent {
         val intent = Intent(Intent.ACTION_VIEW)
         val type = "application/vnd.android.package-archive"
         intent.setDataAndType(uri, type)
