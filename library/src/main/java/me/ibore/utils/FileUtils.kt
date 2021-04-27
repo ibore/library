@@ -488,7 +488,7 @@ object FileUtils {
      */
     @JvmStatic
     fun deleteAllInDir(dirPath: String): Boolean {
-        return deleteAllInDir(getFileByPath(dirPath))
+        return deleteAllInDir(getFileByPath(dirPath) ?: return false)
     }
 
     /**
@@ -576,7 +576,7 @@ object FileUtils {
      * @return the files in directory
      */
     @JvmOverloads
-    fun listFilesInDir(dirPath: String?, comparator: Comparator<File?>? = null): List<File?> {
+    fun listFilesInDir(dirPath: String, comparator: Comparator<File>? = null): List<File> {
         return listFilesInDir(getFileByPath(dirPath), false, comparator)
     }
 
@@ -590,7 +590,7 @@ object FileUtils {
      * @return the files in directory
      */
     @JvmOverloads
-    fun listFilesInDir(dir: File?, comparator: Comparator<File?>? = null): List<File?> {
+    fun listFilesInDir(dir: File, comparator: Comparator<File>? = null): List<File> {
         return listFilesInDir(dir, false, comparator)
     }
 
@@ -601,7 +601,7 @@ object FileUtils {
      * @param isRecursive True to traverse subdirectories, false otherwise.
      * @return the files in directory
      */
-    fun listFilesInDir(dirPath: String?, isRecursive: Boolean): List<File?> {
+    fun listFilesInDir(dirPath: String, isRecursive: Boolean): List<File> {
         return listFilesInDir(getFileByPath(dirPath), isRecursive)
     }
 
@@ -614,10 +614,8 @@ object FileUtils {
      * @return the files in directory
      */
     fun listFilesInDir(
-        dirPath: String?,
-        isRecursive: Boolean,
-        comparator: Comparator<File?>?
-    ): List<File?> {
+        dirPath: String, isRecursive: Boolean, comparator: Comparator<File>?
+    ): List<File> {
         return listFilesInDir(getFileByPath(dirPath), isRecursive, comparator)
     }
 
@@ -631,7 +629,7 @@ object FileUtils {
      */
     @JvmOverloads
     fun listFilesInDir(
-        dir: File?,
+        dir: File,
         isRecursive: Boolean,
         comparator: Comparator<File?>? = null
     ): List<File?> {
@@ -1143,8 +1141,8 @@ object FileUtils {
      * @param filePath The path of file.
      * @return the md5 of file
      */
-    fun getFileMD5(filePath: String?): ByteArray? {
-        return getFileMD5(getFileByPath(filePath))
+    fun getFileMD5(filePath: String): ByteArray? {
+        return getFileMD5(getFileByPath(filePath) ?: return null)
     }
 
     /**
@@ -1153,8 +1151,9 @@ object FileUtils {
      * @param file The file.
      * @return the md5 of file
      */
-    fun getFileMD5(file: File?): ByteArray? {
-        if (file == null) return null
+
+    @JvmStatic
+    fun getFileMD5(file: File): ByteArray? {
         var dis: DigestInputStream? = null
         try {
             val fis = FileInputStream(file)
@@ -1186,8 +1185,9 @@ object FileUtils {
      * @param file The file.
      * @return the file's path of directory
      */
-    fun getDirName(file: File?): String {
-        return if (file == null) "" else getDirName(file.absolutePath)
+    @JvmStatic
+    fun getDirName(file: File): String {
+        return getDirName(file.absolutePath)
     }
 
     /**
@@ -1196,6 +1196,7 @@ object FileUtils {
      * @param filePath The path of file.
      * @return the file's path of directory
      */
+    @JvmStatic
     fun getDirName(filePath: String): String {
         if (UtilsBridge.isSpace(filePath)) return ""
         val lastSep = filePath.lastIndexOf(File.separator)
@@ -1208,8 +1209,9 @@ object FileUtils {
      * @param file The file.
      * @return the name of file
      */
-    fun getFileName(file: File?): String {
-        return if (file == null) "" else getFileName(file.absolutePath)
+    @JvmStatic
+    fun getFileName(file: File): String {
+        return getFileName(file.absolutePath)
     }
 
     /**
@@ -1218,6 +1220,7 @@ object FileUtils {
      * @param filePath The path of file.
      * @return the name of file
      */
+    @JvmStatic
     fun getFileName(filePath: String): String {
         if (UtilsBridge.isSpace(filePath)) return ""
         val lastSep = filePath.lastIndexOf(File.separator)
@@ -1230,10 +1233,9 @@ object FileUtils {
      * @param file The file.
      * @return the name of file without extension
      */
-    fun getFileNameNoExtension(file: File?): String {
-        return if (file == null) "" else getFileNameNoExtension(
-            file.path
-        )
+    @JvmStatic
+    fun getFileNameNoExtension(file: File): String {
+        return getFileNameNoExtension(file.path)
     }
 
     /**
@@ -1242,6 +1244,7 @@ object FileUtils {
      * @param filePath The path of file.
      * @return the name of file without extension
      */
+    @JvmStatic
     fun getFileNameNoExtension(filePath: String): String {
         if (UtilsBridge.isSpace(filePath)) return ""
         val lastPoi = filePath.lastIndexOf('.')
@@ -1260,8 +1263,9 @@ object FileUtils {
      * @param file The file.
      * @return the extension of file
      */
-    fun getFileExtension(file: File?): String {
-        return if (file == null) "" else getFileExtension(file.path)
+    @JvmStatic
+    fun getFileExtension(file: File): String {
+        return getFileExtension(file.path)
     }
 
     /**
@@ -1270,6 +1274,7 @@ object FileUtils {
      * @param filePath The path of file.
      * @return the extension of file
      */
+    @JvmStatic
     fun getFileExtension(filePath: String): String {
         if (UtilsBridge.isSpace(filePath)) return ""
         val lastPoi = filePath.lastIndexOf('.')
@@ -1282,7 +1287,8 @@ object FileUtils {
      *
      * @param filePath The path of file.
      */
-    fun notifySystemToScan(filePath: String?) {
+    @JvmStatic
+    fun notifySystemToScan(filePath: String) {
         notifySystemToScan(getFileByPath(filePath))
     }
 
@@ -1344,7 +1350,7 @@ object FileUtils {
     }
 
     interface OnReplaceListener {
-        fun onReplace(srcFile: File?, destFile: File?): Boolean
+        fun onReplace(srcFile: File, destFile: File): Boolean
     }
 
 }
