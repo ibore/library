@@ -24,187 +24,105 @@ object JsonUtils {
 
     @JvmStatic
     @JvmOverloads
-    fun getBoolean(
-        jsonObject: JSONObject?,
-        key: String?,
-        defaultValue: Boolean = false
-    ): Boolean {
+    fun getBoolean(jsonObject: JSONObject, key: String, defaultValue: Boolean = false): Boolean {
         return getValueByType(jsonObject, key, defaultValue, TYPE_BOOLEAN)
     }
 
     @JvmStatic
     @JvmOverloads
-    fun getBoolean(
-        json: String?,
-        key: String?,
-        defaultValue: Boolean = false
-    ): Boolean {
+    fun getBoolean(json: String, key: String, defaultValue: Boolean = false): Boolean {
         return getValueByType(json, key, defaultValue, TYPE_BOOLEAN)
     }
 
     @JvmStatic
     @JvmOverloads
-    fun getInt(
-        jsonObject: JSONObject?,
-        key: String?,
-        defaultValue: Int = -1
-    ): Int {
+    fun getInt(jsonObject: JSONObject, key: String, defaultValue: Int = -1): Int {
         return getValueByType(jsonObject, key, defaultValue, TYPE_INT)
     }
 
     @JvmStatic
     @JvmOverloads
-    fun getInt(
-        json: String?,
-        key: String?,
-        defaultValue: Int = -1
-    ): Int {
+    fun getInt(json: String, key: String, defaultValue: Int = -1): Int {
         return getValueByType(json, key, defaultValue, TYPE_INT)
     }
 
     @JvmStatic
     @JvmOverloads
-    fun getLong(
-        jsonObject: JSONObject?,
-        key: String?,
-        defaultValue: Long = -1
-    ): Long {
+    fun getLong(jsonObject: JSONObject, key: String, defaultValue: Long = -1): Long {
         return getValueByType(jsonObject, key, defaultValue, TYPE_LONG)
     }
 
     @JvmStatic
     @JvmOverloads
-    fun getLong(
-        json: String?,
-        key: String?,
-        defaultValue: Long = -1
-    ): Long {
+    fun getLong(json: String, key: String, defaultValue: Long = -1): Long {
         return getValueByType(json, key, defaultValue, TYPE_LONG)
     }
 
     @JvmStatic
     @JvmOverloads
-    fun getDouble(
-        jsonObject: JSONObject?,
-        key: String?,
-        defaultValue: Double = -1.0
-    ): Double {
+    fun getDouble(jsonObject: JSONObject, key: String, defaultValue: Double = -1.0): Double {
         return getValueByType(jsonObject, key, defaultValue, TYPE_DOUBLE)
     }
 
     @JvmStatic
     @JvmOverloads
-    fun getDouble(
-        json: String?,
-        key: String?,
-        defaultValue: Double = -1.0
-    ): Double {
+    fun getDouble(json: String, key: String, defaultValue: Double = -1.0): Double {
         return getValueByType(json, key, defaultValue, TYPE_DOUBLE)
     }
 
     @JvmStatic
     @JvmOverloads
-    fun getString(
-        jsonObject: JSONObject?,
-        key: String?,
-        defaultValue: String = ""
-    ): String {
+    fun getString(jsonObject: JSONObject, key: String, defaultValue: String = ""): String {
         return getValueByType(jsonObject, key, defaultValue, TYPE_STRING)
     }
 
     @JvmStatic
     @JvmOverloads
-    fun getString(
-        json: String?,
-        key: String?,
-        defaultValue: String = ""
-    ): String {
+    fun getString(json: String, key: String, defaultValue: String = ""): String {
         return getValueByType(json, key, defaultValue, TYPE_STRING)
     }
 
-    fun getJSONObject(
-        jsonObject: JSONObject?,
-        key: String?,
-        defaultValue: JSONObject
-    ): JSONObject {
+    @JvmStatic
+    fun getJSONObject(jsonObject: JSONObject, key: String, defaultValue: JSONObject): JSONObject {
         return getValueByType(jsonObject, key, defaultValue, TYPE_JSON_OBJECT)
     }
 
-    fun getJSONObject(
-        json: String?,
-        key: String?,
-        defaultValue: JSONObject
-    ): JSONObject {
+    @JvmStatic
+    fun getJSONObject(json: String, key: String, defaultValue: JSONObject): JSONObject {
         return getValueByType(json, key, defaultValue, TYPE_JSON_OBJECT)
     }
 
-    fun getJSONArray(
-        jsonObject: JSONObject?,
-        key: String?,
-        defaultValue: JSONArray
-    ): JSONArray {
+    @JvmStatic
+    fun getJSONArray(jsonObject: JSONObject, key: String, defaultValue: JSONArray): JSONArray {
         return getValueByType(jsonObject, key, defaultValue, TYPE_JSON_ARRAY)
     }
 
-    fun getJSONArray(
-        json: String?,
-        key: String?,
-        defaultValue: JSONArray
-    ): JSONArray {
+    @JvmStatic
+    fun getJSONArray(json: String, key: String, defaultValue: JSONArray): JSONArray {
         return getValueByType(json, key, defaultValue, TYPE_JSON_ARRAY)
     }
 
-    private fun <T> getValueByType(
-        jsonObject: JSONObject?,
-        key: String?,
-        defaultValue: T,
-        type: Byte
-    ): T {
-        return if (jsonObject == null || key == null || key.isEmpty()) {
-            defaultValue
-        } else try {
-            val ret: Any = when (type) {
-                TYPE_BOOLEAN -> {
-                    jsonObject.getBoolean(key)
-                }
-                TYPE_INT -> {
-                    jsonObject.getInt(key)
-                }
-                TYPE_LONG -> {
-                    jsonObject.getLong(key)
-                }
-                TYPE_DOUBLE -> {
-                    jsonObject.getDouble(key)
-                }
-                TYPE_STRING -> {
-                    jsonObject.getString(key)
-                }
-                TYPE_JSON_OBJECT -> {
-                    jsonObject.getJSONObject(key)
-                }
-                TYPE_JSON_ARRAY -> {
-                    jsonObject.getJSONArray(key)
-                }
-                else -> {
-                    return defaultValue
-                }
+    @Suppress("UNCHECKED_CAST")
+    private fun <T> getValueByType(jsonO: JSONObject, key: String, defaultValue: T, type: Byte): T {
+        return if (key.isEmpty()) defaultValue else try {
+            return when (type) {
+                TYPE_BOOLEAN -> jsonO.getBoolean(key) as T
+                TYPE_INT -> jsonO.getInt(key) as T
+                TYPE_LONG -> jsonO.getLong(key) as T
+                TYPE_DOUBLE -> jsonO.getDouble(key) as T
+                TYPE_STRING -> jsonO.getString(key) as T
+                TYPE_JSON_OBJECT -> jsonO.getJSONObject(key) as T
+                TYPE_JSON_ARRAY -> jsonO.getJSONArray(key) as T
+                else -> defaultValue
             }
-            ret as T
         } catch (e: JSONException) {
             e.printStackTrace()
             defaultValue
         }
     }
 
-    private fun <T> getValueByType(
-        json: String?,
-        key: String?,
-        defaultValue: T,
-        type: Byte
-    ): T {
-        return if (json == null || json.isEmpty() || key == null || key.isEmpty()) {
-            defaultValue
-        } else try {
+    private fun <T> getValueByType(json: String, key: String, defaultValue: T, type: Byte): T {
+        return if (json.isEmpty() || key.isEmpty()) defaultValue else try {
             getValueByType(JSONObject(json), key, defaultValue, type)
         } catch (e: JSONException) {
             e.printStackTrace()

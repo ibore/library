@@ -89,7 +89,7 @@ object BatteryUtils {
         }
 
         override fun onReceive(context: Context, intent: Intent) {
-            if (Intent.ACTION_BATTERY_CHANGED == intent.getAction()) {
+            if (Intent.ACTION_BATTERY_CHANGED == intent.action) {
                 ThreadUtils.runOnUiThread {
                     val level: Int = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1)
                     val status: Int =
@@ -107,20 +107,16 @@ object BatteryUtils {
 
         companion object {
             internal fun getInstance(): BatteryChangedReceiver {
-                return BatteryChangedReceiver.LazyHolder.INSTANCE
+                return LazyHolder.INSTANCE
             }
         }
     }
 
     interface OnBatteryStatusChangedListener {
-        fun onBatteryStatusChanged(status: Status?)
+        fun onBatteryStatusChanged(status: Status)
     }
 
-    class Status internal constructor(
-        var level: Int,
-        @BatteryStatus
-        var status: Int
-    ) {
+    class Status internal constructor(var level: Int, @BatteryStatus var status: Int) {
 
         override fun toString(): String {
             return batteryStatus2String(status) + ": " + level + "%"

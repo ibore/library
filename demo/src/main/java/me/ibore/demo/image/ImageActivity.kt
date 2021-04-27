@@ -27,7 +27,7 @@ class ImageActivity : BaseActivity<ActivityImageBinding>() {
 
     override fun onBindData() {
 
-        adapter.addData(ActivityItem("选择图片", TitleBarActivity::class.java))
+        adapter.addData(ActivityItem("选择图片", ImagePickerActivity::class.java))
         adapter.addData(ActivityItem("图片压缩", ImageCompressActivity::class.java))
 
 //        adapter.addData(TitleItem("拍照") {

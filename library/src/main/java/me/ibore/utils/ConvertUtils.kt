@@ -7,9 +7,9 @@ import android.graphics.drawable.Drawable
 import android.os.Parcel
 import android.os.Parcelable
 import android.view.View
+import me.ibore.utils.UtilsBridge.isSpace
 import me.ibore.utils.constant.MemoryConstants
 import me.ibore.utils.constant.TimeConstants
-import me.ibore.utils.UtilsBridge.isSpace
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.*
@@ -26,41 +26,13 @@ import java.util.*
  */
 object ConvertUtils {
     private const val BUFFER_SIZE = 8192
+
     private val HEX_DIGITS_UPPER = charArrayOf(
-        '0',
-        '1',
-        '2',
-        '3',
-        '4',
-        '5',
-        '6',
-        '7',
-        '8',
-        '9',
-        'A',
-        'B',
-        'C',
-        'D',
-        'E',
-        'F'
+        '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'
     )
+
     private val HEX_DIGITS_LOWER = charArrayOf(
-        '0',
-        '1',
-        '2',
-        '3',
-        '4',
-        '5',
-        '6',
-        '7',
-        '8',
-        '9',
-        'a',
-        'b',
-        'c',
-        'd',
-        'e',
-        'f'
+        '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'
     )
 
     /**
@@ -170,8 +142,7 @@ object ConvertUtils {
      * @return hex string
      */
     @JvmOverloads
-    fun bytes2HexString(bytes: ByteArray?, isUpperCase: Boolean = true): String {
-        if (bytes == null) return ""
+    fun bytes2HexString(bytes: ByteArray, isUpperCase: Boolean = true): String {
         val hexDigits = if (isUpperCase) HEX_DIGITS_UPPER else HEX_DIGITS_LOWER
         val len = bytes.size
         if (len <= 0) return ""

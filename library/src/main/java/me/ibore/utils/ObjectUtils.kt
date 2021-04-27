@@ -258,6 +258,6 @@ object ObjectUtils {
      * Return the hash code of objects.
      */
     fun hashCodes(vararg values: Any?): Int {
-        return Arrays.hashCode(values)
+        return values.contentHashCode()
     }
 }

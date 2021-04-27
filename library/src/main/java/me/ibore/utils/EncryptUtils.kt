@@ -293,8 +293,8 @@ object EncryptUtils {
      * @param data 待加密数据
      * @return SHA512 加密后的数据转十六进制
      */
-    fun encryptSHA512ToHexString(data: String?): String? {
-        return if (data.isNullOrEmpty()) null else encryptSHA512ToHexString(data.toByteArray())
+    fun encryptSHA512ToHexString(data: String): String {
+        return if (data.isEmpty()) "" else encryptSHA512ToHexString(data.toByteArray())
     }
 
     /**
@@ -302,7 +302,7 @@ object EncryptUtils {
      * @param data 待加密数据
      * @return SHA512 加密后的数据转十六进制
      */
-    fun encryptSHA512ToHexString(data: ByteArray?): String {
+    fun encryptSHA512ToHexString(data: ByteArray): String {
         return ConvertUtils.bytes2HexString(encryptSHA512(data))
     }
 
@@ -312,11 +312,8 @@ object EncryptUtils {
      * @param algorithm 算法
      * @return 指定加密算法加密后的数据
      */
-    fun hashTemplate(
-        data: ByteArray?,
-        algorithm: String
-    ): ByteArray? {
-        return if (data == null || data.isEmpty()) null else try {
+    fun hashTemplate(data: ByteArray, algorithm: String): ByteArray {
+        return if (data.isEmpty()) null else try {
             val digest = MessageDigest.getInstance(algorithm)
             digest.update(data)
             digest.digest()

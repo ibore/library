@@ -116,10 +116,7 @@ object HttpUtils {
         return null
     }
 
-    private fun prepareRequestProperty(
-        connection: HttpURLConnection?,
-        property: Map<String, String>?
-    ) {
+    private fun prepareRequestProperty(connection: HttpURLConnection?, property: Map<String, String>?) {
         if (!property.isNullOrEmpty()) {
             for ((key, value) in property) {
                 if (connection!!.getRequestProperty(key) == null) {

@@ -21,16 +21,10 @@ object DESUtils {
      * @param key 前八个字节将被用来生成密钥
      * @return 可逆算法 DES 的密钥
      */
-    fun getDESKey(key: ByteArray?): Key? {
-        if (key == null) return null
-        try {
-            val desKey = DESKeySpec(key)
-            val keyFactory = SecretKeyFactory.getInstance("DES")
-            return keyFactory.generateSecret(desKey)
-        } catch (e: Exception) {
-            LogUtils.d(e)
-        }
-        return null
+    fun getDESKey(key: ByteArray): Key {
+        val desKey = DESKeySpec(key)
+        val keyFactory = SecretKeyFactory.getInstance("DES")
+        return keyFactory.generateSecret(desKey)
     }
 
     /**
@@ -39,20 +33,11 @@ object DESUtils {
      * @param key  密钥
      * @return 加密后的 byte[]
      */
-    fun encrypt(
-        data: ByteArray?,
-        key: ByteArray?
-    ): ByteArray? {
-        if (data == null || key == null) return null
-        try {
-            val secretKey: SecretKey = SecretKeySpec(key, "DES")
-            val cipher = Cipher.getInstance("DES/ECB/PKCS5Padding")
-            cipher.init(Cipher.ENCRYPT_MODE, secretKey)
-            return cipher.doFinal(data)
-        } catch (e: Exception) {
-            LogUtils.d(e)
-        }
-        return null
+    fun encrypt(data: ByteArray, key: ByteArray): ByteArray {
+        val secretKey: SecretKey = SecretKeySpec(key, "DES")
+        val cipher = Cipher.getInstance("DES/ECB/PKCS5Padding")
+        cipher.init(Cipher.ENCRYPT_MODE, secretKey)
+        return cipher.doFinal(data)
     }
 
     /**
@@ -61,19 +46,10 @@ object DESUtils {
      * @param key  密钥
      * @return 解密后的 byte[]
      */
-    fun decrypt(
-        data: ByteArray?,
-        key: ByteArray?
-    ): ByteArray? {
-        if (data == null || key == null) return null
-        try {
-            val secretKey: SecretKey = SecretKeySpec(key, "DES")
-            val cipher = Cipher.getInstance("DES/ECB/PKCS5Padding")
-            cipher.init(Cipher.DECRYPT_MODE, secretKey)
-            return cipher.doFinal(data)
-        } catch (e: Exception) {
-            LogUtils.d(e)
-        }
-        return null
+    fun decrypt(data: ByteArray, key: ByteArray): ByteArray {
+        val secretKey: SecretKey = SecretKeySpec(key, "DES")
+        val cipher = Cipher.getInstance("DES/ECB/PKCS5Padding")
+        cipher.init(Cipher.DECRYPT_MODE, secretKey)
+        return cipher.doFinal(data)
     }
 }
