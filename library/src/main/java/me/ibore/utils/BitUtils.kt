@@ -36,10 +36,10 @@ object BitUtils  {
     fun setBitValue(source: Byte, pos: Int, value: Byte): Byte {
         var sourceTemp = source.toInt()
         val mask = (1 shl pos).toByte()
-        if (value > 0) {
-            sourceTemp = sourceTemp or mask.toInt()
+        sourceTemp = if (value > 0) {
+            sourceTemp or mask.toInt()
         } else {
-            sourceTemp = sourceTemp and mask.inv().toInt()
+            sourceTemp and mask.inv().toInt()
         }
         return sourceTemp.toByte()
     }

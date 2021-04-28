@@ -12,6 +12,7 @@ import java.util.*
 
 
 class BottomBarLayout @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : LinearLayout(context, attrs, defStyleAttr) {
+
     private val STATE_INSTANCE = "instance_state"
     private val STATE_ITEM = "state_item"
     private var mSmoothScroll: Boolean = false

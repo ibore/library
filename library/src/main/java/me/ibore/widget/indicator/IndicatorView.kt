@@ -18,6 +18,7 @@ import me.ibore.widget.indicator.IndicatorView.IndicatorStyle.Companion.INDICATO
 import me.ibore.widget.indicator.IndicatorView.IndicatorStyle.Companion.INDICATOR_DASH
 
 class IndicatorView @JvmOverloads constructor(context: Context?, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : View(context, attrs, defStyleAttr), Indicator {
+
     private val interpolator: Interpolator = DecelerateInterpolator()
     private var accelerateInterpolator: Interpolator? = null
     private var path: Path? = null
@@ -26,8 +27,9 @@ class IndicatorView @JvmOverloads constructor(context: Context?, attrs: Attribut
     private var pagerCount = 0
     private var unColor = Color.GRAY
     private var selectedColor = Color.WHITE
-    private val indicatorPaint: Paint
-    private val rectF: RectF
+    private val indicatorPaint: Paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    private val rectF: RectF = RectF()
+
     /**
      * indicator样式
      */
@@ -382,8 +384,4 @@ class IndicatorView @JvmOverloads constructor(context: Context?, attrs: Attribut
         return this
     }
 
-    init {
-        rectF = RectF()
-        indicatorPaint = Paint(Paint.ANTI_ALIAS_FLAG)
-    }
 }

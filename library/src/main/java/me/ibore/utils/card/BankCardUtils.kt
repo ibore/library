@@ -1,4 +1,6 @@
-package me.ibore.utils
+package me.ibore.utils.card
+
+import me.ibore.utils.LogUtils
 
 /**
  * detail: 银行卡管理工具类

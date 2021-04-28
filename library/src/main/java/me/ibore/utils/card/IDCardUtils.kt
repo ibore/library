@@ -1,6 +1,8 @@
-package me.ibore.utils
+package me.ibore.utils.card
 
 import android.annotation.SuppressLint
+import me.ibore.utils.LogUtils
+import me.ibore.utils.StringUtils
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -541,7 +543,7 @@ object IDCardUtils {
      * @return `true` yes, `false` no
      */
     private fun isNumber(str: String): Boolean {
-        return !StringUtils.isEmpty(str) && str.matches(Regex("^[0-9]*$"))
+        return str.isNotEmpty() && str.matches(Regex("^[0-9]*$"))
     }
 
     init {
