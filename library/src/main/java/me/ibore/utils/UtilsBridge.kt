@@ -284,54 +284,6 @@ internal object UtilsBridge {
     }
 
     ///////////////////////////////////////////////////////////////////////////
-    // FileUtils
-    ///////////////////////////////////////////////////////////////////////////
-    @JvmStatic
-    fun isFileExists(file: File?): Boolean {
-        return FileUtils.isFileExists(file)
-    }
-
-    @JvmStatic
-    fun getFileByPath(filePath: String?): File? {
-        return FileUtils.getFileByPath(filePath)
-    }
-
-    @JvmStatic
-    fun deleteAllInDir(dir: File?): Boolean {
-        return FileUtils.deleteAllInDir(dir)
-    }
-
-    @JvmStatic
-    fun createOrExistsFile(file: File?): Boolean {
-        return FileUtils.createOrExistsFile(file)
-    }
-
-    @JvmStatic
-    fun createOrExistsDir(file: File?): Boolean {
-        return FileUtils.createOrExistsDir(file)
-    }
-
-    @JvmStatic
-    fun createFileByDeleteOldFile(file: File?): Boolean {
-        return FileUtils.createFileByDeleteOldFile(file)
-    }
-
-    @JvmStatic
-    fun getFsTotalSize(path: String?): Long {
-        return FileUtils.getFsTotalSize(path)
-    }
-
-    @JvmStatic
-    fun getFsAvailableSize(path: String?): Long {
-        return FileUtils.getFsAvailableSize(path)
-    }
-
-    @JvmStatic
-    fun notifySystemToScan(file: File?) {
-        FileUtils.notifySystemToScan(file)
-    }
-
-    ///////////////////////////////////////////////////////////////////////////
     // ImageUtils
     ///////////////////////////////////////////////////////////////////////////
     @JvmStatic

@@ -92,7 +92,7 @@ object EncryptUtils {
         if (salt == null) return ConvertUtils.bytes2HexString(md5(data))
         if (data == null) return ConvertUtils.bytes2HexString(md5(salt))
         // 拼接数据
-        val bytes: ByteArray = ArrayUtils.add(data, salt)
+        val bytes: ByteArray = ArrayUtils.add(data, salt)!!
         return ConvertUtils.bytes2HexString(md5(bytes))
     }
     // =
@@ -101,9 +101,9 @@ object EncryptUtils {
      * @param filePath 文件路径
      * @return 文件 MD5 值
      */
-    fun encryptMD5File(filePath: String?): ByteArray? {
-        val file = if (filePath.isNullOrEmpty()) null else File(filePath)
-        return encryptMD5File(file)
+    fun encryptMD5File(filePath: String): ByteArray {
+        if (filePath.isEmpty()) return ByteArray(0)
+        return encryptMD5File(File(filePath))
     }
 
     /**
@@ -111,9 +111,9 @@ object EncryptUtils {
      * @param filePath 文件路径
      * @return 文件 MD5 值转十六进制字符串
      */
-    fun encryptMD5FileToHexString(filePath: String?): String {
-        val file = if (filePath.isNullOrEmpty()) null else File(filePath)
-        return encryptMD5FileToHexString(file)
+    fun encryptMD5FileToHexString(filePath: String): String {
+        if (filePath.isEmpty()) return ""
+        return encryptMD5FileToHexString(File(filePath))
     }
 
     /**
@@ -121,7 +121,7 @@ object EncryptUtils {
      * @param file 文件
      * @return 文件 MD5 值转十六进制字符串
      */
-    fun encryptMD5FileToHexString(file: File?): String {
+    fun encryptMD5FileToHexString(file: File): String {
         return ConvertUtils.bytes2HexString(encryptMD5File(file))
     }
 
@@ -130,8 +130,7 @@ object EncryptUtils {
      * @param file 文件
      * @return 文件 MD5 值 byte[]
      */
-    fun encryptMD5File(file: File?): ByteArray? {
-        if (file == null) return null
+    fun encryptMD5File(file: File): ByteArray {
         var dis: DigestInputStream? = null
         return try {
             val fis = FileInputStream(file)
@@ -145,7 +144,7 @@ object EncryptUtils {
             digest.digest()
         } catch (e: Exception) {
             LogUtils.d(e)
-            null
+            ByteArray(0)
         } finally {
             CloseUtils.closeIOQuietly(dis)
         }
@@ -346,9 +345,9 @@ object EncryptUtils {
      * @return HmacSHA1 加密后的数据
      */
     fun encryptHmacSHA1(
-        data: ByteArray?,
-        key: ByteArray?
-    ): ByteArray? {
+        data: ByteArray,
+        key: ByteArray
+    ): ByteArray {
         return hmacTemplate(data, key, "HmacSHA1")
     }
 
@@ -358,14 +357,9 @@ object EncryptUtils {
      * @param key  密钥
      * @return HmacSHA1 加密后的数据转十六进制
      */
-    fun encryptHmacSHA1ToHexString(
-        data: String?,
-        key: String?
-    ): String? {
-        return if (data.isNullOrEmpty() || key.isNullOrEmpty()) null else encryptHmacSHA1ToHexString(
-            data.toByteArray(),
-            key.toByteArray()
-        )
+    fun encryptHmacSHA1ToHexString(data: String, key: String): String {
+        return if (data.isEmpty() || key.isEmpty()) ""
+        else encryptHmacSHA1ToHexString(data.toByteArray(), key.toByteArray())
     }
 
     /**
@@ -374,7 +368,7 @@ object EncryptUtils {
      * @param key  密钥
      * @return HmacSHA1 加密后的数据转十六进制
      */
-    fun encryptHmacSHA1ToHexString(data: ByteArra, key: ByteArray): String {
+    fun encryptHmacSHA1ToHexString(data: ByteArray, key: ByteArray): String {
         return ConvertUtils.bytes2HexString(encryptHmacSHA1(data, key))
     }
     // =
@@ -384,10 +378,7 @@ object EncryptUtils {
      * @param key  密钥
      * @return HmacSHA224 加密后的数据
      */
-    fun encryptHmacSHA224(
-        data: ByteArray?,
-        key: ByteArray?
-    ): ByteArray? {
+    fun encryptHmacSHA224(data: ByteArray, key: ByteArray): ByteArray {
         return hmacTemplate(data, key, "HmacSHA224")
     }
 
@@ -397,14 +388,9 @@ object EncryptUtils {
      * @param key  密钥
      * @return HmacSHA224 加密后的数据转十六进制
      */
-    fun encryptHmacSHA224ToHexString(
-        data: String?,
-        key: String?
-    ): String? {
-        return if (data.isNullOrEmpty() || key.isNullOrEmpty()) null else encryptHmacSHA224ToHexString(
-            data.toByteArray(),
-            key.toByteArray()
-        )
+    fun encryptHmacSHA224ToHexString(data: String, key: String): String {
+        return if (data.isEmpty() || key.isEmpty()) ""
+        else encryptHmacSHA224ToHexString(data.toByteArray(), key.toByteArray())
     }
 
     /**
@@ -423,10 +409,7 @@ object EncryptUtils {
      * @param key  密钥
      * @return HmacSHA256 加密后的数据
      */
-    fun encryptHmacSHA256(
-        data: ByteArray?,
-        key: ByteArray?
-    ): ByteArray? {
+    fun encryptHmacSHA256(data: ByteArray, key: ByteArray): ByteArray {
         return hmacTemplate(data, key, "HmacSHA256")
     }
 
@@ -436,14 +419,9 @@ object EncryptUtils {
      * @param key  密钥
      * @return HmacSHA256 加密后的数据转十六进制
      */
-    fun encryptHmacSHA256ToHexString(
-        data: String?,
-        key: String?
-    ): String? {
-        return if (data.isNullOrEmpty() || key.isNullOrEmpty()) null else encryptHmacSHA256ToHexString(
-            data.toByteArray(),
-            key.toByteArray()
-        )
+    fun encryptHmacSHA256ToHexString(data: String, key: String): String {
+        return if (data.isEmpty() || key.isEmpty()) ""
+        else encryptHmacSHA256ToHexString(data.toByteArray(), key.toByteArray())
     }
 
     /**
@@ -472,14 +450,9 @@ object EncryptUtils {
      * @param key  密钥
      * @return HmacSHA384 加密后的数据转十六进制
      */
-    fun encryptHmacSHA384ToHexString(
-        data: String?,
-        key: String?
-    ): String? {
-        return if (data.isNullOrEmpty() || key.isNullOrEmpty()) null else encryptHmacSHA384ToHexString(
-            data.toByteArray(),
-            key.toByteArray()
-        )
+    fun encryptHmacSHA384ToHexString(data: String, key: String): String {
+        return if (data.isEmpty() || key.isEmpty()) ""
+        else encryptHmacSHA384ToHexString(data.toByteArray(), key.toByteArray())
     }
 
     /**
@@ -488,7 +461,7 @@ object EncryptUtils {
      * @param key  密钥
      * @return HmacSHA384 加密后的数据转十六进制
      */
-    fun encryptHmacSHA384ToHexString(data: ByteArray?, key: ByteArray?): String {
+    fun encryptHmacSHA384ToHexString(data: ByteArray, key: ByteArray): String {
         return ConvertUtils.bytes2HexString(encryptHmacSHA384(data, key))
     }
     // =
@@ -554,7 +527,12 @@ object EncryptUtils {
      * @param iv             算法参数 [AlgorithmParameterSpec]
      * @return DES 加密后的数据
      */
-    fun encryptDES(data: ByteArray, key: ByteArray, transformation: String, iv: ByteArray): ByteArray? {
+    fun encryptDES(
+        data: ByteArray,
+        key: ByteArray,
+        transformation: String,
+        iv: ByteArray
+    ): ByteArray {
         return symmetricTemplate(data, key, "DES", transformation, iv, true)
     }
 
@@ -567,11 +545,8 @@ object EncryptUtils {
      * @return DES 加密后的数据转 Base64
      */
     fun encryptDESToBase64(
-        data: ByteArray?,
-        key: ByteArray?,
-        transformation: String?,
-        iv: ByteArray?
-    ): ByteArray? {
+        data: ByteArray, key: ByteArray, transformation: String, iv: ByteArray
+    ): ByteArray {
         return base64Encode(encryptDES(data, key, transformation, iv))
     }
 
@@ -601,11 +576,8 @@ object EncryptUtils {
      * @return DES 解密后的数据
      */
     fun decryptDES(
-        data: ByteArray?,
-        key: ByteArray?,
-        transformation: String?,
-        iv: ByteArray?
-    ): ByteArray? {
+        data: ByteArray, key: ByteArray, transformation: String, iv: ByteArray
+    ): ByteArray {
         return symmetricTemplate(data, key, "DES", transformation, iv, false)
     }
 
@@ -618,11 +590,8 @@ object EncryptUtils {
      * @return Base64 解码后, 在进行 DES 解密后的数据
      */
     fun decryptDESToBase64(
-        data: ByteArray?,
-        key: ByteArray?,
-        transformation: String?,
-        iv: ByteArray?
-    ): ByteArray? {
+        data: ByteArray, key: ByteArray, transformation: String, iv: ByteArray
+    ): ByteArray {
         return decryptDES(base64Decode(data), key, transformation, iv)
     }
 
@@ -635,11 +604,8 @@ object EncryptUtils {
      * @return 十六进制转换后, 在进行 DES 解密后的数据
      */
     fun decryptDESToHexString(
-        data: String?,
-        key: ByteArray?,
-        transformation: String?,
-        iv: ByteArray?
-    ): ByteArray? {
+        data: String, key: ByteArray, transformation: String, iv: ByteArray
+    ): ByteArray {
         return decryptDES(ConvertUtils.hexString2Bytes(data), key, transformation, iv)
     }
     // =
@@ -652,11 +618,8 @@ object EncryptUtils {
      * @return 3DES 加密后的数据
      */
     fun encrypt3DES(
-        data: ByteArray?,
-        key: ByteArray?,
-        transformation: String?,
-        iv: ByteArray?
-    ): ByteArray? {
+        data: ByteArray, key: ByteArray, transformation: String, iv: ByteArray
+    ): ByteArray {
         return symmetricTemplate(data, key, "DESede", transformation, iv, true)
     }
 
@@ -669,11 +632,8 @@ object EncryptUtils {
      * @return 3DES 加密后的数据转 Base64
      */
     fun encrypt3DESToBase64(
-        data: ByteArray?,
-        key: ByteArray?,
-        transformation: String?,
-        iv: ByteArray?
-    ): ByteArray? {
+        data: ByteArray, key: ByteArray, transformation: String, iv: ByteArray
+    ): ByteArray {
         return base64Encode(encrypt3DES(data, key, transformation, iv))
     }
 
@@ -686,10 +646,7 @@ object EncryptUtils {
      * @return 3DES 加密后的数据转十六进制
      */
     fun encrypt3DESToHexString(
-        data: ByteArray?,
-        key: ByteArray?,
-        transformation: String?,
-        iv: ByteArray?
+        data: ByteArray, key: ByteArray, transformation: String, iv: ByteArray
     ): String {
         return ConvertUtils.bytes2HexString(encrypt3DES(data, key, transformation, iv))
     }
@@ -703,11 +660,8 @@ object EncryptUtils {
      * @return 3DES 解密后的数据
      */
     fun decrypt3DES(
-        data: ByteArray?,
-        key: ByteArray?,
-        transformation: String?,
-        iv: ByteArray?
-    ): ByteArray? {
+        data: ByteArray, key: ByteArray, transformation: String, iv: ByteArray
+    ): ByteArray {
         return symmetricTemplate(data, key, "DESede", transformation, iv, false)
     }
 
@@ -720,11 +674,8 @@ object EncryptUtils {
      * @return Base64 解码后, 在进行 3DES 解密后的数据
      */
     fun decrypt3DESToBase64(
-        data: ByteArray?,
-        key: ByteArray?,
-        transformation: String?,
-        iv: ByteArray?
-    ): ByteArray? {
+        data: ByteArray, key: ByteArray, transformation: String, iv: ByteArray
+    ): ByteArray {
         return decrypt3DES(base64Decode(data), key, transformation, iv)
     }
 
@@ -737,11 +688,8 @@ object EncryptUtils {
      * @return 十六进制转换后, 在进行 3DES 解密后的数据
      */
     fun decrypt3DESToHexString(
-        data: String?,
-        key: ByteArray?,
-        transformation: String?,
-        iv: ByteArray?
-    ): ByteArray? {
+        data: String, key: ByteArray, transformation: String, iv: ByteArray
+    ): ByteArray {
         return decrypt3DES(ConvertUtils.hexString2Bytes(data), key, transformation, iv)
     }
     // =
@@ -754,11 +702,11 @@ object EncryptUtils {
      * @return AES 加密后的数据
      */
     fun encryptAES(
-        data: ByteArray?,
-        key: ByteArray?,
-        transformation: String?,
-        iv: ByteArray?
-    ): ByteArray? {
+        data: ByteArray,
+        key: ByteArray,
+        transformation: String,
+        iv: ByteArray
+    ): ByteArray {
         return symmetricTemplate(data, key, "AES", transformation, iv, true)
     }
 
@@ -771,11 +719,8 @@ object EncryptUtils {
      * @return AES 加密后的数据转 Base64
      */
     fun encryptAESToBase64(
-        data: ByteArray?,
-        key: ByteArray?,
-        transformation: String?,
-        iv: ByteArray?
-    ): ByteArray? {
+        data: ByteArray, key: ByteArray, transformation: String, iv: ByteArray
+    ): ByteArray {
         return base64Encode(encryptAES(data, key, transformation, iv))
     }
 
@@ -788,10 +733,7 @@ object EncryptUtils {
      * @return AES 加密后的数据转十六进制
      */
     fun encryptAESToHexString(
-        data: ByteArray?,
-        key: ByteArray?,
-        transformation: String?,
-        iv: ByteArray?
+        data: ByteArray, key: ByteArray, transformation: String, iv: ByteArray
     ): String {
         return ConvertUtils.bytes2HexString(encryptAES(data, key, transformation, iv))
     }
@@ -805,11 +747,7 @@ object EncryptUtils {
      * @return AES 解密后的数据
      */
     fun decryptAES(
-        data: ByteArray?,
-        key: ByteArray?,
-        transformation: String?,
-        iv: ByteArray?
-    ): ByteArray? {
+        data: ByteArray, key: ByteArray, transformation: String, iv: ByteArray): ByteArray {
         return symmetricTemplate(data, key, "AES", transformation, iv, false)
     }
 
@@ -822,11 +760,8 @@ object EncryptUtils {
      * @return Base64 解码后, 在进行 AES 解密后的数据
      */
     fun decryptAESToBase64(
-        data: ByteArray?,
-        key: ByteArray?,
-        transformation: String?,
-        iv: ByteArray?
-    ): ByteArray? {
+        data: ByteArray, key: ByteArray, transformation: String, iv: ByteArray
+    ): ByteArray {
         return decryptAES(base64Decode(data), key, transformation, iv)
     }
 
@@ -839,11 +774,8 @@ object EncryptUtils {
      * @return 十六进制转换后, 在进行 AES 解密后的数据
      */
     fun decryptAESToHexString(
-        data: String?,
-        key: ByteArray?,
-        transformation: String?,
-        iv: ByteArray?
-    ): ByteArray? {
+        data: String, key: ByteArray, transformation: String, iv: ByteArray
+    ): ByteArray {
         return decryptAES(ConvertUtils.hexString2Bytes(data), key, transformation, iv)
     }
 
@@ -858,14 +790,10 @@ object EncryptUtils {
      * @return 指定加密算法, 加解密后的数据
      */
     fun symmetricTemplate(
-        data: ByteArray?,
-        key: ByteArray?,
-        algorithm: String,
-        transformation: String?,
-        iv: ByteArray?,
-        isEncrypt: Boolean
-    ): ByteArray? {
-        return if (data == null || data.isEmpty() || key == null || key.isEmpty()) null else try {
+        data: ByteArray, key: ByteArray, algorithm: String,
+        transformation: String, iv: ByteArray, isEncrypt: Boolean
+    ): ByteArray {
+        return if (data.isEmpty() || key.isEmpty()) ByteArray(0) else try {
             val secretKey: SecretKey = if ("DES" == algorithm) {
                 val desKey = DESKeySpec(key)
                 val keyFactory = SecretKeyFactory.getInstance(algorithm)
@@ -874,7 +802,7 @@ object EncryptUtils {
                 SecretKeySpec(key, algorithm)
             }
             val cipher = Cipher.getInstance(transformation)
-            if (iv == null || iv.isEmpty()) {
+            if (iv.isEmpty()) {
                 cipher.init(if (isEncrypt) Cipher.ENCRYPT_MODE else Cipher.DECRYPT_MODE, secretKey)
             } else {
                 val params: AlgorithmParameterSpec = IvParameterSpec(iv)
@@ -887,7 +815,7 @@ object EncryptUtils {
             cipher.doFinal(data)
         } catch (e: Exception) {
             LogUtils.d(e)
-            null
+            ByteArray(0)
         }
     }
     // =
@@ -900,11 +828,8 @@ object EncryptUtils {
      * @return RSA 加密后的数据
      */
     fun encryptRSA(
-        data: ByteArray?,
-        key: ByteArray?,
-        isPublicKey: Boolean,
-        transformation: String?
-    ): ByteArray? {
+        data: ByteArray, key: ByteArray, isPublicKey: Boolean, transformation: String
+    ): ByteArray {
         return rsaTemplate(data, key, isPublicKey, transformation, true)
     }
 
@@ -917,11 +842,8 @@ object EncryptUtils {
      * @return RSA 加密后的数据转 Base64
      */
     fun encryptRSAToBase64(
-        data: ByteArray?,
-        key: ByteArray?,
-        isPublicKey: Boolean,
-        transformation: String?
-    ): ByteArray? {
+        data: ByteArray, key: ByteArray, isPublicKey: Boolean, transformation: String
+    ): ByteArray {
         return base64Encode(encryptRSA(data, key, isPublicKey, transformation))
     }
 
@@ -934,10 +856,7 @@ object EncryptUtils {
      * @return RSA 加密后的数据转十六进制
      */
     fun encryptRSAToHexString(
-        data: ByteArray?,
-        key: ByteArray?,
-        isPublicKey: Boolean,
-        transformation: String?
+        data: ByteArray, key: ByteArray, isPublicKey: Boolean, transformation: String
     ): String {
         return ConvertUtils.bytes2HexString(encryptRSA(data, key, isPublicKey, transformation))
     }
@@ -951,11 +870,8 @@ object EncryptUtils {
      * @return RSA 解密后的数据
      */
     fun decryptRSA(
-        data: ByteArray?,
-        key: ByteArray?,
-        isPublicKey: Boolean,
-        transformation: String?
-    ): ByteArray? {
+        data: ByteArray, key: ByteArray, isPublicKey: Boolean, transformation: String
+    ): ByteArray {
         return rsaTemplate(data, key, isPublicKey, transformation, false)
     }
 
@@ -968,11 +884,8 @@ object EncryptUtils {
      * @return Base64 解码后, 在进行 RSA 解密后的数据
      */
     fun decryptRSAToBase64(
-        data: ByteArray?,
-        key: ByteArray?,
-        isPublicKey: Boolean,
-        transformation: String?
-    ): ByteArray? {
+        data: ByteArray, key: ByteArray, isPublicKey: Boolean, transformation: String
+    ): ByteArray {
         return decryptRSA(base64Decode(data), key, isPublicKey, transformation)
     }
 
@@ -985,11 +898,8 @@ object EncryptUtils {
      * @return 十六进制转换后, 在进行 RSA 解密后的数据
      */
     fun decryptRSAToHexString(
-        data: String?,
-        key: ByteArray?,
-        isPublicKey: Boolean,
-        transformation: String?
-    ): ByteArray? {
+        data: String, key: ByteArray, isPublicKey: Boolean, transformation: String
+    ): ByteArray {
         return decryptRSA(ConvertUtils.hexString2Bytes(data), key, isPublicKey, transformation)
     }
 
@@ -1003,17 +913,12 @@ object EncryptUtils {
      * @return 指定加密算法, 加解密后的数据
      */
     fun rsaTemplate(
-        data: ByteArray?,
-        key: ByteArray?,
-        isPublicKey: Boolean,
-        transformation: String?,
-        isEncrypt: Boolean
-    ): ByteArray? {
-        if (data == null || key == null) return null
+        data: ByteArray, key: ByteArray, isPublicKey: Boolean, transformation: String, isEncrypt: Boolean
+    ): ByteArray {
         try {
             val dataLength = data.size
             val keyLength = key.size
-            if (dataLength == 0 || keyLength == 0) return null
+            if (dataLength == 0 || keyLength == 0) return ByteArray(0)
             val rsaKey: Key? = if (isPublicKey) {
                 val keySpec = X509EncodedKeySpec(key)
                 KeyFactory.getInstance("RSA").generatePublic(keySpec)
@@ -1021,13 +926,13 @@ object EncryptUtils {
                 val keySpec = PKCS8EncodedKeySpec(key)
                 KeyFactory.getInstance("RSA").generatePrivate(keySpec)
             }
-            if (rsaKey == null) return null
+            if (rsaKey == null) return ByteArray(0)
             val cipher = Cipher.getInstance(transformation)
             cipher.init(if (isEncrypt) Cipher.ENCRYPT_MODE else Cipher.DECRYPT_MODE, rsaKey)
             val maxLen = if (isEncrypt) 117 else 128
             val count = dataLength / maxLen
             return if (count > 0) {
-                var ret: ByteArray? = ByteArray(0)
+                var ret: ByteArray? = null
                 var buffer = ByteArray(maxLen)
                 var index = 0
                 for (i in 0 until count) {
@@ -1041,14 +946,14 @@ object EncryptUtils {
                     System.arraycopy(data, index, buffer, 0, restLen)
                     ret = ArrayUtils.add(ret, cipher.doFinal(buffer))
                 }
-                ret
+                ret ?: ByteArray(0)
             } else {
                 cipher.doFinal(data)
             }
         } catch (e: Exception) {
             LogUtils.d(e)
         }
-        return null
+        return ByteArray(0)
     }
     // ===========
     // = 私有方法 =
@@ -1058,8 +963,8 @@ object EncryptUtils {
      * @param input 待编码数据
      * @return Base64 编码后的 byte[]
      */
-    private fun base64Encode(input: ByteArray?): ByteArray? {
-        return if (input == null) null else Base64.encode(input, Base64.NO_WRAP)
+    private fun base64Encode(input: ByteArray): ByteArray {
+        return Base64.encode(input, Base64.NO_WRAP)
     }
 
     /**
@@ -1067,7 +972,7 @@ object EncryptUtils {
      * @param input 待解码数据
      * @return Base64 解码后的 byte[]
      */
-    private fun base64Decode(input: ByteArray?): ByteArray? {
-        return if (input == null) null else Base64.decode(input, Base64.NO_WRAP)
+    private fun base64Decode(input: ByteArray): ByteArray {
+        return Base64.decode(input, Base64.NO_WRAP)
     }
 }

@@ -2,7 +2,6 @@ package me.ibore.utils.card
 
 import android.annotation.SuppressLint
 import me.ibore.utils.LogUtils
-import me.ibore.utils.StringUtils
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -10,21 +9,19 @@ import java.util.*
 /**
  * 居民身份证工具类
  */
-object IDCardUtils {
+object CIDCardUtils {
 
     // 加权因子
-    private val POWER = intArrayOf(
-        7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2
-    )
+    private val POWER = intArrayOf(7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2)
 
     // 身份证最少位数
-    const val CHINA_ID_MIN_LENGTH = 15
+    private const val CHINA_ID_MIN_LENGTH = 15
 
     // 身份证最大位数
-    const val CHINA_ID_MAX_LENGTH = 18
+    private const val CHINA_ID_MAX_LENGTH = 18
 
     // 省份编码
-    private val sCityCodeMaps: MutableMap<String, String?> = HashMap()
+    private val sCityCodeMaps: MutableMap<String, String> = HashMap()
 
     // 台湾身份首字母对应数字
     private val sTWFirstCodeMaps: MutableMap<String, Int> = HashMap()
@@ -69,8 +66,8 @@ object IDCardUtils {
      * @param idCard 待验证身份证号码
      * @return `true` yes, `false` no
      */
-    fun validate18(idCard: String?): Boolean {
-        if (idCard != null && idCard.length == CHINA_ID_MAX_LENGTH) {
+    fun validate18(idCard: String): Boolean {
+        if (idCard.length == CHINA_ID_MAX_LENGTH) {
             // 前 17 位
             val code17 = idCard.substring(0, 17)
             // 第 18 位
@@ -100,7 +97,7 @@ object IDCardUtils {
      * @return 18 位身份编码
      */
     @SuppressLint("SimpleDateFormat")
-    fun convert15CardTo18(idCard: String): String? {
+    fun convert15CardTo18(idCard: String): String {
         // 属于数字, 并且长度为 15 位数
         if (isNumber(idCard) && idCard.length == CHINA_ID_MIN_LENGTH) {
             val idCard18: String
@@ -125,12 +122,12 @@ object IDCardUtils {
                 // 获取校验位
                 val str = getCheckCode18(sum17)
                 // 判断长度, 拼接校验位
-                return if (str.isNotEmpty()) idCard18 + str else null
+                return if (str.isNotEmpty()) idCard18 + str else ""
             } catch (e: Exception) {
                 LogUtils.d(e)
             }
         }
-        return null
+        return ""
     }
 
     /**
@@ -138,9 +135,9 @@ object IDCardUtils {
      * @param idCard 身份证号码
      * @return `true` yes, `false` no
      */
-    fun validateTW(idCard: String?): Boolean {
+    fun validateTW(idCard: String): Boolean {
         // 台湾身份证 10 位
-        if (idCard == null || idCard.length != 10) return false
+        if (idCard.length != 10) return false
         try {
             // 第一位英文 不同县市
             val start = idCard.substring(0, 1)
@@ -170,17 +167,18 @@ object IDCardUtils {
      * @return `true` yes, `false` no
      */
     fun validateHK(idCard: String): Boolean {
-        if (StringUtils.isEmpty(idCard)) return false
+        if (idCard.isBlank()) return false
         try {
             var card = idCard.replace("[\\(|\\)]".toRegex(), "")
             var sum: Int
             if (card.length == 9) {
-                sum = (card.substring(0, 1).toUpperCase().toCharArray()[0]
-                    .toInt() - 55) * 9 + (card.substring(1, 2).toUpperCase()
+                sum = (card.substring(0, 1).toUpperCase(Locale.ROOT).toCharArray()[0]
+                    .toInt() - 55) * 9 + (card.substring(1, 2).toUpperCase(Locale.ROOT)
                     .toCharArray()[0].toInt() - 55) * 8
                 card = card.substring(1, 9)
             } else {
-                sum = 522 + (card.substring(0, 1).toUpperCase().toCharArray()[0].toInt() - 55) * 8
+                sum = 522 + (card.substring(0, 1).toUpperCase(Locale.ROOT)
+                    .toCharArray()[0].toInt() - 55) * 8
             }
             val mid = card.substring(1, 7)
             val end = card.substring(7, 8)
@@ -208,7 +206,7 @@ object IDCardUtils {
      * @return `true` yes, `false` no
      */
     fun validateIdCard10(idCard: String): Array<String?>? {
-        if (idCard.isNullOrBlank()) return null
+        if (idCard.isBlank()) return null
         val info = arrayOfNulls<String>(3)
         info[0] = "N" // 默认未知地区
         info[1] = "N" // 默认未知性别
@@ -219,27 +217,30 @@ object IDCardUtils {
             val cardLength = card.length
             // 属于 8, 9, 10 长度范围内
             if (cardLength >= 8 || cardLength <= 10) {
-                if (idCard.matches(Regex("^[a-zA-Z][0-9]{9}$"))) { // 台湾
-                    info[0] = "台湾"
-                    val char2 = idCard.substring(1, 2)
-                    if (char2 == "1") {
-                        info[1] = "M"
-                    } else if (char2 == "2") {
-                        info[1] = "F"
-                    } else {
-                        info[1] = "N"
-                        info[2] = "false"
-                        return info
+                when {
+                    idCard.matches(Regex("^[a-zA-Z][0-9]{9}$")) -> { // 台湾
+                        info[0] = "台湾"
+                        when (idCard.substring(1, 2)) {
+                            "1" -> info[1] = "M"
+                            "2" -> info[1] = "F"
+                            else -> {
+                                info[1] = "N"
+                                info[2] = "false"
+                                return info
+                            }
+                        }
+                        info[2] = if (validateTW(idCard)) "true" else "false"
                     }
-                    info[2] = if (validateTW(idCard)) "true" else "false"
-                } else if (idCard.matches(Regex("^[1|5|7][0-9]{6}\\(?[0-9A-Z]\\)?$"))) { // 澳门
-                    info[0] = "澳门"
-                    info[1] = "N"
-                    // TODO
-                } else if (idCard.matches(Regex("^[A-Z]{1,2}[0-9]{6}\\(?[0-9A]\\)?$"))) { // 香港
-                    info[0] = "香港"
-                    info[1] = "N"
-                    info[2] = if (validateHK(idCard)) "true" else "false"
+                    idCard.matches(Regex("^[1|5|7][0-9]{6}\\(?[0-9A-Z]\\)?$")) -> { // 澳门
+                        info[0] = "澳门"
+                        info[1] = "N"
+                        // TODO
+                    }
+                    idCard.matches(Regex("^[A-Z]{1,2}[0-9]{6}\\(?[0-9A]\\)?$")) -> { // 香港
+                        info[0] = "香港"
+                        info[1] = "N"
+                        info[2] = if (validateHK(idCard)) "true" else "false"
+                    }
                 }
             }
         } catch (e: Exception) {
@@ -253,8 +254,8 @@ object IDCardUtils {
      * @param idCard 身份证号码
      * @return `true` yes, `false` no
      */
-    fun validate(idCard: String?): Boolean {
-        if (idCard.isNullOrBlank()) return false
+    fun validate(idCard: String): Boolean {
+        if (idCard.isBlank()) return false
         val card = idCard.trim { it <= ' ' }
         if (validate18(card)) return true
         if (validate15(card)) return true
@@ -267,24 +268,13 @@ object IDCardUtils {
      * @param idCard 身份编号
      * @return 年龄
      */
-    fun getAge(idCard: String?): Int {
-        if (idCard.isNullOrBlank()) return 0
-        try {
-            var idCardStr: String? = idCard
-            // 属于 15 位身份证, 则转换为 18 位
-            if (idCardStr!!.length == CHINA_ID_MIN_LENGTH) {
-                idCardStr = convert15CardTo18(idCard)
-            }
-            // 属于 18 位身份证才处理
-            if (idCardStr!!.length == CHINA_ID_MAX_LENGTH) {
-                val year = idCardStr.substring(6, 10)
-                // 获取当前年份
-                val currentYear = Calendar.getInstance()[Calendar.YEAR]
-                // 当前年份 ( 出生年份 )
-                return currentYear - Integer.valueOf(year)
-            }
-        } catch (e: Exception) {
-            LogUtils.d(e)
+    fun getAge(idCard: String): Int {
+        val year = getYear(idCard)
+        if (year.isNotBlank()) {
+            // 获取当前年份
+            val currentYear = Calendar.getInstance()[Calendar.YEAR]
+            // 当前年份 ( 出生年份 )
+            return currentYear - Integer.valueOf(year)
         }
         return 0
     }
@@ -294,41 +284,33 @@ object IDCardUtils {
      * @param idCard 身份编号
      * @return 生日 (yyyyMMdd)
      */
-    fun getBirth(idCard: String?): String? {
-        if (idCard.isNullOrBlank()) return null
-        try {
-            var idCardStr: String? = idCard
-            // 属于 15 位身份证, 则转换为 18 位
-            if (idCardStr!!.length == CHINA_ID_MIN_LENGTH) {
-                idCardStr = convert15CardTo18(idCard)
-            }
-            // 属于 18 位身份证才处理
-            if (idCardStr!!.length == CHINA_ID_MAX_LENGTH) {
-                return idCardStr.substring(6, 14)
-            }
-        } catch (e: Exception) {
-            LogUtils.d(e)
+    fun getBirth(idCard: String): String {
+        var idCardStr: String = idCard
+        if (idCardStr.isBlank()) return ""
+        // 属于 15 位身份证, 则转换为 18 位
+        if (idCardStr.length == CHINA_ID_MIN_LENGTH) {
+            idCardStr = convert15CardTo18(idCard)
         }
-        return null
+        // 属于 18 位身份证才处理
+        if (idCardStr.length == CHINA_ID_MAX_LENGTH) {
+            return idCardStr.substring(6, 14)
+        }
+        return ""
     }
 
     /**
      * 根据身份编号获取生日
      * @param idCard 身份编号
-     * @return 生日 (yyyyMMdd)
+     * @return 生日 (yyyy-MM-dd)
      */
-    fun getBirthday(idCard: String): String? {
+    fun getBirthday(idCard: String): String {
         // 获取生日
         val birth = getBirth(idCard)
         // 进行处理
-        if (birth != null) {
-            try {
-                return birth.replace("(\\d{4})(\\d{2})(\\d{2})".toRegex(), "$1-$2-$3")
-            } catch (e: Exception) {
-                LogUtils.d(e)
-            }
+        if (birth.length == 8) {
+            return birth.replace("(\\d{4})(\\d{2})(\\d{2})".toRegex(), "$1-$2-$3")
         }
-        return null
+        return ""
     }
 
     /**
@@ -336,18 +318,14 @@ object IDCardUtils {
      * @param idCard 身份编号
      * @return 生日 (yyyy)
      */
-    fun getYear(idCard: String): String? {
+    fun getYear(idCard: String): String {
         // 获取生日
         val birth = getBirth(idCard)
         // 进行处理
-        if (birth != null) {
-            try {
-                return birth.substring(0, 4)
-            } catch (e: Exception) {
-                LogUtils.d(e)
-            }
+        if (birth.length == 8) {
+            return birth.substring(0, 4)
         }
-        return null
+        return ""
     }
 
     /**
@@ -355,18 +333,14 @@ object IDCardUtils {
      * @param idCard 身份编号
      * @return 生日 (MM)
      */
-    fun getMonth(idCard: String): String? {
+    fun getMonth(idCard: String): String {
         // 获取生日
         val birth = getBirth(idCard)
         // 进行处理
-        if (birth != null) {
-            try {
-                return birth.substring(4, 6)
-            } catch (e: Exception) {
-                LogUtils.d(e)
-            }
+        if (birth.length == 8) {
+            return birth.substring(4, 6)
         }
-        return null
+        return ""
     }
 
     /**
@@ -374,18 +348,14 @@ object IDCardUtils {
      * @param idCard 身份编号
      * @return 生日 (dd)
      */
-    fun getDay(idCard: String): String? {
+    fun getDay(idCard: String): String {
         // 获取生日
         val birth = getBirth(idCard)
         // 进行处理
-        if (birth != null) {
-            try {
-                return birth.substring(6, 8)
-            } catch (e: Exception) {
-                LogUtils.d(e)
-            }
+        if (birth.length == 8) {
+            return birth.substring(6, 8)
         }
-        return null
+        return ""
     }
 
     /**
@@ -393,23 +363,19 @@ object IDCardUtils {
      * @param idCard 身份编号
      * @return 性别 男 (M)、女 (F)、未知 (N)
      */
-    fun getGender(idCard: String?): String? {
-        if (idCard.isNullOrBlank()) return null
-        try {
-            var idCardStr: String? = idCard
-            // 属于 15 位身份证, 则转换为 18 位
-            if (idCardStr!!.length == CHINA_ID_MIN_LENGTH) {
-                idCardStr = convert15CardTo18(idCard)
-            }
-            // 属于 18 位身份证才处理
-            if (idCardStr!!.length == CHINA_ID_MAX_LENGTH) {
-                // 获取第 17 位性别信息
-                val cardNumber = idCardStr.substring(16, 17)
-                // 奇数为男, 偶数为女
-                return if (cardNumber.toInt() % 2 == 0) "F" else "M"
-            }
-        } catch (e: Exception) {
-            LogUtils.d(e)
+    fun getGender(idCard: String): String {
+        var idCardStr: String = idCard
+        if (idCardStr.isBlank()) return "N"
+        // 属于 15 位身份证, 则转换为 18 位
+        if (idCardStr.length == CHINA_ID_MIN_LENGTH) {
+            idCardStr = convert15CardTo18(idCard)
+        }
+        // 属于 18 位身份证才处理
+        if (idCardStr.length == CHINA_ID_MAX_LENGTH) {
+            // 获取第 17 位性别信息
+            val cardNumber = idCardStr.substring(16, 17)
+            // 奇数为男, 偶数为女
+            return if (cardNumber.toInt() % 2 == 0) "F" else "M"
         }
         // 默认未知
         return "N"
@@ -420,19 +386,19 @@ object IDCardUtils {
      * @param idCard 身份编码
      * @return 省级编码
      */
-    fun getProvince(idCard: String?): String? {
-        if (idCard.isNullOrBlank()) return null
+    fun getProvince(idCard: String): String {
+        if (idCard.isBlank()) return ""
         try {
             // 身份证长度
             val idCardLength = idCard.length
             // 属于 15 位身份证、或 18 位身份证
             if (idCardLength == CHINA_ID_MIN_LENGTH || idCardLength == CHINA_ID_MAX_LENGTH) {
-                return sCityCodeMaps[idCard.substring(0, 2)]
+                return sCityCodeMaps[idCard.substring(0, 2)] ?: ""
             }
         } catch (e: Exception) {
             LogUtils.d(e)
         }
-        return null
+        return ""
     }
 
     /**
@@ -460,7 +426,7 @@ object IDCardUtils {
 
     /**
      * 将 POWER 和值与 11 取模获取余数进行校验码判断
-     * @param sum [IDCardUtils.getPowerSum]
+     * @param sum [CIDCardUtils.getPowerSum]
      * @return 校验位
      */
     fun getCheckCode18(sum: Int): String {
@@ -511,11 +477,7 @@ object IDCardUtils {
      * @param dayData   待校验的日期 ( 日 )
      * @return `true` yes, `false` no
      */
-    private fun validateDateSmallerThenNow(
-        yearData: Int,
-        monthData: Int,
-        dayData: Int
-    ): Boolean {
+    private fun validateDateSmallerThenNow(yearData: Int, monthData: Int, dayData: Int): Boolean {
         val year = Calendar.getInstance()[Calendar.YEAR]
         val datePerMonth: Int
         val MIN = 1930

@@ -23,7 +23,6 @@ import me.ibore.permissions.XPermissions
 import me.ibore.utils.UtilsBridge.bytes2HexString
 import me.ibore.utils.UtilsBridge.createFileByDeleteOldFile
 import me.ibore.utils.UtilsBridge.getFileByPath
-import me.ibore.utils.UtilsBridge.isSpace
 import me.ibore.utils.UtilsBridge.notifySystemToScan
 import java.io.*
 import kotlin.math.abs
@@ -45,11 +44,10 @@ object ImageUtils {
      * @param quality The quality.
      * @return bytes
      */
+    @JvmStatic
     @JvmOverloads
     fun bitmap2Bytes(
-        bitmap: Bitmap,
-        format: CompressFormat = CompressFormat.PNG,
-        quality: Int = 100
+        bitmap: Bitmap, format: CompressFormat = CompressFormat.PNG, quality: Int = 100
     ): ByteArray {
         val baos = ByteArrayOutputStream()
         bitmap.compress(format, quality, baos)
@@ -62,12 +60,9 @@ object ImageUtils {
      * @param bytes The bytes.
      * @return bitmap
      */
+    @JvmStatic
     fun bytes2Bitmap(bytes: ByteArray): Bitmap {
-        return BitmapFactory.decodeByteArray(
-            bytes,
-            0,
-            bytes.size
-        )
+        return BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
     }
 
     /**
@@ -76,6 +71,7 @@ object ImageUtils {
      * @param drawable The drawable.
      * @return bitmap
      */
+    @JvmStatic
     fun drawable2Bitmap(drawable: Drawable): Bitmap {
         if (drawable is BitmapDrawable) {
             if (drawable.bitmap != null) {
@@ -106,6 +102,7 @@ object ImageUtils {
      * @param bitmap The bitmap.
      * @return drawable
      */
+    @JvmStatic
     fun bitmap2Drawable(bitmap: Bitmap): Drawable {
         return BitmapDrawable(Utils.app.resources, bitmap)
     }
@@ -116,6 +113,7 @@ object ImageUtils {
      * @param drawable The drawable.
      * @return bytes
      */
+    @JvmStatic
     fun drawable2Bytes(drawable: Drawable): ByteArray {
         return bitmap2Bytes(drawable2Bitmap(drawable))
     }
@@ -127,12 +125,9 @@ object ImageUtils {
      * @param format   The format of bitmap.
      * @return bytes
      */
+    @JvmStatic
     fun drawable2Bytes(drawable: Drawable, format: CompressFormat, quality: Int): ByteArray {
-        return bitmap2Bytes(
-            drawable2Bitmap(drawable),
-            format,
-            quality
-        )
+        return bitmap2Bytes(drawable2Bitmap(drawable), format, quality)
     }
 
     /**
@@ -141,6 +136,7 @@ object ImageUtils {
      * @param bytes The bytes.
      * @return drawable
      */
+    @JvmStatic
     fun bytes2Drawable(bytes: ByteArray): Drawable {
         return bitmap2Drawable(bytes2Bitmap(bytes))
     }
@@ -151,6 +147,7 @@ object ImageUtils {
      * @param view The view.
      * @return bitmap
      */
+    @JvmStatic
     fun view2Bitmap(view: View): Bitmap {
         val drawingCacheEnabled = view.isDrawingCacheEnabled
         val willNotCacheDrawing = view.willNotCacheDrawing()
@@ -191,8 +188,9 @@ object ImageUtils {
      * @param file The file.
      * @return bitmap
      */
-    fun getBitmap(file: File?): Bitmap? {
-        return if (file == null) null else BitmapFactory.decodeFile(file.absolutePath)
+    @JvmStatic
+    fun getBitmap(file: File): Bitmap? {
+        return BitmapFactory.decodeFile(file.absolutePath)
     }
 
     /**
@@ -203,8 +201,8 @@ object ImageUtils {
      * @param maxHeight The maximum height.
      * @return bitmap
      */
-    fun getBitmap(file: File?, maxWidth: Int, maxHeight: Int): Bitmap? {
-        if (file == null) return null
+    @JvmStatic
+    fun getBitmap(file: File, maxWidth: Int, maxHeight: Int): Bitmap? {
         val options = BitmapFactory.Options()
         options.inJustDecodeBounds = true
         BitmapFactory.decodeFile(file.absolutePath, options)
@@ -219,8 +217,9 @@ object ImageUtils {
      * @param filePath The path of file.
      * @return bitmap
      */
-    fun getBitmap(filePath: String?): Bitmap? {
-        return if (isSpace(filePath)) null else BitmapFactory.decodeFile(filePath)
+    @JvmStatic
+    fun getBitmap(filePath: String): Bitmap? {
+        return if (filePath.isBlank()) null else BitmapFactory.decodeFile(filePath)
     }
 
     /**
@@ -231,8 +230,9 @@ object ImageUtils {
      * @param maxHeight The maximum height.
      * @return bitmap
      */
-    fun getBitmap(filePath: String?, maxWidth: Int, maxHeight: Int): Bitmap? {
-        if (isSpace(filePath)) return null
+    @JvmStatic
+    fun getBitmap(filePath: String, maxWidth: Int, maxHeight: Int): Bitmap? {
+        if (filePath.isBlank()) return null
         val options = BitmapFactory.Options()
         options.inJustDecodeBounds = true
         BitmapFactory.decodeFile(filePath, options)
@@ -244,29 +244,31 @@ object ImageUtils {
     /**
      * Return bitmap.
      *
-     * @param is The input stream.
+     * @param `is` The input stream.
      * @return bitmap
      */
-    fun getBitmap(`is`: InputStream?): Bitmap? {
-        return if (`is` == null) null else BitmapFactory.decodeStream(`is`)
+    @JvmStatic
+    fun getBitmap(inputStream: InputStream?): Bitmap? {
+        return if (inputStream == null) null else BitmapFactory.decodeStream(inputStream)
     }
 
     /**
      * Return bitmap.
      *
-     * @param is        The input stream.
+     * @param `is`        The input stream.
      * @param maxWidth  The maximum width.
      * @param maxHeight The maximum height.
      * @return bitmap
      */
-    fun getBitmap(`is`: InputStream?, maxWidth: Int, maxHeight: Int): Bitmap? {
-        if (`is` == null) return null
+    @JvmStatic
+    fun getBitmap(inputStream: InputStream?, maxWidth: Int, maxHeight: Int): Bitmap? {
+        if (inputStream == null) return null
         val options = BitmapFactory.Options()
         options.inJustDecodeBounds = true
-        BitmapFactory.decodeStream(`is`, null, options)
+        BitmapFactory.decodeStream(inputStream, null, options)
         options.inSampleSize = calculateInSampleSize(options, maxWidth, maxHeight)
         options.inJustDecodeBounds = false
-        return BitmapFactory.decodeStream(`is`, null, options)
+        return BitmapFactory.decodeStream(inputStream, null, options)
     }
 
     /**
@@ -276,12 +278,10 @@ object ImageUtils {
      * @param offset The offset.
      * @return bitmap
      */
+    @JvmStatic
     fun getBitmap(data: ByteArray, offset: Int): Bitmap? {
-        return if (data.isEmpty()) null else BitmapFactory.decodeByteArray(
-            data,
-            offset,
-            data.size
-        )
+        return if (data.isEmpty()) null
+        else BitmapFactory.decodeByteArray(data, offset, data.size)
     }
 
     /**
@@ -293,12 +293,8 @@ object ImageUtils {
      * @param maxHeight The maximum height.
      * @return bitmap
      */
-    fun getBitmap(
-        data: ByteArray,
-        offset: Int,
-        maxWidth: Int,
-        maxHeight: Int
-    ): Bitmap? {
+    @JvmStatic
+    fun getBitmap(data: ByteArray, offset: Int, maxWidth: Int, maxHeight: Int): Bitmap? {
         if (data.isEmpty()) return null
         val options = BitmapFactory.Options()
         options.inJustDecodeBounds = true
@@ -314,6 +310,7 @@ object ImageUtils {
      * @param resId The resource id.
      * @return bitmap
      */
+    @JvmStatic
     fun getBitmap(@DrawableRes resId: Int): Bitmap {
         return BitmapFactory.decodeResource(Utils.app.resources, resId)
     }
@@ -326,11 +323,8 @@ object ImageUtils {
      * @param maxHeight The maximum height.
      * @return bitmap
      */
-    fun getBitmap(
-        @DrawableRes resId: Int,
-        maxWidth: Int,
-        maxHeight: Int
-    ): Bitmap {
+    @JvmStatic
+    fun getBitmap(@DrawableRes resId: Int, maxWidth: Int, maxHeight: Int): Bitmap {
         val options = BitmapFactory.Options()
         val resources = Utils.app.resources
         options.inJustDecodeBounds = true
@@ -346,6 +340,7 @@ object ImageUtils {
      * @param fd The file descriptor.
      * @return bitmap
      */
+    @JvmStatic
     fun getBitmap(fd: FileDescriptor?): Bitmap? {
         return if (fd == null) null else BitmapFactory.decodeFileDescriptor(fd)
     }
@@ -358,11 +353,8 @@ object ImageUtils {
      * @param maxHeight The maximum height.
      * @return bitmap
      */
-    fun getBitmap(
-        fd: FileDescriptor?,
-        maxWidth: Int,
-        maxHeight: Int
-    ): Bitmap? {
+    @JvmStatic
+    fun getBitmap(fd: FileDescriptor?, maxWidth: Int, maxHeight: Int): Bitmap? {
         if (fd == null) return null
         val options = BitmapFactory.Options()
         options.inJustDecodeBounds = true
@@ -380,12 +372,9 @@ object ImageUtils {
      * @param recycle True to recycle the source of bitmap, false otherwise.
      * @return the bitmap with the specified color
      */
+    @JvmStatic
     @JvmOverloads
-    fun drawColor(
-        src: Bitmap,
-        @ColorInt color: Int,
-        recycle: Boolean = false
-    ): Bitmap? {
+    fun drawColor(src: Bitmap, @ColorInt color: Int, recycle: Boolean = false): Bitmap? {
         if (isEmptyBitmap(src)) return null
         val ret = if (recycle) src else src.copy(src.config, true)
         val canvas = Canvas(ret)
@@ -402,13 +391,9 @@ object ImageUtils {
      * @param recycle   True to recycle the source of bitmap, false otherwise.
      * @return the scaled bitmap
      */
+    @JvmStatic
     @JvmOverloads
-    fun scale(
-        src: Bitmap,
-        newWidth: Int,
-        newHeight: Int,
-        recycle: Boolean = false
-    ): Bitmap? {
+    fun scale(src: Bitmap, newWidth: Int, newHeight: Int, recycle: Boolean = false): Bitmap? {
         if (isEmptyBitmap(src)) return null
         val ret = Bitmap.createScaledBitmap(src, newWidth, newHeight, true)
         if (recycle && !src.isRecycled && ret != src) src.recycle()
@@ -424,6 +409,7 @@ object ImageUtils {
      * @param recycle     True to recycle the source of bitmap, false otherwise.
      * @return the scaled bitmap
      */
+    @JvmStatic
     @JvmOverloads
     fun scale(
         src: Bitmap,
@@ -450,6 +436,7 @@ object ImageUtils {
      * @param recycle True to recycle the source of bitmap, false otherwise.
      * @return the clipped bitmap
      */
+    @JvmStatic
     @JvmOverloads
     fun clip(
         src: Bitmap,
@@ -474,12 +461,8 @@ object ImageUtils {
      * @param recycle True to recycle the source of bitmap, false otherwise.
      * @return the skewed bitmap
      */
-    fun skew(
-        src: Bitmap,
-        kx: Float,
-        ky: Float,
-        recycle: Boolean
-    ): Bitmap? {
+    @JvmStatic
+    fun skew(src: Bitmap, kx: Float, ky: Float, recycle: Boolean): Bitmap? {
         return skew(src, kx, ky, 0f, 0f, recycle)
     }
 
@@ -494,14 +477,10 @@ object ImageUtils {
      * @param recycle True to recycle the source of bitmap, false otherwise.
      * @return the skewed bitmap
      */
+    @JvmStatic
     @JvmOverloads
     fun skew(
-        src: Bitmap,
-        kx: Float,
-        ky: Float,
-        px: Float = 0f,
-        py: Float = 0f,
-        recycle: Boolean = false
+        src: Bitmap, kx: Float, ky: Float, px: Float = 0f, py: Float = 0f, recycle: Boolean = false
     ): Bitmap? {
         if (isEmptyBitmap(src)) return null
         val matrix = Matrix()
@@ -521,14 +500,9 @@ object ImageUtils {
      * @param recycle True to recycle the source of bitmap, false otherwise.
      * @return the rotated bitmap
      */
+    @JvmStatic
     @JvmOverloads
-    fun rotate(
-        src: Bitmap,
-        degrees: Int,
-        px: Float,
-        py: Float,
-        recycle: Boolean = false
-    ): Bitmap? {
+    fun rotate(src: Bitmap, degrees: Int, px: Float, py: Float, recycle: Boolean = false): Bitmap? {
         if (isEmptyBitmap(src)) return null
         if (degrees == 0) return src
         val matrix = Matrix()
@@ -544,6 +518,7 @@ object ImageUtils {
      * @param filePath The path of file.
      * @return the rotated degree
      */
+    @JvmStatic
     fun getRotateDegree(filePath: String?): Int {
         return try {
             val exifInterface = ExifInterface(filePath!!)
@@ -570,6 +545,7 @@ object ImageUtils {
      * @param recycle True to recycle the source of bitmap, false otherwise.
      * @return the round bitmap
      */
+    @JvmStatic
     fun toRound(src: Bitmap, recycle: Boolean): Bitmap? {
         return toRound(src, 0, 0, recycle)
     }
@@ -583,12 +559,11 @@ object ImageUtils {
      * @param borderColor The color of border.
      * @return the round bitmap
      */
+    @JvmStatic
     @JvmOverloads
     fun toRound(
-        src: Bitmap,
-        @androidx.annotation.IntRange(from = 0) borderSize: Int = 0,
-        @ColorInt borderColor: Int = 0,
-        recycle: Boolean = false
+        src: Bitmap, @androidx.annotation.IntRange(from = 0) borderSize: Int = 0,
+        @ColorInt borderColor: Int = 0, recycle: Boolean = false
     ): Bitmap? {
         if (isEmptyBitmap(src)) return null
         val width = src.width
@@ -629,11 +604,8 @@ object ImageUtils {
      * @param recycle True to recycle the source of bitmap, false otherwise.
      * @return the round corner bitmap
      */
-    fun toRoundCorner(
-        src: Bitmap,
-        radius: Float,
-        recycle: Boolean
-    ): Bitmap? {
+    @JvmStatic
+    fun toRoundCorner(src: Bitmap, radius: Float, recycle: Boolean): Bitmap? {
         return toRoundCorner(src, radius, 0f, 0, recycle)
     }
 
@@ -647,13 +619,11 @@ object ImageUtils {
      * @param recycle     True to recycle the source of bitmap, false otherwise.
      * @return the round corner bitmap
      */
+    @JvmStatic
     @JvmOverloads
     fun toRoundCorner(
-        src: Bitmap,
-        radius: Float,
-        @FloatRange(from = 0.0) borderSize: Float = 0f,
-        @ColorInt borderColor: Int = 0,
-        recycle: Boolean = false
+        src: Bitmap, radius: Float, @FloatRange(from = 0.0) borderSize: Float = 0f,
+        @ColorInt borderColor: Int = 0, recycle: Boolean = false
     ): Bitmap? {
         val radii = floatArrayOf(radius, radius, radius, radius, radius, radius, radius, radius)
         return toRoundCorner(src, radii, borderSize, borderColor, recycle)
@@ -669,13 +639,11 @@ object ImageUtils {
      * @param recycle     True to recycle the source of bitmap, false otherwise.
      * @return the round corner bitmap
      */
+    @JvmStatic
     @JvmOverloads
     fun toRoundCorner(
-        src: Bitmap,
-        radii: FloatArray?,
-        @FloatRange(from = 0.0) borderSize: Float,
-        @ColorInt borderColor: Int,
-        recycle: Boolean = false
+        src: Bitmap, radii: FloatArray?, @FloatRange(from = 0.0) borderSize: Float,
+        @ColorInt borderColor: Int, recycle: Boolean = false
     ): Bitmap? {
         if (isEmptyBitmap(src)) return null
         val width = src.width
@@ -712,10 +680,9 @@ object ImageUtils {
      * @param cornerRadius The radius of corner.
      * @return the round corner bitmap with border
      */
+    @JvmStatic
     fun addCornerBorder(
-        src: Bitmap,
-        @FloatRange(from = 1.0) borderSize: Float,
-        @ColorInt color: Int,
+        src: Bitmap, @FloatRange(from = 1.0) borderSize: Float, @ColorInt color: Int,
         @FloatRange(from = 0.0) cornerRadius: Float
     ): Bitmap? {
         return addBorder(src, borderSize, color, false, cornerRadius, false)
@@ -730,11 +697,10 @@ object ImageUtils {
      * @param radii      Array of 8 values, 4 pairs of [X,Y] radii
      * @return the round corner bitmap with border
      */
+    @JvmStatic
     fun addCornerBorder(
-        src: Bitmap,
-        @FloatRange(from = 1.0) borderSize: Float,
-        @ColorInt color: Int,
-        radii: FloatArray
+        src: Bitmap, @FloatRange(from = 1.0) borderSize: Float,
+        @ColorInt color: Int, radii: FloatArray
     ): Bitmap? {
         return addBorder(src, borderSize, color, false, radii, false)
     }
@@ -749,12 +715,10 @@ object ImageUtils {
      * @param recycle    True to recycle the source of bitmap, false otherwise.
      * @return the round corner bitmap with border
      */
+    @JvmStatic
     fun addCornerBorder(
-        src: Bitmap,
-        @FloatRange(from = 1.0) borderSize: Float,
-        @ColorInt color: Int,
-        radii: FloatArray,
-        recycle: Boolean
+        src: Bitmap, @FloatRange(from = 1.0) borderSize: Float,
+        @ColorInt color: Int, radii: FloatArray, recycle: Boolean
     ): Bitmap? {
         return addBorder(src, borderSize, color, false, radii, recycle)
     }
@@ -824,13 +788,10 @@ object ImageUtils {
      * @param recycle      True to recycle the source of bitmap, false otherwise.
      * @return the bitmap with border
      */
+    @JvmStatic
     private fun addBorder(
-        src: Bitmap,
-        @FloatRange(from = 1.0) borderSize: Float,
-        @ColorInt color: Int,
-        isCircle: Boolean,
-        cornerRadius: Float,
-        recycle: Boolean
+        src: Bitmap, @FloatRange(from = 1.0) borderSize: Float, @ColorInt color: Int,
+        isCircle: Boolean, cornerRadius: Float, recycle: Boolean
     ): Bitmap? {
         val radii = floatArrayOf(
             cornerRadius, cornerRadius, cornerRadius, cornerRadius,
@@ -850,13 +811,10 @@ object ImageUtils {
      * @param recycle    True to recycle the source of bitmap, false otherwise.
      * @return the bitmap with border
      */
+    @JvmStatic
     private fun addBorder(
-        src: Bitmap,
-        @FloatRange(from = 1.0) borderSize: Float,
-        @ColorInt color: Int,
-        isCircle: Boolean,
-        radii: FloatArray,
-        recycle: Boolean
+        src: Bitmap, @FloatRange(from = 1.0) borderSize: Float, @ColorInt color: Int,
+        isCircle: Boolean, radii: FloatArray, recycle: Boolean
     ): Bitmap? {
         if (isEmptyBitmap(src)) return null
         val ret = if (recycle) src else src.copy(src.config, true)
@@ -889,12 +847,9 @@ object ImageUtils {
      * @param recycle          True to recycle the source of bitmap, false otherwise.
      * @return the bitmap with reflection
      */
+    @JvmStatic
     @JvmOverloads
-    fun addReflection(
-        src: Bitmap,
-        reflectionHeight: Int,
-        recycle: Boolean = false
-    ): Bitmap? {
+    fun addReflection(src: Bitmap, reflectionHeight: Int, recycle: Boolean = false): Bitmap? {
         if (isEmptyBitmap(src)) return null
         val REFLECTION_GAP = 0
         val srcWidth = src.width
@@ -942,13 +897,9 @@ object ImageUtils {
      * @param y        The y coordinate of the first pixel.
      * @return the bitmap with text watermarking
      */
+    @JvmStatic
     fun addTextWatermark(
-        src: Bitmap,
-        content: String?,
-        textSize: Int,
-        @ColorInt color: Int,
-        x: Float,
-        y: Float
+        src: Bitmap, content: String?, textSize: Int, @ColorInt color: Int, x: Float, y: Float
     ): Bitmap? {
         return addTextWatermark(src, content, textSize.toFloat(), color, x, y, false)
     }
@@ -965,14 +916,10 @@ object ImageUtils {
      * @param recycle  True to recycle the source of bitmap, false otherwise.
      * @return the bitmap with text watermarking
      */
+    @JvmStatic
     fun addTextWatermark(
-        src: Bitmap,
-        content: String?,
-        textSize: Float,
-        @ColorInt color: Int,
-        x: Float,
-        y: Float,
-        recycle: Boolean
+        src: Bitmap, content: String?, textSize: Float,
+        @ColorInt color: Int, x: Float, y: Float, recycle: Boolean
     ): Bitmap? {
         if (isEmptyBitmap(src) || content == null) return null
         val ret = src.copy(src.config, true)
@@ -998,14 +945,10 @@ object ImageUtils {
      * @param recycle   True to recycle the source of bitmap, false otherwise.
      * @return the bitmap with image watermarking
      */
+    @JvmStatic
     @JvmOverloads
     fun addImageWatermark(
-        src: Bitmap,
-        watermark: Bitmap?,
-        x: Int,
-        y: Int,
-        alpha: Int,
-        recycle: Boolean = false
+        src: Bitmap, watermark: Bitmap?, x: Int, y: Int, alpha: Int, recycle: Boolean = false
     ): Bitmap? {
         if (isEmptyBitmap(src)) return null
         val ret = src.copy(src.config, true)
@@ -1026,6 +969,7 @@ object ImageUtils {
      * @param recycle True to recycle the source of bitmap, false otherwise.
      * @return the alpha bitmap
      */
+    @JvmStatic
     @JvmOverloads
     fun toAlpha(src: Bitmap, recycle: Boolean = false): Bitmap? {
         if (isEmptyBitmap(src)) return null
@@ -1041,6 +985,7 @@ object ImageUtils {
      * @param recycle True to recycle the source of bitmap, false otherwise.
      * @return the gray bitmap
      */
+    @JvmStatic
     @JvmOverloads
     fun toGray(src: Bitmap, recycle: Boolean = false): Bitmap? {
         if (isEmptyBitmap(src)) return null
@@ -1068,13 +1013,13 @@ object ImageUtils {
      * @param isReturnScale True to return the scale blur bitmap, false otherwise.
      * @return the blur bitmap
      */
+    @JvmStatic
     @JvmOverloads
     fun fastBlur(
         src: Bitmap,
         @FloatRange(from = 0.0, to = 1.0, fromInclusive = false) scale: Float,
         @FloatRange(from = 0.0, to = 25.0, fromInclusive = false) radius: Float,
-        recycle: Boolean = false,
-        isReturnScale: Boolean = false
+        recycle: Boolean = false, isReturnScale: Boolean = false
     ): Bitmap? {
         if (isEmptyBitmap(src)) return null
         val width = src.width
@@ -1108,31 +1053,17 @@ object ImageUtils {
     /**
      * Return the blur bitmap using render script.
      *
-     * @param src    The source of bitmap.
-     * @param radius The radius(0...25).
-     * @return the blur bitmap
-     */
-    @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
-    fun renderScriptBlur(
-        src: Bitmap,
-        @FloatRange(from = 0.0, to = 25.0, fromInclusive = false) radius: Float
-    ): Bitmap {
-        return renderScriptBlur(src, radius, false)
-    }
-
-    /**
-     * Return the blur bitmap using render script.
-     *
      * @param src     The source of bitmap.
      * @param radius  The radius(0...25).
      * @param recycle True to recycle the source of bitmap, false otherwise.
      * @return the blur bitmap
      */
+    @JvmStatic
+    @JvmOverloads
     @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     fun renderScriptBlur(
-        src: Bitmap,
-        @FloatRange(from = 0.0, to = 25.0, fromInclusive = false) radius: Float,
-        recycle: Boolean
+        src: Bitmap, @FloatRange(from = 0.0, to = 25.0, fromInclusive = false) radius: Float,
+        recycle: Boolean = false
     ): Bitmap {
         var rs: RenderScript? = null
         val ret = if (recycle) src else src.copy(src.config, true)
@@ -1165,6 +1096,7 @@ object ImageUtils {
      * @param recycle True to recycle the source of bitmap, false otherwise.
      * @return the blur bitmap
      */
+    @JvmStatic
     @JvmOverloads
     fun stackBlur(src: Bitmap, radius: Int, recycle: Boolean = false): Bitmap {
         var radiusTemp = radius
@@ -1381,12 +1313,8 @@ object ImageUtils {
      * @param recycle  True to recycle the source of bitmap, false otherwise.
      * @return `true`: success<br></br>`false`: fail
      */
-    fun save(
-        src: Bitmap,
-        filePath: String?,
-        format: CompressFormat?,
-        recycle: Boolean
-    ): Boolean {
+    @JvmStatic
+    fun save(src: Bitmap, filePath: String?, format: CompressFormat?, recycle: Boolean): Boolean {
         return save(src, filePath, format, 100, recycle)
     }
 
@@ -1399,12 +1327,8 @@ object ImageUtils {
      * @param recycle True to recycle the source of bitmap, false otherwise.
      * @return `true`: success<br></br>`false`: fail
      */
-    fun save(
-        src: Bitmap,
-        file: File?,
-        format: CompressFormat?,
-        recycle: Boolean
-    ): Boolean {
+    @JvmStatic
+    fun save(src: Bitmap, file: File?, format: CompressFormat?, recycle: Boolean): Boolean {
         return save(src, file, format, 100, recycle)
     }
 
@@ -1421,15 +1345,13 @@ object ImageUtils {
      * @param recycle  True to recycle the source of bitmap, false otherwise.
      * @return `true`: success<br></br>`false`: fail
      */
+    @JvmStatic
     @JvmOverloads
     fun save(
-        src: Bitmap,
-        filePath: String?,
-        format: CompressFormat?,
-        quality: Int = 100,
-        recycle: Boolean = false
+        src: Bitmap, filePath: String?, format: CompressFormat?,
+        quality: Int = 100, recycle: Boolean = false
     ): Boolean {
-        return save(src, getFileByPath(filePath), format, quality, recycle)
+        return save(src, FileUtils.getFileByPath(filePath), format, quality, recycle)
     }
 
     /**
@@ -1445,13 +1367,10 @@ object ImageUtils {
      * @param recycle True to recycle the source of bitmap, false otherwise.
      * @return `true`: success<br></br>`false`: fail
      */
+    @JvmStatic
     @JvmOverloads
     fun save(
-        src: Bitmap,
-        file: File?,
-        format: CompressFormat?,
-        quality: Int = 100,
-        recycle: Boolean = false
+        src: Bitmap, file: File?, format: CompressFormat?, quality: Int = 100, recycle: Boolean = false
     ): Boolean {
         if (isEmptyBitmap(src)) {
             Log.e("ImageUtils", "bitmap is empty.")
@@ -1489,11 +1408,8 @@ object ImageUtils {
      * @param recycle True to recycle the source of bitmap, false otherwise.
      * @return the file if save success, otherwise return null.
      */
-    fun save2Album(
-        src: Bitmap,
-        format: CompressFormat,
-        recycle: Boolean
-    ): File? {
+    @JvmStatic
+    fun save2Album(src: Bitmap, format: CompressFormat, recycle: Boolean): File? {
         return save2Album(src, format, 100, recycle)
     }
     /**
@@ -1520,12 +1436,10 @@ object ImageUtils {
      * quality setting
      * @return the file if save success, otherwise return null.
      */
+    @JvmStatic
     @JvmOverloads
     fun save2Album(
-        src: Bitmap,
-        format: CompressFormat,
-        quality: Int = 100,
-        recycle: Boolean = false
+        src: Bitmap, format: CompressFormat,quality: Int = 100, recycle: Boolean = false
     ): File? {
         val suffix = if (CompressFormat.JPEG == format) "JPG" else format.name
         val fileName = System.currentTimeMillis().toString() + "_" + quality + "." + suffix
