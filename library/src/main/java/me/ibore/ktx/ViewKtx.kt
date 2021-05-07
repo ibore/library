@@ -6,6 +6,7 @@ import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Build
+import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +14,8 @@ import android.view.inputmethod.InputMethodManager
 import me.ibore.ktx.ViewClickDelay.SPACE_TIME
 import me.ibore.ktx.ViewClickDelay.hash
 import me.ibore.ktx.ViewClickDelay.lastClickTime
+import me.ibore.utils.Utils
+import java.util.*
 
 
 /*************************************** View宽高相关 ********************************************/
@@ -58,6 +61,9 @@ fun View.widthAndHeight(width: Int, height: Int): View {
     return this
 }
 
+/**
+ * 隐藏键盘
+ */
 fun View.hideSoftInputKeyBoard() {
     val binder = windowToken
     if (binder != null) {
@@ -66,6 +72,20 @@ fun View.hideSoftInputKeyBoard() {
     }
 }
 
+/**
+ * Return whether horizontal layout direction of views are from Right to Left.
+ *
+ * @return `true`: yes<br></br>`false`: no
+ */
+val isLayoutRtl: Boolean
+    get() {
+        val primaryLocale: Locale = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            Utils.app.resources.configuration.locales[0]
+        } else {
+            Utils.app.resources.configuration.locale
+        }
+        return TextUtils.getLayoutDirectionFromLocale(primaryLocale) == View.LAYOUT_DIRECTION_RTL
+    }
 
 /**
  * 设置宽度，带有过渡动画

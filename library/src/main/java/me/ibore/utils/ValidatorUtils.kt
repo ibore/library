@@ -1,11 +1,11 @@
 package me.ibore.utils
 
+import me.ibore.ktx.logD
 import java.util.*
 import java.util.regex.Pattern
 
 /**
- * detail: 校验工具类
- * @author Ttt
+ * 校验工具类
  */
 object ValidatorUtils {
 
@@ -63,15 +63,12 @@ object ValidatorUtils {
      * @param input 待校验的字符串
      * @return `true` yes, `false` no
      */
-    fun match(
-        regex: String,
-        input: String?
-    ): Boolean {
-        if (!input.isNullOrEmpty()) {
+    fun match(regex: String, input: String): Boolean {
+        if (input.isNotEmpty()) {
             try {
                 return Pattern.matches(regex, input)
             } catch (e: Exception) {
-                LogUtils.d(e)
+                logD(e)
             }
         }
         return false
@@ -82,7 +79,7 @@ object ValidatorUtils {
      * @param str 待校验的字符串
      * @return `true` yes, `false` no
      */
-    fun isNumber(str: String?): Boolean {
+    fun isNumber(str: String): Boolean {
         return match(REGEX_NUMBER, str)
     }
 
@@ -91,7 +88,7 @@ object ValidatorUtils {
      * @param str 待校验的字符串
      * @return `true` yes, `false` no
      */
-    fun isNumberDecimal(str: String?): Boolean {
+    fun isNumberDecimal(str: String): Boolean {
         return match(REGEX_NUMBER_OR_DECIMAL, str)
     }
 
@@ -100,7 +97,7 @@ object ValidatorUtils {
      * @param str 待校验的字符串
      * @return `true` yes, `false` no
      */
-    fun isLetter(str: String?): Boolean {
+    fun isLetter(str: String): Boolean {
         return match(REGEX_LETTER, str)
     }
 
@@ -109,7 +106,7 @@ object ValidatorUtils {
      * @param str 待校验的字符串
      * @return `true` yes, `false` no
      */
-    fun isContainNumber(str: String?): Boolean {
+    fun isContainNumber(str: String): Boolean {
         return match(REGEX_CONTAIN_NUMBER, str)
     }
 
@@ -118,7 +115,7 @@ object ValidatorUtils {
      * @param str 待校验的字符串
      * @return `true` yes, `false` no
      */
-    fun isNumberLetter(str: String?): Boolean {
+    fun isNumberLetter(str: String): Boolean {
         return match(REGEX_NUMBER_OR_LETTER, str)
     }
 
@@ -127,7 +124,7 @@ object ValidatorUtils {
      * @param str 待校验的字符串
      * @return `true` yes, `false` no
      */
-    fun isSpecial(str: String?): Boolean {
+    fun isSpecial(str: String): Boolean {
         return match(REGEX_SPECIAL, str)
     }
 
@@ -136,7 +133,7 @@ object ValidatorUtils {
      * @param str 待校验的字符串
      * @return `true` yes, `false` no
      */
-    fun isWeixin(str: String?): Boolean {
+    fun isWeixin(str: String): Boolean {
         return match(REGEX_WEIXIN, str)
     }
 
@@ -145,7 +142,7 @@ object ValidatorUtils {
      * @param str 待校验的字符串
      * @return `true` yes, `false` no
      */
-    fun isRealName(str: String?): Boolean {
+    fun isRealName(str: String): Boolean {
         return match(REGEX_REALNAME, str)
     }
 
@@ -154,7 +151,7 @@ object ValidatorUtils {
      * @param str 待校验的字符串
      * @return `true` yes, `false` no
      */
-    fun isNickName(str: String?): Boolean {
+    fun isNickName(str: String): Boolean {
         return match(REGEX_NICKNAME, str)
     }
 
@@ -163,7 +160,7 @@ object ValidatorUtils {
      * @param str 待校验的字符串
      * @return `true` yes, `false` no
      */
-    fun isUserName(str: String?): Boolean {
+    fun isUserName(str: String): Boolean {
         return match(REGEX_USERNAME, str)
     }
 
@@ -172,7 +169,7 @@ object ValidatorUtils {
      * @param str 待校验的字符串
      * @return `true` yes, `false` no
      */
-    fun isPassword(str: String?): Boolean {
+    fun isPassword(str: String): Boolean {
         return match(REGEX_PASSWORD, str)
     }
 
@@ -181,7 +178,7 @@ object ValidatorUtils {
      * @param str 待校验的字符串
      * @return `true` yes, `false` no
      */
-    fun isEmail(str: String?): Boolean {
+    fun isEmail(str: String): Boolean {
         return match(REGEX_EMAIL, str)
     }
 
@@ -201,7 +198,7 @@ object ValidatorUtils {
      * @param str 待校验的字符串
      * @return `true` yes, `false` no
      */
-    fun isIPAddress(str: String?): Boolean {
+    fun isIPAddress(str: String): Boolean {
         return match(REGEX_IP_ADDRESS, str)
     }
 
@@ -219,7 +216,7 @@ object ValidatorUtils {
      * @param str 待校验的字符串
      * @return `true` yes, `false` no
      */
-    fun isChinese(str: String?): Boolean {
+    fun isChinese(str: String): Boolean {
         return match(REGEX_CHINESE, str)
     }
 
@@ -228,7 +225,7 @@ object ValidatorUtils {
      * @param str 待校验的字符串
      * @return `true` yes, `false` no
      */
-    fun isChineseAll(str: String?): Boolean {
+    fun isChineseAll(str: String): Boolean {
         return match(REGEX_CHINESE_ALL, str)
     }
 
@@ -251,7 +248,7 @@ object ValidatorUtils {
                     }
                 }
             } catch (e: Exception) {
-                LogUtils.d(e)
+                logD(e)
             }
         }
         return false

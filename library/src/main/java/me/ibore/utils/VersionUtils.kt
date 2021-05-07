@@ -3,22 +3,19 @@ package me.ibore.utils
 import android.os.Build
 
 /**
- * detail: 版本工具类
- * @author Ttt
+ * 版本工具类
  */
 object VersionUtils {
 
     /**
      * 获取 SDK 版本
-     * @return SDK 版本
      */
     @JvmStatic
-    val sDKVersion: Int
+    val SDKVersion: Int
         get() = Build.VERSION.SDK_INT
 
     /**
      * 是否在 5.0.1 版本及以上
-     * @return 是否在 5.0.1 版本及以上
      */
     @JvmStatic
     val isLollipop: Boolean
@@ -26,7 +23,6 @@ object VersionUtils {
 
     /**
      * 是否在 6.0 版本及以上
-     * @return 是否在 6.0 版本及以上
      */
     @JvmStatic
     val isM: Boolean
@@ -34,7 +30,6 @@ object VersionUtils {
 
     /**
      * 是否在 7.0 版本及以上
-     * @return 是否在 7.0 版本及以上
      */
     @JvmStatic
     val isN: Boolean
@@ -42,7 +37,6 @@ object VersionUtils {
 
     /**
      * 是否在 7.1.1 版本及以上
-     * @return 是否在 7.1.1 版本及以上
      */
     @JvmStatic
     val isN_MR1: Boolean
@@ -50,7 +44,6 @@ object VersionUtils {
 
     /**
      * 是否在 8.0 版本及以上
-     * @return 是否在 8.0 版本及以上
      */
     @JvmStatic
     val isO: Boolean
@@ -58,7 +51,6 @@ object VersionUtils {
 
     /**
      * 是否在 8.1 版本及以上
-     * @return 是否在 8.1 版本及以上
      */
     @JvmStatic
     val isO_MR1: Boolean
@@ -66,7 +58,6 @@ object VersionUtils {
 
     /**
      * 是否在 9.0 版本及以上
-     * @return 是否在 9.0 版本及以上
      */
     @JvmStatic
     val isP: Boolean
@@ -74,7 +65,6 @@ object VersionUtils {
 
     /**
      * 是否在 10.0 版本及以上
-     * @return 是否在 10.0 版本及以上
      */
     @JvmStatic
     val isQ: Boolean
@@ -82,7 +72,6 @@ object VersionUtils {
 
     /**
      * 是否在 11.0 版本及以上
-     * @return 是否在 11.0 版本及以上
      */
     @JvmStatic
     val isR: Boolean
@@ -94,7 +83,7 @@ object VersionUtils {
      * @return SDK 版本
      */
     @JvmOverloads
-    fun convertSDKVersion(sdkVersion: Int = Build.VERSION.SDK_INT): String {
+    fun convertSDKVersion(sdkVersion: Int = SDKVersion): String {
         when (sdkVersion) {
             21 -> return "Android 5.0"
             22 -> return "Android 5.1"

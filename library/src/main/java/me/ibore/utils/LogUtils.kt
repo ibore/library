@@ -10,7 +10,6 @@ import androidx.annotation.IntRange
 import androidx.annotation.RequiresApi
 import androidx.collection.SimpleArrayMap
 import me.ibore.utils.UtilsBridge.FileHead
-import me.ibore.utils.UtilsBridge.createOrExistsDir
 import me.ibore.utils.UtilsBridge.isSpace
 import me.ibore.utils.UtilsBridge.writeFileFromString
 import org.json.JSONArray
@@ -525,7 +524,7 @@ object LogUtils {
     private fun createOrExistsFile(filePath: String, date: String): Boolean {
         val file = File(filePath)
         if (file.exists()) return file.isFile
-        return if (!createOrExistsDir(file.parentFile)) false else try {
+        return if (!FileUtils.createOrExistsDir(file.parentFile)) false else try {
             deleteDueLogs(filePath, date)
             val isCreate = file.createNewFile()
             if (isCreate) {

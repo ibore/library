@@ -11,6 +11,7 @@ import androidx.core.view.*
 import me.ibore.R
 import me.ibore.ktx.activity
 import me.ibore.ktx.dp2px
+import me.ibore.ktx.isLayoutRtl
 import me.ibore.utils.BarUtils
 import java.util.*
 import kotlin.collections.ArrayList
@@ -174,8 +175,7 @@ class TitleBar @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
         onLayoutTopBottomViews(bottomViews, left, bottom - bottomHeight, right, bottom)
         top += topHeight
         bottom -= bottomHeight
-        val layoutDirection = TextUtilsCompat.getLayoutDirectionFromLocale(Locale.getDefault())
-        if (layoutDirection == ViewCompat.LAYOUT_DIRECTION_RTL) {
+        if (isLayoutRtl) {
             onLayoutLeftRightViews(endViews, true, left, top, right, bottom)
             onLayoutLeftRightViews(startViews, false, left, top, right, bottom)
         } else {

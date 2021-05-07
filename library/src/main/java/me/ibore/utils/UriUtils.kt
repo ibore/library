@@ -12,8 +12,8 @@ import android.provider.MediaStore
 import android.text.TextUtils
 import android.util.Log
 import androidx.core.content.FileProvider
+import me.ibore.ktx.logD
 import me.ibore.utils.UtilsBridge.inputStream2Bytes
-import me.ibore.utils.UtilsBridge.isFileExists
 import me.ibore.utils.UtilsBridge.writeFileFromIS
 import java.io.File
 import java.io.FileNotFoundException
@@ -52,7 +52,7 @@ object UriUtils {
      */
     @JvmStatic
     fun file2Uri(file: File?): Uri? {
-        if (!isFileExists(file)) return null
+        if (!FileUtils.isFileExists(file)) return null
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             val authority = Utils.app.packageName + ".utilcode.provider"
             FileProvider.getUriForFile(Utils.app, authority, file!!)
@@ -82,7 +82,7 @@ object UriUtils {
      */
     @JvmStatic
     private fun uri2FileReal(uri: Uri): File? {
-        Log.d("UriUtils", uri.toString())
+        logD(uri.toString())
         val authority = uri.authority
         val scheme = uri.scheme
         val path = uri.path
@@ -96,7 +96,7 @@ object UriUtils {
                                 + path.replace(external, "/")
                     )
                     if (file.exists()) {
-                        Log.d("UriUtils", "$uri -> $external")
+                        logD("$uri -> $external")
                         return file
                     }
                 }
@@ -124,13 +124,13 @@ object UriUtils {
                 )
             }
             if (file != null && file.exists()) {
-                Log.d("UriUtils", "$uri -> $path")
+                logD("$uri -> $path")
                 return file
             }
         }
         return if (ContentResolver.SCHEME_FILE == scheme) {
             if (path != null) return File(path)
-            Log.d("UriUtils", "$uri parse failed. -> 0")
+            logD("$uri parse failed. -> 0")
             null
         } // end 0
         else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT
@@ -187,16 +187,16 @@ object UriUtils {
                             }
                         }
                     } catch (ex: Exception) {
-                        Log.d("UriUtils", "$uri parse failed. $ex -> 1_0")
+                        logD("$uri parse failed. $ex -> 1_0")
                     }
                 }
-                Log.d("UriUtils", "$uri parse failed. -> 1_0")
+                logD("$uri parse failed. -> 1_0")
                 null
             } // end 1_0
             else if ("com.android.providers.downloads.documents" == authority) {
                 var id = DocumentsContract.getDocumentId(uri)
                 if (TextUtils.isEmpty(id)) {
-                    Log.d("UriUtils", "$uri parse failed(id is null). -> 1_1")
+                    logD("$uri parse failed(id is null). -> 1_1")
                     return null
                 }
                 if (id.startsWith("raw:")) {
@@ -226,7 +226,7 @@ object UriUtils {
                     } catch (ignore: Exception) {
                     }
                 }
-                Log.d("UriUtils", "$uri parse failed. -> 1_1")
+                logD("$uri parse failed. -> 1_1")
                 null
             } // end 1_1
             else if ("com.android.providers.media.documents" == authority) {
@@ -241,7 +241,7 @@ object UriUtils {
                 } else if ("audio" == type) {
                     MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
                 } else {
-                    Log.d("UriUtils", "$uri parse failed. -> 1_2")
+                    logD("$uri parse failed. -> 1_2")
                     return null
                 }
                 val selection = "_id=?"
@@ -252,7 +252,7 @@ object UriUtils {
                 getFileFromUri(uri, "1_3")
             } // end 1_3
             else {
-                Log.d("UriUtils", "$uri parse failed. -> 1_4")
+                logD("$uri parse failed. -> 1_4")
                 null
             } // end 1_4
         } // end 1
@@ -260,7 +260,7 @@ object UriUtils {
             getFileFromUri(uri, "2")
         } // end 2
         else {
-            Log.d("UriUtils", "$uri parse failed. -> 3")
+            logD("$uri parse failed. -> 3")
             null
         } // end 3
     }
@@ -278,26 +278,27 @@ object UriUtils {
         code: String
     ): File? {
         if ("com.google.android.apps.photos.content" == uri.authority) {
-            if (!TextUtils.isEmpty(uri.lastPathSegment)) {
-                return File(uri.lastPathSegment)
+            val lastPathSegment = uri.lastPathSegment
+            if (!lastPathSegment.isNullOrEmpty()) {
+                return File(lastPathSegment)
             }
         } else if ("com.tencent.mtt.fileprovider" == uri.authority) {
             val path = uri.path
-            if (!TextUtils.isEmpty(path)) {
+            if (!path.isNullOrEmpty()) {
                 val fileDir = Environment.getExternalStorageDirectory()
-                return File(fileDir, path!!.substring("/QQBrowser".length, path.length))
+                return File(fileDir, path.substring("/QQBrowser".length, path.length))
             }
         } else if ("com.huawei.hidisk.fileprovider" == uri.authority) {
             val path = uri.path
-            if (!TextUtils.isEmpty(path)) {
-                return File(path!!.replace("/root", ""))
+            if (!path.isNullOrEmpty()) {
+                return File(path.replace("/root", ""))
             }
         }
         val cursor = Utils.app.contentResolver.query(
             uri, arrayOf("_data"), selection, selectionArgs, null
         )
         if (cursor == null) {
-            Log.d("UriUtils", "$uri parse failed(cursor is null). -> $code")
+            logD("$uri parse failed(cursor is null). -> $code")
             return null
         }
         return try {
@@ -306,18 +307,15 @@ object UriUtils {
                 if (columnIndex > -1) {
                     File(cursor.getString(columnIndex))
                 } else {
-                    Log.d(
-                        "UriUtils",
-                        "$uri parse failed(columnIndex: $columnIndex is wrong). -> $code"
-                    )
+                    logD("$uri parse failed(columnIndex: $columnIndex is wrong). -> $code")
                     null
                 }
             } else {
-                Log.d("UriUtils", "$uri parse failed(moveToFirst return false). -> $code")
+                logD("$uri parse failed(moveToFirst return false). -> $code")
                 null
             }
         } catch (e: Exception) {
-            Log.d("UriUtils", "$uri parse failed. -> $code")
+            logD("$uri parse failed. -> $code")
             null
         } finally {
             cursor.close()
@@ -326,7 +324,7 @@ object UriUtils {
 
     @JvmStatic
     private fun copyUri2Cache(uri: Uri): File? {
-        Log.d("UriUtils", "copyUri2Cache() called")
+        logD("copyUri2Cache() called")
         var `is`: InputStream? = null
         return try {
             `is` = Utils.app.contentResolver.openInputStream(uri)
@@ -362,7 +360,7 @@ object UriUtils {
             inputStream2Bytes(`is`)
         } catch (e: FileNotFoundException) {
             e.printStackTrace()
-            Log.d("UriUtils", "uri to bytes failed.")
+            logD("uri to bytes failed.")
             null
         } finally {
             if (`is` != null) {

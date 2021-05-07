@@ -6,8 +6,6 @@ import android.os.Environment
 import android.os.storage.StorageManager
 import android.os.storage.StorageVolume
 import android.text.format.Formatter
-import me.ibore.utils.UtilsBridge.getFsAvailableSize
-import me.ibore.utils.UtilsBridge.getFsTotalSize
 import java.lang.reflect.Array
 import java.lang.reflect.InvocationTargetException
 import java.util.*
@@ -47,7 +45,7 @@ object SDCardUtils {
     val sDCardInfo: List<SDCardInfo>
         get() {
             val paths: MutableList<SDCardInfo> = ArrayList()
-            val sm = Utils.app.getSystemService(Context.STORAGE_SERVICE) as StorageManager
+            val sm = Utils.app.getSystemService(Context.STORAGE_SERVICE) as StorageManager?
                 ?: return paths
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 val storageVolumes = sm.storageVolumes
@@ -121,7 +119,7 @@ object SDCardUtils {
      * @return the total size of external storage
      */
     val externalTotalSize: Long
-        get() = getFsTotalSize(sDCardPathByEnvironment)
+        get() = FileUtils.getFsTotalSize(sDCardPathByEnvironment)
 
     /**
      * Return the available size of external storage.
@@ -129,7 +127,7 @@ object SDCardUtils {
      * @return the available size of external storage
      */
     val externalAvailableSize: Long
-        get() = getFsAvailableSize(sDCardPathByEnvironment)
+        get() = FileUtils.getFsAvailableSize(sDCardPathByEnvironment)
 
     /**
      * Return the total size of internal storage
@@ -137,7 +135,7 @@ object SDCardUtils {
      * @return the total size of internal storage
      */
     val internalTotalSize: Long
-        get() = getFsTotalSize(Environment.getDataDirectory().absolutePath)
+        get() = FileUtils.getFsTotalSize(Environment.getDataDirectory().absolutePath)
 
     /**
      * Return the available size of internal storage.
@@ -145,15 +143,15 @@ object SDCardUtils {
      * @return the available size of internal storage
      */
     val internalAvailableSize: Long
-        get() = getFsAvailableSize(Environment.getDataDirectory().absolutePath)
+        get() = FileUtils.getFsAvailableSize(Environment.getDataDirectory().absolutePath)
 
     class SDCardInfo internal constructor(
         val path: String,
         val state: String,
         val isRemovable: Boolean
     ) {
-        val totalSize: Long = getFsTotalSize(path)
-        val availableSize: Long = getFsAvailableSize(path)
+        val totalSize: Long = FileUtils.getFsTotalSize(path)
+        val availableSize: Long = FileUtils.getFsAvailableSize(path)
         override fun toString(): String {
             return "SDCardInfo {" +
                     "path = " + path +

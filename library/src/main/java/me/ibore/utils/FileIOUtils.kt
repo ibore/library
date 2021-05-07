@@ -1,10 +1,7 @@
 package me.ibore.utils
 
 import android.util.Log
-import me.ibore.utils.UtilsBridge.createOrExistsFile
-import me.ibore.utils.UtilsBridge.getFileByPath
-import me.ibore.utils.UtilsBridge.isFileExists
-import me.ibore.utils.UtilsBridge.isSpace
+import me.ibore.ktx.logD
 import java.io.*
 import java.nio.ByteBuffer
 import java.nio.channels.FileChannel
@@ -20,54 +17,8 @@ import java.util.*
 </pre> *
  */
 object FileIOUtils {
+
     private var sBufferSize = 524288
-    ///////////////////////////////////////////////////////////////////////////
-    // writeFileFromIS without progress
-    ///////////////////////////////////////////////////////////////////////////
-    /**
-     * Write file from input stream.
-     *
-     * @param filePath The path of file.
-     * @param is       The input stream.
-     * @return `true`: success<br></br>`false`: fail
-     */
-    fun writeFileFromIS(filePath: String?, `is`: InputStream?): Boolean {
-        return writeFileFromIS(getFileByPath(filePath), `is`, false, null)
-    }
-
-    /**
-     * Write file from input stream.
-     *
-     * @param filePath The path of file.
-     * @param is       The input stream.
-     * @param append   True to append, false otherwise.
-     * @return `true`: success<br></br>`false`: fail
-     */
-    fun writeFileFromIS(
-        filePath: String?,
-        `is`: InputStream?,
-        append: Boolean
-    ): Boolean {
-        return writeFileFromIS(getFileByPath(filePath), `is`, append, null)
-    }
-    ///////////////////////////////////////////////////////////////////////////
-    // writeFileFromIS with progress
-    ///////////////////////////////////////////////////////////////////////////
-    /**
-     * Write file from input stream.
-     *
-     * @param filePath The path of file.
-     * @param is       The input stream.
-     * @param listener The progress update listener.
-     * @return `true`: success<br></br>`false`: fail
-     */
-    fun writeFileFromIS(
-        filePath: String?,
-        `is`: InputStream?,
-        listener: OnProgressUpdateListener?
-    ): Boolean {
-        return writeFileFromIS(getFileByPath(filePath), `is`, false, listener)
-    }
 
     /**
      * Write file from input stream.
@@ -78,48 +29,34 @@ object FileIOUtils {
      * @param listener The progress update listener.
      * @return `true`: success<br></br>`false`: fail
      */
-    fun writeFileFromIS(
-        filePath: String?,
-        `is`: InputStream?,
-        append: Boolean,
-        listener: OnProgressUpdateListener?
-    ): Boolean {
-        return writeFileFromIS(getFileByPath(filePath), `is`, append, listener)
-    }
-
-    /**
-     * Write file from input stream.
-     *
-     * @param file     The file.
-     * @param is       The input stream.
-     * @param listener The progress update listener.
-     * @return `true`: success<br></br>`false`: fail
-     */
-    fun writeFileFromIS(
-        file: File?,
-        `is`: InputStream?,
-        listener: OnProgressUpdateListener?
-    ): Boolean {
-        return writeFileFromIS(file, `is`, false, listener)
-    }
-    /**
-     * Write file from input stream.
-     *
-     * @param file     The file.
-     * @param is       The input stream.
-     * @param append   True to append, false otherwise.
-     * @param listener The progress update listener.
-     * @return `true`: success<br></br>`false`: fail
-     */
+    @JvmStatic
     @JvmOverloads
     fun writeFileFromIS(
-        file: File?,
-        `is`: InputStream?,
-        append: Boolean = false,
+        filePath: String, inputStream: InputStream, append: Boolean = false,
         listener: OnProgressUpdateListener? = null
     ): Boolean {
-        if (`is` == null || !createOrExistsFile(file)) {
-            Log.e("FileIOUtils", "create file <$file> failed.")
+        return writeFileFromIS(
+            FileUtils.getFileByPath(filePath) ?: return false, inputStream, append, listener
+        )
+    }
+
+    /**
+     * Write file from input stream.
+     *
+     * @param file     The file.
+     * @param is       The input stream.
+     * @param append   True to append, false otherwise.
+     * @param listener The progress update listener.
+     * @return `true`: success<br></br>`false`: fail
+     */
+    @JvmStatic
+    @JvmOverloads
+    fun writeFileFromIS(
+        file: File, inputStream: InputStream, append: Boolean = false,
+        listener: OnProgressUpdateListener? = null
+    ): Boolean {
+        if (!FileUtils.createOrExistsFile(file)) {
+            logD("create file <$file> failed.")
             return false
         }
         var os: OutputStream? = null
@@ -128,16 +65,16 @@ object FileIOUtils {
             if (listener == null) {
                 val data = ByteArray(sBufferSize)
                 var len: Int
-                while (`is`.read(data).also { len = it } != -1) {
+                while (inputStream.read(data).also { len = it } != -1) {
                     os.write(data, 0, len)
                 }
             } else {
-                val totalSize = `is`.available().toDouble()
+                val totalSize = inputStream.available().toDouble()
                 var curSize = 0
                 listener.onProgressUpdate(0.0)
                 val data = ByteArray(sBufferSize)
                 var len: Int
-                while (`is`.read(data).also { len = it } != -1) {
+                while (inputStream.read(data).also { len = it } != -1) {
                     os.write(data, 0, len)
                     curSize += len
                     listener.onProgressUpdate(curSize / totalSize)
@@ -148,65 +85,9 @@ object FileIOUtils {
             e.printStackTrace()
             false
         } finally {
-            try {
-                `is`.close()
-            } catch (e: IOException) {
-                e.printStackTrace()
-            }
-            try {
-                os?.close()
-            } catch (e: IOException) {
-                e.printStackTrace()
-            }
+            CloseUtils.closeIOQuietly(inputStream, os)
         }
     }
-    ///////////////////////////////////////////////////////////////////////////
-    // writeFileFromBytesByStream without progress
-    ///////////////////////////////////////////////////////////////////////////
-    /**
-     * Write file from bytes by stream.
-     *
-     * @param filePath The path of file.
-     * @param bytes    The bytes.
-     * @return `true`: success<br></br>`false`: fail
-     */
-    fun writeFileFromBytesByStream(filePath: String?, bytes: ByteArray?): Boolean {
-        return writeFileFromBytesByStream(getFileByPath(filePath), bytes, false, null)
-    }
-
-    /**
-     * Write file from bytes by stream.
-     *
-     * @param filePath The path of file.
-     * @param bytes    The bytes.
-     * @param append   True to append, false otherwise.
-     * @return `true`: success<br></br>`false`: fail
-     */
-    fun writeFileFromBytesByStream(
-        filePath: String?,
-        bytes: ByteArray?,
-        append: Boolean
-    ): Boolean {
-        return writeFileFromBytesByStream(getFileByPath(filePath), bytes, append, null)
-    }
-    ///////////////////////////////////////////////////////////////////////////
-    // writeFileFromBytesByStream with progress
-    ///////////////////////////////////////////////////////////////////////////
-    /**
-     * Write file from bytes by stream.
-     *
-     * @param filePath The path of file.
-     * @param bytes    The bytes.
-     * @param listener The progress update listener.
-     * @return `true`: success<br></br>`false`: fail
-     */
-    fun writeFileFromBytesByStream(
-        filePath: String?,
-        bytes: ByteArray?,
-        listener: OnProgressUpdateListener?
-    ): Boolean {
-        return writeFileFromBytesByStream(getFileByPath(filePath), bytes, false, listener)
-    }
 
     /**
      * Write file from bytes by stream.
@@ -217,68 +98,33 @@ object FileIOUtils {
      * @param listener The progress update listener.
      * @return `true`: success<br></br>`false`: fail
      */
-    fun writeFileFromBytesByStream(
-        filePath: String?,
-        bytes: ByteArray?,
-        append: Boolean,
-        listener: OnProgressUpdateListener?
-    ): Boolean {
-        return writeFileFromBytesByStream(getFileByPath(filePath), bytes, append, listener)
-    }
-
-    /**
-     * Write file from bytes by stream.
-     *
-     * @param file     The file.
-     * @param bytes    The bytes.
-     * @param listener The progress update listener.
-     * @return `true`: success<br></br>`false`: fail
-     */
-    fun writeFileFromBytesByStream(
-        file: File?,
-        bytes: ByteArray?,
-        listener: OnProgressUpdateListener?
-    ): Boolean {
-        return writeFileFromBytesByStream(file, bytes, false, listener)
-    }
-    /**
-     * Write file from bytes by stream.
-     *
-     * @param file     The file.
-     * @param bytes    The bytes.
-     * @param append   True to append, false otherwise.
-     * @param listener The progress update listener.
-     * @return `true`: success<br></br>`false`: fail
-     */
+    @JvmStatic
     @JvmOverloads
     fun writeFileFromBytesByStream(
-        file: File?,
-        bytes: ByteArray?,
-        append: Boolean = false,
+        filePath: String, bytes: ByteArray, append: Boolean = false,
         listener: OnProgressUpdateListener? = null
     ): Boolean {
-        return if (bytes == null) false else writeFileFromIS(
-            file,
-            ByteArrayInputStream(bytes),
-            append,
-            listener
+        return writeFileFromBytesByStream(
+            FileUtils.getFileByPath(filePath) ?: return false, bytes, append, listener
         )
     }
 
     /**
-     * Write file from bytes by channel.
+     * Write file from bytes by stream.
      *
-     * @param filePath The path of file.
+     * @param file     The file.
      * @param bytes    The bytes.
-     * @param isForce  是否写入文件
+     * @param append   True to append, false otherwise.
+     * @param listener The progress update listener.
      * @return `true`: success<br></br>`false`: fail
      */
-    fun writeFileFromBytesByChannel(
-        filePath: String?,
-        bytes: ByteArray?,
-        isForce: Boolean
+    @JvmStatic
+    @JvmOverloads
+    fun writeFileFromBytesByStream(
+        file: File, bytes: ByteArray, append: Boolean = false,
+        listener: OnProgressUpdateListener? = null
     ): Boolean {
-        return writeFileFromBytesByChannel(getFileByPath(filePath), bytes, false, isForce)
+        return writeFileFromIS(file, ByteArrayInputStream(bytes), append, listener)
     }
 
     /**
@@ -290,29 +136,14 @@ object FileIOUtils {
      * @param isForce  True to force write file, false otherwise.
      * @return `true`: success<br></br>`false`: fail
      */
+    @JvmStatic
+    @JvmOverloads
     fun writeFileFromBytesByChannel(
-        filePath: String?,
-        bytes: ByteArray?,
-        append: Boolean,
-        isForce: Boolean
+        filePath: String, bytes: ByteArray, append: Boolean = false, isForce: Boolean = true
     ): Boolean {
-        return writeFileFromBytesByChannel(getFileByPath(filePath), bytes, append, isForce)
-    }
-
-    /**
-     * Write file from bytes by channel.
-     *
-     * @param file    The file.
-     * @param bytes   The bytes.
-     * @param isForce True to force write file, false otherwise.
-     * @return `true`: success<br></br>`false`: fail
-     */
-    fun writeFileFromBytesByChannel(
-        file: File?,
-        bytes: ByteArray?,
-        isForce: Boolean
-    ): Boolean {
-        return writeFileFromBytesByChannel(file, bytes, false, isForce)
+        return writeFileFromBytesByChannel(
+            FileUtils.getFileByPath(filePath) ?: return false, bytes, append, isForce
+        )
     }
 
     /**
@@ -324,18 +155,13 @@ object FileIOUtils {
      * @param isForce True to force write file, false otherwise.
      * @return `true`: success<br></br>`false`: fail
      */
+    @JvmStatic
+    @JvmOverloads
     fun writeFileFromBytesByChannel(
-        file: File?,
-        bytes: ByteArray?,
-        append: Boolean,
-        isForce: Boolean
+        file: File, bytes: ByteArray, append: Boolean = false, isForce: Boolean = true
     ): Boolean {
-        if (bytes == null) {
-            Log.e("FileIOUtils", "bytes is null.")
-            return false
-        }
-        if (!createOrExistsFile(file)) {
-            Log.e("FileIOUtils", "create file <$file> failed.")
+        if (!FileUtils.createOrExistsFile(file)) {
+            logD("create file <$file> failed.")
             return false
         }
         var fc: FileChannel? = null
@@ -366,49 +192,18 @@ object FileIOUtils {
      *
      * @param filePath The path of file.
      * @param bytes    The bytes.
-     * @param isForce  True to force write file, false otherwise.
-     * @return `true`: success<br></br>`false`: fail
-     */
-    fun writeFileFromBytesByMap(
-        filePath: String?,
-        bytes: ByteArray?,
-        isForce: Boolean
-    ): Boolean {
-        return writeFileFromBytesByMap(filePath, bytes, false, isForce)
-    }
-
-    /**
-     * Write file from bytes by map.
-     *
-     * @param filePath The path of file.
-     * @param bytes    The bytes.
      * @param append   True to append, false otherwise.
      * @param isForce  True to force write file, false otherwise.
      * @return `true`: success<br></br>`false`: fail
      */
+    @JvmStatic
+    @JvmOverloads
     fun writeFileFromBytesByMap(
-        filePath: String?,
-        bytes: ByteArray?,
-        append: Boolean,
-        isForce: Boolean
+        filePath: String, bytes: ByteArray, append: Boolean = false, isForce: Boolean = true
     ): Boolean {
-        return writeFileFromBytesByMap(getFileByPath(filePath), bytes, append, isForce)
-    }
-
-    /**
-     * Write file from bytes by map.
-     *
-     * @param file    The file.
-     * @param bytes   The bytes.
-     * @param isForce True to force write file, false otherwise.
-     * @return `true`: success<br></br>`false`: fail
-     */
-    fun writeFileFromBytesByMap(
-        file: File?,
-        bytes: ByteArray?,
-        isForce: Boolean
-    ): Boolean {
-        return writeFileFromBytesByMap(file, bytes, false, isForce)
+        return writeFileFromBytesByMap(
+            FileUtils.getFileByPath(filePath) ?: return false, bytes, append, isForce
+        )
     }
 
     /**
@@ -420,13 +215,12 @@ object FileIOUtils {
      * @param isForce True to force write file, false otherwise.
      * @return `true`: success<br></br>`false`: fail
      */
+    @JvmStatic
+    @JvmOverloads
     fun writeFileFromBytesByMap(
-        file: File?,
-        bytes: ByteArray?,
-        append: Boolean,
-        isForce: Boolean
+        file: File, bytes: ByteArray, append: Boolean = false, isForce: Boolean = true
     ): Boolean {
-        if (bytes == null || !createOrExistsFile(file)) {
+        if (!FileUtils.createOrExistsFile(file)) {
             Log.e("FileIOUtils", "create file <$file> failed.")
             return false
         }
@@ -458,27 +252,17 @@ object FileIOUtils {
      *
      * @param filePath The path of file.
      * @param content  The string of content.
-     * @return `true`: success<br></br>`false`: fail
-     */
-    fun writeFileFromString(filePath: String?, content: String?): Boolean {
-        return writeFileFromString(getFileByPath(filePath), content, false)
-    }
-
-    /**
-     * Write file from string.
-     *
-     * @param filePath The path of file.
-     * @param content  The string of content.
      * @param append   True to append, false otherwise.
      * @return `true`: success<br></br>`false`: fail
      */
-    fun writeFileFromString(
-        filePath: String?,
-        content: String?,
-        append: Boolean
-    ): Boolean {
-        return writeFileFromString(getFileByPath(filePath), content, append)
+    @JvmStatic
+    @JvmOverloads
+    fun writeFileFromString(filePath: String, content: String, append: Boolean = false): Boolean {
+        return writeFileFromString(
+            FileUtils.getFileByPath(filePath) ?: return false, content, append
+        )
     }
+
     /**
      * Write file from string.
      *
@@ -487,14 +271,10 @@ object FileIOUtils {
      * @param append  True to append, false otherwise.
      * @return `true`: success<br></br>`false`: fail
      */
+    @JvmStatic
     @JvmOverloads
-    fun writeFileFromString(
-        file: File?,
-        content: String?,
-        append: Boolean = false
-    ): Boolean {
-        if (file == null || content == null) return false
-        if (!createOrExistsFile(file)) {
+    fun writeFileFromString(file: File, content: String, append: Boolean = false): Boolean {
+        if (!FileUtils.createOrExistsFile(file)) {
             Log.e("FileIOUtils", "create file <$file> failed.")
             return false
         }
@@ -514,52 +294,6 @@ object FileIOUtils {
             }
         }
     }
-    ///////////////////////////////////////////////////////////////////////////
-    // the divide line of write and read
-    ///////////////////////////////////////////////////////////////////////////
-    /**
-     * Return the lines in file.
-     *
-     * @param filePath The path of file.
-     * @return the lines in file
-     */
-    fun readFile2List(filePath: String?): List<String>? {
-        return readFile2List(getFileByPath(filePath), null)
-    }
-
-    /**
-     * Return the lines in file.
-     *
-     * @param filePath    The path of file.
-     * @param charsetName The name of charset.
-     * @return the lines in file
-     */
-    fun readFile2List(filePath: String?, charsetName: String?): List<String>? {
-        return readFile2List(getFileByPath(filePath), charsetName)
-    }
-
-    /**
-     * Return the lines in file.
-     *
-     * @param file        The file.
-     * @param charsetName The name of charset.
-     * @return the lines in file
-     */
-    fun readFile2List(file: File?, charsetName: String?): List<String>? {
-        return readFile2List(file, 0, 0x7FFFFFFF, charsetName)
-    }
-
-    /**
-     * Return the lines in file.
-     *
-     * @param filePath The path of file.
-     * @param st       The line's index of start.
-     * @param end      The line's index of end.
-     * @return the lines in file
-     */
-    fun readFile2List(filePath: String?, st: Int, end: Int): List<String>? {
-        return readFile2List(getFileByPath(filePath), st, end, null)
-    }
 
     /**
      * Return the lines in file.
@@ -570,43 +304,41 @@ object FileIOUtils {
      * @param charsetName The name of charset.
      * @return the lines in file
      */
-    fun readFile2List(
-        filePath: String?,
-        st: Int,
-        end: Int,
-        charsetName: String?
-    ): List<String>? {
-        return readFile2List(getFileByPath(filePath), st, end, charsetName)
-    }
-    /**
-     * Return the lines in file.
-     *
-     * @param file        The file.
-     * @param st          The line's index of start.
-     * @param end         The line's index of end.
-     * @param charsetName The name of charset.
-     * @return the lines in file
-     */
+    @JvmStatic
     @JvmOverloads
     fun readFile2List(
-        file: File?,
-        st: Int = 0,
-        end: Int = 0x7FFFFFFF,
-        charsetName: String? = null
-    ): List<String>? {
-        if (!isFileExists(file)) return null
-        if (st > end) return null
+        filePath: String, st: Int = 0, end: Int = 0x7FFFFFFF, charsetName: String? = null
+    ): List<String> {
+        return readFile2List(
+            FileUtils.getFileByPath(filePath) ?: return emptyList(), st, end, charsetName
+        )
+    }
+
+    /**
+     * Return the lines in file.
+     *
+     * @param file        The file.
+     * @param st          The line's index of start.
+     * @param end         The line's index of end.
+     * @param charsetName The name of charset.
+     * @return the lines in file
+     */
+    @JvmStatic
+    @JvmOverloads
+    fun readFile2List(
+        file: File, st: Int = 0, end: Int = 0x7FFFFFFF, charsetName: String? = null
+    ): List<String> {
+        if (!FileUtils.isFileExists(file)) return emptyList()
+        if (st > end) return emptyList()
         var reader: BufferedReader? = null
         return try {
             var line: String
             var curLine = 1
             val list: MutableList<String> = ArrayList()
-            reader = if (isSpace(charsetName)) {
+            reader = if (charsetName.isNullOrBlank()) {
                 BufferedReader(InputStreamReader(FileInputStream(file)))
             } else {
-                BufferedReader(
-                    InputStreamReader(FileInputStream(file), charsetName)
-                )
+                BufferedReader(InputStreamReader(FileInputStream(file), charsetName))
             }
             while (reader.readLine().also { line = it } != null) {
                 if (curLine > end) break
@@ -616,7 +348,7 @@ object FileIOUtils {
             list
         } catch (e: IOException) {
             e.printStackTrace()
-            null
+            emptyList()
         } finally {
             try {
                 reader?.close()
@@ -629,23 +361,16 @@ object FileIOUtils {
     /**
      * Return the string in file.
      *
-     * @param filePath The path of file.
-     * @return the string in file
-     */
-    fun readFile2String(filePath: String?): String? {
-        return readFile2String(getFileByPath(filePath), null)
-    }
-
-    /**
-     * Return the string in file.
-     *
      * @param filePath    The path of file.
      * @param charsetName The name of charset.
      * @return the string in file
      */
-    fun readFile2String(filePath: String?, charsetName: String?): String? {
-        return readFile2String(getFileByPath(filePath), charsetName)
+    @JvmStatic
+    @JvmOverloads
+    fun readFile2String(filePath: String, charsetName: String? = null): String {
+        return readFile2String(FileUtils.getFileByPath(filePath) ?: return "", charsetName)
     }
+
     /**
      * Return the string in file.
      *
@@ -653,35 +378,22 @@ object FileIOUtils {
      * @param charsetName The name of charset.
      * @return the string in file
      */
+    @JvmStatic
     @JvmOverloads
-    fun readFile2String(file: File?, charsetName: String? = null): String? {
-        val bytes = readFile2BytesByStream(file) ?: return null
-        return if (isSpace(charsetName)) {
+    fun readFile2String(file: File, charsetName: String? = null): String {
+        val bytes = readFile2BytesByStream(file)
+        return if (charsetName.isNullOrBlank()) {
             String(bytes)
         } else {
             try {
                 String(bytes, Charset.forName(charsetName))
             } catch (e: UnsupportedEncodingException) {
-                e.printStackTrace()
+                logD(e)
                 ""
             }
         }
     }
-    ///////////////////////////////////////////////////////////////////////////
-    // readFile2BytesByStream without progress
-    ///////////////////////////////////////////////////////////////////////////
-    /**
-     * Return the bytes in file by stream.
-     *
-     * @param filePath The path of file.
-     * @return the bytes in file
-     */
-    fun readFile2BytesByStream(filePath: String?): ByteArray? {
-        return readFile2BytesByStream(getFileByPath(filePath), null)
-    }
-    ///////////////////////////////////////////////////////////////////////////
-    // readFile2BytesByStream with progress
-    ///////////////////////////////////////////////////////////////////////////
+
     /**
      * Return the bytes in file by stream.
      *
@@ -689,12 +401,15 @@ object FileIOUtils {
      * @param listener The progress update listener.
      * @return the bytes in file
      */
+    @JvmStatic
+    @JvmOverloads
     fun readFile2BytesByStream(
-        filePath: String?,
-        listener: OnProgressUpdateListener?
-    ): ByteArray? {
-        return readFile2BytesByStream(getFileByPath(filePath), listener)
+        filePath: String, listener: OnProgressUpdateListener? = null
+    ): ByteArray {
+        return readFile2BytesByStream(
+            FileUtils.getFileByPath(filePath)?:return ByteArray(0), listener)
     }
+
     /**
      * Return the bytes in file by stream.
      *
@@ -702,27 +417,27 @@ object FileIOUtils {
      * @param listener The progress update listener.
      * @return the bytes in file
      */
+    @JvmStatic
     @JvmOverloads
     fun readFile2BytesByStream(
-        file: File?,
-        listener: OnProgressUpdateListener? = null
-    ): ByteArray? {
-        return if (!isFileExists(file)) null else try {
+        file: File, listener: OnProgressUpdateListener? = null
+    ): ByteArray {
+        return if (!FileUtils.isFileExists(file)) ByteArray(0) else {
             var os: ByteArrayOutputStream? = null
-            val `is`: InputStream = BufferedInputStream(FileInputStream(file), sBufferSize)
+            val inputStream: InputStream = BufferedInputStream(FileInputStream(file), sBufferSize)
             try {
                 os = ByteArrayOutputStream()
                 val b = ByteArray(sBufferSize)
                 var len: Int
                 if (listener == null) {
-                    while (`is`.read(b, 0, sBufferSize).also { len = it } != -1) {
+                    while (inputStream.read(b, 0, sBufferSize).also { len = it } != -1) {
                         os.write(b, 0, len)
                     }
                 } else {
-                    val totalSize = `is`.available().toDouble()
+                    val totalSize = inputStream.available().toDouble()
                     var curSize = 0
                     listener.onProgressUpdate(0.0)
-                    while (`is`.read(b, 0, sBufferSize).also { len = it } != -1) {
+                    while (inputStream.read(b, 0, sBufferSize).also { len = it } != -1) {
                         os.write(b, 0, len)
                         curSize += len
                         listener.onProgressUpdate(curSize / totalSize)
@@ -731,22 +446,10 @@ object FileIOUtils {
                 os.toByteArray()
             } catch (e: IOException) {
                 e.printStackTrace()
-                null
+                ByteArray(0)
             } finally {
-                try {
-                    `is`.close()
-                } catch (e: IOException) {
-                    e.printStackTrace()
-                }
-                try {
-                    os?.close()
-                } catch (e: IOException) {
-                    e.printStackTrace()
-                }
+                CloseUtils.closeIOQuietly(inputStream, os)
             }
-        } catch (e: FileNotFoundException) {
-            e.printStackTrace()
-            null
         }
     }
 
@@ -756,8 +459,8 @@ object FileIOUtils {
      * @param filePath The path of file.
      * @return the bytes in file
      */
-    fun readFile2BytesByChannel(filePath: String?): ByteArray? {
-        return readFile2BytesByChannel(getFileByPath(filePath))
+    fun readFile2BytesByChannel(filePath: String): ByteArray {
+        return readFile2BytesByChannel(FileUtils.getFileByPath(filePath) ?: return ByteArray(0))
     }
 
     /**
@@ -766,8 +469,8 @@ object FileIOUtils {
      * @param file The file.
      * @return the bytes in file
      */
-    fun readFile2BytesByChannel(file: File?): ByteArray? {
-        if (!isFileExists(file)) return null
+    fun readFile2BytesByChannel(file: File): ByteArray {
+        if (!FileUtils.isFileExists(file)) return ByteArray(0)
         var fc: FileChannel? = null
         return try {
             fc = RandomAccessFile(file, "r").channel
@@ -781,14 +484,10 @@ object FileIOUtils {
             }
             byteBuffer.array()
         } catch (e: IOException) {
-            e.printStackTrace()
-            null
+            logD(e)
+            ByteArray(0)
         } finally {
-            try {
-                fc?.close()
-            } catch (e: IOException) {
-                e.printStackTrace()
-            }
+            CloseUtils.closeIOQuietly(fc)
         }
     }
 
@@ -798,8 +497,8 @@ object FileIOUtils {
      * @param filePath The path of file.
      * @return the bytes in file
      */
-    fun readFile2BytesByMap(filePath: String?): ByteArray? {
-        return readFile2BytesByMap(getFileByPath(filePath))
+    fun readFile2BytesByMap(filePath: String): ByteArray {
+        return readFile2BytesByMap(FileUtils.getFileByPath(filePath)?:return ByteArray(0))
     }
 
     /**
@@ -808,8 +507,8 @@ object FileIOUtils {
      * @param file The file.
      * @return the bytes in file
      */
-    fun readFile2BytesByMap(file: File?): ByteArray? {
-        if (!isFileExists(file)) return null
+    fun readFile2BytesByMap(file: File): ByteArray {
+        if (!FileUtils.isFileExists(file)) return ByteArray(0)
         var fc: FileChannel? = null
         return try {
             fc = RandomAccessFile(file, "r").channel
@@ -823,14 +522,10 @@ object FileIOUtils {
             mbb[result, 0, size]
             result
         } catch (e: IOException) {
-            e.printStackTrace()
-            null
+            logD(e)
+            ByteArray(0)
         } finally {
-            try {
-                fc?.close()
-            } catch (e: IOException) {
-                e.printStackTrace()
-            }
+            CloseUtils.closeIOQuietly(fc)
         }
     }
 

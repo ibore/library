@@ -9,7 +9,6 @@ import java.io.*
 import java.net.URL
 import java.security.DigestInputStream
 import java.security.MessageDigest
-import java.security.NoSuchAlgorithmException
 import java.util.*
 import javax.net.ssl.HttpsURLConnection
 
@@ -43,8 +42,8 @@ object FileUtils {
      * @return `true`: yes<br></br>`false`: no
      */
     @JvmStatic
-    fun isFileExists(file: File): Boolean {
-        return if (file.exists()) true
+    fun isFileExists(file: File?): Boolean {
+        return if (file?.exists()?:return false) true
         else isFileExists(file.absolutePath)
     }
 
@@ -165,7 +164,7 @@ object FileUtils {
      */
     @JvmStatic
     fun createOrExistsDir(dirPath: String): Boolean {
-        return createOrExistsDir(getFileByPath(dirPath) ?: return false)
+        return createOrExistsDir(getFileByPath(dirPath))
     }
 
     /**
@@ -175,8 +174,8 @@ object FileUtils {
      * @return `true`: exists or creates successfully<br></br>`false`: otherwise
      */
     @JvmStatic
-    fun createOrExistsDir(file: File): Boolean {
-        return if (file.exists()) file.isDirectory else file.mkdirs()
+    fun createOrExistsDir(file: File?): Boolean {
+        return if (file?.exists() ?: return false) file.isDirectory else file.mkdirs()
     }
 
     /**

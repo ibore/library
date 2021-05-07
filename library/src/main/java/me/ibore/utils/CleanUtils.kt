@@ -87,7 +87,7 @@ object CleanUtils  {
     @JvmStatic
     fun cleanExternalCache(): Boolean {
         return Environment.MEDIA_MOUNTED == Environment.getExternalStorageState()
-                && FileUtils.deleteAllInDir(Utils.app.externalCacheDir)
+                && FileUtils.deleteAllInDir(Utils.app.externalCacheDir ?: return false)
     }
 
     /**
@@ -97,8 +97,8 @@ object CleanUtils  {
      * @return `true`: success<br></br>`false`: fail
      */
     @JvmStatic
-    fun cleanCustomDir(dirPath: String?): Boolean {
-        return FileUtils.deleteAllInDir(FileUtils.getFileByPath(dirPath))
+    fun cleanCustomDir(dirPath: String): Boolean {
+        return FileUtils.deleteAllInDir(FileUtils.getFileByPath(dirPath) ?: return false)
     }
 
     @JvmStatic

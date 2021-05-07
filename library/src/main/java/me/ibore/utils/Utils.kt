@@ -86,7 +86,7 @@ object Utils {
     }
 
     open class ActivityLifecycleCallbacks {
-        open fun onActivityCreated(activity: Activity) {
+        fun onActivityCreated(activity: Activity) {
         }
 
         fun onActivityStarted(activity: Activity) {
