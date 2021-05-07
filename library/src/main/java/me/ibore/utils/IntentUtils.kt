@@ -12,9 +12,7 @@ import android.provider.MediaStore
 import android.provider.Settings
 import androidx.annotation.RequiresPermission
 import androidx.core.content.FileProvider
-import me.ibore.utils.UtilsBridge.getFileByPath
 import me.ibore.utils.UtilsBridge.getLauncherActivity
-import me.ibore.utils.UtilsBridge.isFileExists
 import me.ibore.utils.UtilsBridge.isSpace
 import java.io.File
 import java.util.*
@@ -50,8 +48,8 @@ object IntentUtils {
      * @param filePath The path of file.
      * @return the intent of install app
      */
-    fun getInstallAppIntent(filePath: String?): Intent? {
-        return getInstallAppIntent(getFileByPath(filePath))
+    fun getInstallAppIntent(filePath: String): Intent? {
+        return getInstallAppIntent(FileUtils.getFileByPath(filePath)?:return null)
     }
 
     /**
@@ -68,7 +66,7 @@ object IntentUtils {
         val uri: Uri = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
             Uri.fromFile(file)
         } else {
-            val authority = Utils.app.packageName + ".utilcode.provider"
+            val authority = Utils.app.packageName + ".provider"
             FileProvider.getUriForFile(Utils.app, authority, file)
         }
         return getInstallAppIntent(uri)

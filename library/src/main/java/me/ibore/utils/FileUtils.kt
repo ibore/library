@@ -23,7 +23,7 @@ import javax.net.ssl.HttpsURLConnection
  */
 object FileUtils {
 
-    private val LINE_SEP = System.getProperty("line.separator")
+    private val LINE_SEP: String = System.getProperty("line.separator")!!
 
     /**
      * Return the file by path.
@@ -33,7 +33,7 @@ object FileUtils {
      */
     @JvmStatic
     fun getFileByPath(filePath: String): File? {
-        return if (filePath.isEmpty()) null else File(filePath)
+        return if (filePath.isBlank()) null else File(filePath)
     }
 
     /**
@@ -57,9 +57,8 @@ object FileUtils {
     @JvmStatic
     fun isFileExists(filePath: String): Boolean {
         val file = getFileByPath(filePath) ?: return false
-        return if (file.exists()) {
-            true
-        } else isFileExistsApi29(filePath)
+        return if (file.exists()) true
+        else isFileExistsApi29(filePath)
     }
 
     @JvmStatic
@@ -105,7 +104,7 @@ object FileUtils {
         // file doesn't exist then return false
         if (!file.exists()) return false
         // the new name is space then return false
-        if (UtilsBridge.isSpace(newName)) return false
+        if (newName.isBlank()) return false
         // the new name equals old name then return true
         if (newName == file.name) return true
         val newFile = File(file.parent + File.separator + newName)
@@ -567,199 +566,61 @@ object FileUtils {
     }
 
     /**
-     * Return the files in directory.
-     *
-     * Doesn't traverse subdirectories
-     *
-     * @param dirPath    The path of directory.
-     * @param comparator The comparator to determine the order of the list.
-     * @return the files in directory
-     */
-    @JvmOverloads
-    fun listFilesInDir(dirPath: String, comparator: Comparator<File>? = null): List<File> {
-        return listFilesInDir(getFileByPath(dirPath), false, comparator)
-    }
-
-    /**
-     * Return the files in directory.
-     *
-     * Doesn't traverse subdirectories
-     *
-     * @param dir        The directory.
-     * @param comparator The comparator to determine the order of the list.
-     * @return the files in directory
-     */
-    @JvmOverloads
-    fun listFilesInDir(dir: File, comparator: Comparator<File>? = null): List<File> {
-        return listFilesInDir(dir, false, comparator)
-    }
-
-    /**
-     * Return the files in directory.
+     * Return the files that satisfy the filter in directory.
      *
      * @param dirPath     The path of directory.
-     * @param isRecursive True to traverse subdirectories, false otherwise.
-     * @return the files in directory
-     */
-    fun listFilesInDir(dirPath: String, isRecursive: Boolean): List<File> {
-        return listFilesInDir(getFileByPath(dirPath), isRecursive)
-    }
-
-    /**
-     * Return the files in directory.
-     *
-     * @param dirPath     The path of directory.
+     * @param filter      The filter.
      * @param isRecursive True to traverse subdirectories, false otherwise.
      * @param comparator  The comparator to determine the order of the list.
-     * @return the files in directory
+     * @return the files that satisfy the filter in directory
      */
+    @JvmStatic
+    @JvmOverloads
     fun listFilesInDir(
-        dirPath: String, isRecursive: Boolean, comparator: Comparator<File>?
+        dirPath: String, filter: FileFilter = FileFilter { true },
+        isRecursive: Boolean = false, comparator: Comparator<File>? = null
     ): List<File> {
-        return listFilesInDir(getFileByPath(dirPath), isRecursive, comparator)
+        return listFilesInDir(
+            getFileByPath(dirPath) ?: return emptyList(),
+            filter, isRecursive, comparator
+        )
     }
 
     /**
-     * Return the files in directory.
+     * Return the files that satisfy the filter in directory.
      *
      * @param dir         The directory.
+     * @param filter      The filter.
      * @param isRecursive True to traverse subdirectories, false otherwise.
      * @param comparator  The comparator to determine the order of the list.
-     * @return the files in directory
+     * @return the files that satisfy the filter in directory
      */
+    @JvmStatic
     @JvmOverloads
     fun listFilesInDir(
-        dir: File,
-        isRecursive: Boolean,
-        comparator: Comparator<File?>? = null
-    ): List<File?> {
-        return listFilesInDirWithFilter(dir, { true }, isRecursive, comparator)
-    }
-
-    /**
-     * Return the files that satisfy the filter in directory.
-     *
-     * Doesn't traverse subdirectories
-     *
-     * @param dirPath The path of directory.
-     * @param filter  The filter.
-     * @return the files that satisfy the filter in directory
-     */
-    fun listFilesInDirWithFilter(
-        dirPath: String?,
-        filter: FileFilter
-    ): List<File?> {
-        return listFilesInDirWithFilter(getFileByPath(dirPath), filter)
-    }
-
-    /**
-     * Return the files that satisfy the filter in directory.
-     *
-     * Doesn't traverse subdirectories
-     *
-     * @param dirPath    The path of directory.
-     * @param filter     The filter.
-     * @param comparator The comparator to determine the order of the list.
-     * @return the files that satisfy the filter in directory
-     */
-    fun listFilesInDirWithFilter(
-        dirPath: String?,
-        filter: FileFilter,
-        comparator: Comparator<File?>?
-    ): List<File?> {
-        return listFilesInDirWithFilter(getFileByPath(dirPath), filter, comparator)
-    }
-
-    /**
-     * Return the files that satisfy the filter in directory.
-     *
-     * Doesn't traverse subdirectories
-     *
-     * @param dir        The directory.
-     * @param filter     The filter.
-     * @param comparator The comparator to determine the order of the list.
-     * @return the files that satisfy the filter in directory
-     */
-    fun listFilesInDirWithFilter(
-        dir: File?,
-        filter: FileFilter,
-        comparator: Comparator<File?>?
-    ): List<File?> {
-        return listFilesInDirWithFilter(dir, filter, false, comparator)
-    }
-
-    /**
-     * Return the files that satisfy the filter in directory.
-     *
-     * @param dirPath     The path of directory.
-     * @param filter      The filter.
-     * @param isRecursive True to traverse subdirectories, false otherwise.
-     * @return the files that satisfy the filter in directory
-     */
-    fun listFilesInDirWithFilter(
-        dirPath: String?,
-        filter: FileFilter,
-        isRecursive: Boolean
-    ): List<File?> {
-        return listFilesInDirWithFilter(getFileByPath(dirPath), filter, isRecursive)
-    }
-
-    /**
-     * Return the files that satisfy the filter in directory.
-     *
-     * @param dirPath     The path of directory.
-     * @param filter      The filter.
-     * @param isRecursive True to traverse subdirectories, false otherwise.
-     * @param comparator  The comparator to determine the order of the list.
-     * @return the files that satisfy the filter in directory
-     */
-    fun listFilesInDirWithFilter(
-        dirPath: String?,
-        filter: FileFilter,
-        isRecursive: Boolean,
-        comparator: Comparator<File?>?
-    ): List<File?> {
-        return listFilesInDirWithFilter(getFileByPath(dirPath), filter, isRecursive, comparator)
-    }
-
-    /**
-     * Return the files that satisfy the filter in directory.
-     *
-     * @param dir         The directory.
-     * @param filter      The filter.
-     * @param isRecursive True to traverse subdirectories, false otherwise.
-     * @param comparator  The comparator to determine the order of the list.
-     * @return the files that satisfy the filter in directory
-     */
-    @JvmOverloads
-    fun listFilesInDirWithFilter(
-        dir: File?,
-        filter: FileFilter,
-        isRecursive: Boolean = false,
-        comparator: Comparator<File?>? = null
-    ): List<File?> {
-        val files = listFilesInDirWithFilterInner(dir, filter, isRecursive)
+        dir: File, filter: FileFilter = FileFilter { true },
+        isRecursive: Boolean = false, comparator: Comparator<File>? = null
+    ): List<File> {
+        val files = listFilesInDirInner(dir, filter, isRecursive)
         if (comparator != null) {
             Collections.sort(files, comparator)
         }
         return files
     }
 
-    private fun listFilesInDirWithFilterInner(
-        dir: File?,
-        filter: FileFilter,
-        isRecursive: Boolean
-    ): List<File?> {
-        val list: MutableList<File?> = ArrayList()
+    private fun listFilesInDirInner(
+        dir: File, filter: FileFilter, isRecursive: Boolean
+    ): List<File> {
+        val list: MutableList<File> = ArrayList()
         if (!isDir(dir)) return list
-        val files = dir!!.listFiles()
+        val files = dir.listFiles()
         if (files != null && files.isNotEmpty()) {
             for (file in files) {
                 if (filter.accept(file)) {
                     list.add(file)
                 }
                 if (isRecursive && file.isDirectory) {
-                    list.addAll(listFilesInDirWithFilterInner(file, filter, true))
+                    list.addAll(listFilesInDirInner(file, filter, true))
                 }
             }
         }
@@ -772,7 +633,7 @@ object FileUtils {
      * @param filePath The path of file.
      * @return the time that the file was last modified
      */
-    fun getFileLastModified(filePath: String?): Long {
+    fun getFileLastModified(filePath: String): Long {
         return getFileLastModified(getFileByPath(filePath))
     }
 
@@ -792,7 +653,7 @@ object FileUtils {
      * @param filePath The path of file.
      * @return the charset of file simply
      */
-    fun getFileCharsetSimple(filePath: String?): String {
+    fun getFileCharsetSimple(filePath: String): String {
         return getFileCharsetSimple(getFileByPath(filePath))
     }
 
@@ -806,15 +667,15 @@ object FileUtils {
         if (file == null) return ""
         if (isUtf8(file)) return "UTF-8"
         var p = 0
-        var `is`: InputStream? = null
+        var inputStream: InputStream? = null
         try {
-            `is` = BufferedInputStream(FileInputStream(file))
-            p = (`is`.read() shl 8) + `is`.read()
+            inputStream = BufferedInputStream(FileInputStream(file))
+            p = (inputStream.read() shl 8) + inputStream.read()
         } catch (e: IOException) {
             e.printStackTrace()
         } finally {
             try {
-                `is`?.close()
+                inputStream?.close()
             } catch (e: IOException) {
                 e.printStackTrace()
             }
@@ -832,8 +693,8 @@ object FileUtils {
      * @param filePath The path of file.
      * @return `true`: yes<br></br>`false`: no
      */
-    fun isUtf8(filePath: String?): Boolean {
-        return isUtf8(getFileByPath(filePath))
+    fun isUtf8(filePath: String): Boolean {
+        return isUtf8(getFileByPath(filePath) ?: return false)
     }
 
     /**
@@ -842,13 +703,12 @@ object FileUtils {
      * @param file The file.
      * @return `true`: yes<br></br>`false`: no
      */
-    fun isUtf8(file: File?): Boolean {
-        if (file == null) return false
-        var `is`: InputStream? = null
+    fun isUtf8(file: File): Boolean {
+        var inputStream: InputStream? = null
         try {
             val bytes = ByteArray(24)
-            `is` = BufferedInputStream(FileInputStream(file))
-            val read = `is`.read(bytes)
+            inputStream = BufferedInputStream(FileInputStream(file))
+            val read = inputStream.read(bytes)
             return if (read != -1) {
                 val readArr = ByteArray(read)
                 System.arraycopy(bytes, 0, readArr, 0, read)
@@ -860,7 +720,7 @@ object FileUtils {
             e.printStackTrace()
         } finally {
             try {
-                `is`?.close()
+                inputStream?.close()
             } catch (e: IOException) {
                 e.printStackTrace()
             }
@@ -949,7 +809,7 @@ object FileUtils {
      * @param filePath The path of file.
      * @return the number of lines of file
      */
-    fun getFileLines(filePath: String?): Int {
+    fun getFileLines(filePath: String): Int {
         return getFileLines(getFileByPath(filePath))
     }
 
@@ -997,8 +857,8 @@ object FileUtils {
      * @param filePath The path of file.
      * @return the size
      */
-    fun getSize(filePath: String?): String {
-        return getSize(getFileByPath(filePath))
+    fun getSize(filePath: String): String {
+        return getSize(getFileByPath(filePath) ?: return "")
     }
 
     /**
@@ -1007,11 +867,9 @@ object FileUtils {
      * @param file The directory.
      * @return the size
      */
-    fun getSize(file: File?): String {
-        if (file == null) return ""
-        return if (file.isDirectory) {
-            getDirSize(file)
-        } else getFileSize(file)
+    fun getSize(file: File): String {
+        return if (file.isDirectory) getDirSize(file)
+        else getFileSize(file)
     }
 
     /**
@@ -1042,8 +900,8 @@ object FileUtils {
      * @param filePath The path of file.
      * @return the length
      */
-    fun getLength(filePath: String?): Long {
-        return getLength(getFileByPath(filePath))
+    fun getLength(filePath: String): Long {
+        return getLength(getFileByPath(filePath) ?: return -1)
     }
 
     /**
@@ -1052,8 +910,7 @@ object FileUtils {
      * @param file The file.
      * @return the length
      */
-    fun getLength(file: File?): Long {
-        if (file == null) return 0
+    fun getLength(file: File): Long {
         return if (file.isDirectory) {
             getDirLength(file)
         } else getFileLength(file)
@@ -1101,7 +958,7 @@ object FileUtils {
                 e.printStackTrace()
             }
         }
-        return getFileLength(getFileByPath(filePath))
+        return getFileLength(getFileByPath(filePath) ?: return -1L)
     }
 
     /**
@@ -1110,8 +967,8 @@ object FileUtils {
      * @param file The file.
      * @return the length of file
      */
-    private fun getFileLength(file: File?): Long {
-        return if (!isFile(file)) -1 else file!!.length()
+    private fun getFileLength(file: File): Long {
+        return if (!isFile(file)) -1L else file.length()
     }
 
     /**
@@ -1120,9 +977,9 @@ object FileUtils {
      * @param filePath The path of file.
      * @return the md5 of file
      */
-    fun getFileMD5ToString(filePath: String?): String {
-        val file = if (UtilsBridge.isSpace(filePath)) null else File(filePath!!)
-        return getFileMD5ToString(file)
+    fun getFileMD5ToString(filePath: String): String {
+        if (filePath.isBlank()) return ""
+        return getFileMD5ToString(File(filePath))
     }
 
     /**
@@ -1131,8 +988,8 @@ object FileUtils {
      * @param file The file.
      * @return the md5 of file
      */
-    fun getFileMD5ToString(file: File?): String {
-        return UtilsBridge.bytes2HexString(getFileMD5(file))
+    fun getFileMD5ToString(file: File): String {
+        return ConvertUtils.bytes2HexString(getFileMD5(file))
     }
 
     /**
@@ -1141,8 +998,8 @@ object FileUtils {
      * @param filePath The path of file.
      * @return the md5 of file
      */
-    fun getFileMD5(filePath: String): ByteArray? {
-        return getFileMD5(getFileByPath(filePath) ?: return null)
+    fun getFileMD5(filePath: String): ByteArray {
+        return getFileMD5(getFileByPath(filePath) ?: return ByteArray(0))
     }
 
     /**
@@ -1153,30 +1010,24 @@ object FileUtils {
      */
 
     @JvmStatic
-    fun getFileMD5(file: File): ByteArray? {
+    fun getFileMD5(file: File): ByteArray {
         var dis: DigestInputStream? = null
-        try {
+        return try {
             val fis = FileInputStream(file)
-            var md = MessageDigest.getInstance("MD5")
-            dis = DigestInputStream(fis, md)
-            val buffer = ByteArray(1024 * 256)
+            var digest = MessageDigest.getInstance("MD5")
+            dis = DigestInputStream(fis, digest)
+            val buffer = ByteArray(256 * 1024)
             while (true) {
                 if (dis.read(buffer) <= 0) break
             }
-            md = dis.messageDigest
-            return md.digest()
-        } catch (e: NoSuchAlgorithmException) {
-            e.printStackTrace()
-        } catch (e: IOException) {
-            e.printStackTrace()
+            digest = dis.messageDigest
+            digest.digest()
+        } catch (e: Exception) {
+            LogUtils.d(e)
+            ByteArray(0)
         } finally {
-            try {
-                dis?.close()
-            } catch (e: IOException) {
-                e.printStackTrace()
-            }
+            CloseUtils.closeIOQuietly(dis)
         }
-        return null
     }
 
     /**
@@ -1198,7 +1049,7 @@ object FileUtils {
      */
     @JvmStatic
     fun getDirName(filePath: String): String {
-        if (UtilsBridge.isSpace(filePath)) return ""
+        if (filePath.isBlank()) return ""
         val lastSep = filePath.lastIndexOf(File.separator)
         return if (lastSep == -1) "" else filePath.substring(0, lastSep + 1)
     }
@@ -1222,7 +1073,7 @@ object FileUtils {
      */
     @JvmStatic
     fun getFileName(filePath: String): String {
-        if (UtilsBridge.isSpace(filePath)) return ""
+        if (filePath.isBlank()) return ""
         val lastSep = filePath.lastIndexOf(File.separator)
         return if (lastSep == -1) filePath else filePath.substring(lastSep + 1)
     }
@@ -1246,7 +1097,7 @@ object FileUtils {
      */
     @JvmStatic
     fun getFileNameNoExtension(filePath: String): String {
-        if (UtilsBridge.isSpace(filePath)) return ""
+        if (filePath.isBlank()) return ""
         val lastPoi = filePath.lastIndexOf('.')
         val lastSep = filePath.lastIndexOf(File.separator)
         if (lastSep == -1) {
@@ -1276,7 +1127,7 @@ object FileUtils {
      */
     @JvmStatic
     fun getFileExtension(filePath: String): String {
-        if (UtilsBridge.isSpace(filePath)) return ""
+        if (filePath.isBlank()) return ""
         val lastPoi = filePath.lastIndexOf('.')
         val lastSep = filePath.lastIndexOf(File.separator)
         return if (lastPoi == -1 || lastSep >= lastPoi) "" else filePath.substring(lastPoi + 1)
@@ -1315,15 +1166,8 @@ object FileUtils {
     fun getFsTotalSize(anyPathInFs: String?): Long {
         if (TextUtils.isEmpty(anyPathInFs)) return 0
         val statFs = StatFs(anyPathInFs)
-        val blockSize: Long
-        val totalSize: Long
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-            blockSize = statFs.blockSizeLong
-            totalSize = statFs.blockCountLong
-        } else {
-            blockSize = statFs.blockSize.toLong()
-            totalSize = statFs.blockCount.toLong()
-        }
+        val blockSize: Long = statFs.blockSizeLong
+        val totalSize: Long = statFs.blockCountLong
         return blockSize * totalSize
     }
 
@@ -1337,15 +1181,8 @@ object FileUtils {
     fun getFsAvailableSize(anyPathInFs: String?): Long {
         if (TextUtils.isEmpty(anyPathInFs)) return 0
         val statFs = StatFs(anyPathInFs)
-        val blockSize: Long
-        val availableSize: Long
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-            blockSize = statFs.blockSizeLong
-            availableSize = statFs.availableBlocksLong
-        } else {
-            blockSize = statFs.blockSize.toLong()
-            availableSize = statFs.availableBlocks.toLong()
-        }
+        val blockSize: Long = statFs.blockSizeLong
+        val availableSize: Long = statFs.availableBlocksLong
         return blockSize * availableSize
     }
 

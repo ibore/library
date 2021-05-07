@@ -89,9 +89,8 @@ object MD5Utils {
      * @param filePath 文件路径
      * @return 文件 MD5 值
      */
-    fun getFileMD5(filePath: String?): ByteArray? {
-        val file = if (filePath.isNullOrBlank()) null else File(filePath)
-        return getFileMD5(file)
+    fun getFileMD5(filePath: String): ByteArray {
+        return FileUtils.getFileMD5(filePath)
     }
 
     /**
@@ -99,9 +98,8 @@ object MD5Utils {
      * @param filePath 文件路径
      * @return 文件 MD5 值转十六进制字符串
      */
-    fun getFileMD5ToHexString(filePath: String?): String {
-        val file = if (filePath.isNullOrBlank()) null else File(filePath)
-        return getFileMD5ToHexString(file)
+    fun getFileMD5ToHexString(filePath: String): String {
+        return ConvertUtils.bytes2HexString(FileUtils.getFileMD5(filePath))
     }
 
     /**
@@ -109,8 +107,8 @@ object MD5Utils {
      * @param file 文件
      * @return 文件 MD5 值转十六进制字符串
      */
-    fun getFileMD5ToHexString(file: File?): String {
-        return ConvertUtils.bytes2HexString(getFileMD5(file))
+    fun getFileMD5ToHexString(file: File): String {
+        return ConvertUtils.bytes2HexString(FileUtils.getFileMD5(file))
     }
 
     /**
@@ -118,24 +116,7 @@ object MD5Utils {
      * @param file 文件
      * @return 文件 MD5 值 byte[]
      */
-    fun getFileMD5(file: File?): ByteArray? {
-        if (file == null) return null
-        var dis: DigestInputStream? = null
-        return try {
-            val fis = FileInputStream(file)
-            var digest = MessageDigest.getInstance("MD5")
-            dis = DigestInputStream(fis, digest)
-            val buffer = ByteArray(256 * 1024)
-            while (true) {
-                if (dis.read(buffer) <= 0) break
-            }
-            digest = dis.messageDigest
-            digest.digest()
-        } catch (e: Exception) {
-            LogUtils.d(e)
-            null
-        } finally {
-            CloseUtils.closeIOQuietly(dis)
-        }
+    fun getFileMD5(file: File): ByteArray {
+        return FileUtils.getFileMD5(file)
     }
 }

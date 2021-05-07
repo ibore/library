@@ -71,7 +71,7 @@ object GsonUtils {
      */
     @JvmStatic
     @JvmOverloads
-    fun toJson(gson: Gson = GsonUtils.gson, any: Any?): String {
+    fun toJson(any: Any?, gson: Gson = GsonUtils.gson): String {
         return gson.toJson(any)
     }
 
@@ -85,7 +85,7 @@ object GsonUtils {
      */
     @JvmStatic
     @JvmOverloads
-    fun toJson(gson: Gson = GsonUtils.gson, src: Any?, typeOfSrc: Type): String {
+    fun toJson(src: Any?, typeOfSrc: Type, gson: Gson = GsonUtils.gson): String {
         return gson.toJson(src, typeOfSrc)
     }
 
@@ -99,7 +99,7 @@ object GsonUtils {
      */
     @JvmStatic
     @JvmOverloads
-    fun <T> fromJson(gson: Gson = GsonUtils.gson, json: String?, type: Class<T>): T {
+    fun <T> fromJson(json: String?, type: Class<T>, gson: Gson = GsonUtils.gson): T {
         return gson.fromJson(json, type)
     }
 
@@ -113,7 +113,7 @@ object GsonUtils {
      */
     @JvmStatic
     @JvmOverloads
-    fun <T> fromJson(gson: Gson = GsonUtils.gson, json: String?, type: Type): T {
+    fun <T> fromJson(json: String?, type: Type, gson: Gson = GsonUtils.gson): T {
         return gson.fromJson(json, type)
     }
 
@@ -128,7 +128,7 @@ object GsonUtils {
 
     @JvmStatic
     @JvmOverloads
-    fun <T> fromJson(gson: Gson = GsonUtils.gson, reader: Reader?, type: Class<T>): T {
+    fun <T> fromJson(reader: Reader?, type: Class<T>, gson: Gson = GsonUtils.gson): T {
         return gson.fromJson(reader, type)
     }
 
@@ -143,7 +143,7 @@ object GsonUtils {
 
     @JvmStatic
     @JvmOverloads
-    fun <T> fromJson(gson: Gson = GsonUtils.gson, reader: Reader?, type: Type): T {
+    fun <T> fromJson(reader: Reader?, type: Type, gson: Gson = GsonUtils.gson): T {
         return gson.fromJson(reader, type)
     }
 

@@ -1454,7 +1454,7 @@ object ImageUtils {
             if (!save(src, destFile, format, quality, recycle)) {
                 return null
             }
-            notifySystemToScan(destFile)
+            FileUtils.notifySystemToScan(destFile)
             destFile
         } else {
             val contentValues = ContentValues()
