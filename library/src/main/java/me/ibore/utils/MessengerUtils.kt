@@ -7,12 +7,9 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.os.*
-import android.text.TextUtils
 import android.util.Log
 import me.ibore.utils.Utils.app
 import me.ibore.utils.UtilsBridge.getNotification
-import me.ibore.utils.UtilsBridge.isAppInstalled
-import me.ibore.utils.UtilsBridge.isAppRunning
 import me.ibore.utils.UtilsBridge.isMainProcess
 import me.ibore.utils.UtilsBridge.isServiceRunning
 import java.util.*
@@ -170,12 +167,12 @@ object MessengerUtils {
         }
 
         fun bind(): Boolean {
-            if (TextUtils.isEmpty(mPkgName)) {
+            if (mPkgName.isNullOrBlank()) {
                 val intent = Intent(app, ServerService::class.java)
                 return app.bindService(intent, mConn, Context.BIND_AUTO_CREATE)
             }
-            return if (isAppInstalled(mPkgName)) {
-                if (isAppRunning(mPkgName!!)) {
+            return if (AppUtils.isAppInstalled(mPkgName!!)) {
+                if (AppUtils.isAppRunning(mPkgName!!)) {
                     val intent = Intent("$mPkgName.messenger")
                     intent.setPackage(mPkgName)
                     app.bindService(

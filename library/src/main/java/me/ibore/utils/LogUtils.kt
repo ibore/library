@@ -11,7 +11,6 @@ import androidx.annotation.RequiresApi
 import androidx.collection.SimpleArrayMap
 import me.ibore.utils.UtilsBridge.FileHead
 import me.ibore.utils.UtilsBridge.isSpace
-import me.ibore.utils.UtilsBridge.writeFileFromString
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -583,7 +582,7 @@ object LogUtils {
 
     private fun input2File(filePath: String, input: String) {
         if (config.mFileWriter == null) {
-            writeFileFromString(filePath, input, true)
+            FileIOUtils.writeFileFromString(filePath, input, true)
         } else {
             config.mFileWriter!!.write(filePath, input)
         }
@@ -1088,7 +1087,7 @@ object LogUtils {
 
         private fun object2Json(any: Any): String {
             return if (any is CharSequence) {
-                UtilsBridge.formatJson(any.toString())
+                JsonUtils.formatJson(any.toString())
             } else try {
                 GsonUtils.toJson(any)
             } catch (t: Throwable) {

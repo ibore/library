@@ -4,12 +4,13 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Application
 import android.content.ContentResolver
+import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.util.Log
 import androidx.lifecycle.Lifecycle
+import me.ibore.ktx.logD
 import me.ibore.utils.ThreadUtils.SimpleTask
 import me.ibore.utils.UtilsBridge.applicationByReflect
-import me.ibore.utils.UtilsBridge.preLoad
 
 /**
  * <pre>
@@ -46,7 +47,6 @@ object Utils {
         if (sApp == null) {
             sApp = app
             UtilsActivityLifecycleImpl.INSTANCE.init(sApp!!)
-            preLoad()
             return
         }
         if (sApp == app) return
@@ -69,9 +69,15 @@ object Utils {
             if (sApp != null) return sApp!!
             init(applicationByReflect!!)
             if (sApp == null) throw NullPointerException("reflect failed.")
-            Log.i("Utils", "${ProcessUtils.currentProcessName} reflect app success.")
+            logD("${ProcessUtils.currentProcessName} reflect app success.")
             return sApp!!
         }
+
+    val packageName: String
+        get() = app.packageName
+
+    val applicationInfo: ApplicationInfo
+        get() = app.applicationInfo
 
     val packageManager: PackageManager
         get() = app.packageManager
@@ -94,7 +100,7 @@ object Utils {
     }
 
     open class ActivityLifecycleCallbacks {
-        fun onActivityCreated(activity: Activity) {
+        open fun onActivityCreated(activity: Activity) {
         }
 
         fun onActivityStarted(activity: Activity) {

@@ -10,12 +10,10 @@ import android.view.View
 import android.widget.LinearLayout
 import androidx.annotation.*
 import androidx.appcompat.widget.AppCompatTextView
-import androidx.core.content.ContextCompat
 import me.ibore.R
 import me.ibore.ktx.color
 import me.ibore.ktx.dp2px
 import me.ibore.utils.TimeUtils
-import me.ibore.utils.UIUtils
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -341,16 +339,20 @@ class DatePickerView @JvmOverloads constructor(context: Context, attrs: Attribut
 
     @SuppressLint("SimpleDateFormat")
     fun setDate(selectDate: String?, startDate: String?, endDate: String?, @DateFormat dateFormat: String) {
-        val selects = (if (isValidDate(selectDate, dateFormat)) selectDate else TimeUtils.getNowString(TimeUtils.getSafeDateFormat("yyyy-MM-dd")))!!.split("-")
+        val selects = (if (isValidDate(
+                selectDate,
+                dateFormat
+            )
+        ) selectDate else TimeUtils.nowString(TimeUtils.getSafeDateFormat("yyyy-MM-dd")))!!.split("-")
         val starts = (if (isValidDate(startDate, dateFormat)) startDate else {
             val calendar = Calendar.getInstance()
             calendar.set(Calendar.YEAR, calendar.get(Calendar.YEAR) - 100)
-            TimeUtils.getString(calendar.time, TimeUtils.getSafeDateFormat("yyyy-MM-dd"), 0,0 )
+            TimeUtils.getString(calendar.time, 0, 0, TimeUtils.getSafeDateFormat("yyyy-MM-dd"))
         })!!.split("-")
         val ends = (if (isValidDate(endDate, dateFormat)) endDate else {
             val calendar = Calendar.getInstance()
             calendar.set(Calendar.YEAR, calendar.get(Calendar.YEAR) + 100)
-            TimeUtils.getString(calendar.time, TimeUtils.getSafeDateFormat("yyyy-MM-dd"), 0,0 )
+            TimeUtils.getString(calendar.time, 0, 0, TimeUtils.getSafeDateFormat("yyyy-MM-dd"))
         })!!.split("-")
         when (dateFormat) {
             YYYY -> {

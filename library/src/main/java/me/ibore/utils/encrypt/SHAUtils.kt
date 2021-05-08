@@ -1,5 +1,8 @@
-package me.ibore.utils
+package me.ibore.utils.encrypt
 
+import me.ibore.utils.CloseUtils
+import me.ibore.utils.ConvertUtils
+import me.ibore.utils.LogUtils
 import java.io.File
 import java.io.FileInputStream
 import java.io.InputStream

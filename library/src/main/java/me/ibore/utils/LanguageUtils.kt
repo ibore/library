@@ -8,7 +8,6 @@ import android.os.Build
 import android.util.Log
 import me.ibore.utils.UtilsBridge.activityList
 import me.ibore.utils.UtilsBridge.equals
-import me.ibore.utils.UtilsBridge.relaunchApp
 import java.util.*
 
 /**
@@ -64,7 +63,7 @@ object LanguageUtils {
                 if (t) {
                     restart(isRelaunchApp)
                 } else {
-                    relaunchApp()
+                    AppUtils.relaunchApp()
                 }
             }
         })
@@ -72,7 +71,7 @@ object LanguageUtils {
 
     private fun restart(isRelaunchApp: Boolean) {
         if (isRelaunchApp) {
-            relaunchApp()
+            AppUtils.relaunchApp()
         } else {
             for (activity in activityList) {
                 activity.recreate()

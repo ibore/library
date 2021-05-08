@@ -10,11 +10,9 @@ import android.os.storage.StorageManager
 import android.provider.DocumentsContract
 import android.provider.MediaStore
 import android.text.TextUtils
-import android.util.Log
 import androidx.core.content.FileProvider
 import me.ibore.ktx.logD
 import me.ibore.utils.UtilsBridge.inputStream2Bytes
-import me.ibore.utils.UtilsBridge.writeFileFromIS
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.IOException
@@ -41,7 +39,7 @@ object UriUtils {
      */
     @JvmStatic
     fun res2Uri(resPath: String): Uri {
-        return Uri.parse("android.resource://" + Utils.app.packageName + "/" + resPath)
+        return Uri.parse("android.resource://" + Utils.packageName + "/" + resPath)
     }
 
     /**
@@ -54,7 +52,7 @@ object UriUtils {
     fun file2Uri(file: File?): Uri? {
         if (!FileUtils.isFileExists(file)) return null
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            val authority = Utils.app.packageName + ".utilcode.provider"
+            val authority = Utils.packageName + ".utilcode.provider"
             FileProvider.getUriForFile(Utils.app, authority, file!!)
         } else {
             Uri.fromFile(file)
@@ -68,8 +66,7 @@ object UriUtils {
      * @return file
      */
     @JvmStatic
-    fun uri2File(uri: Uri?): File? {
-        if (uri == null) return null
+    fun uri2File(uri: Uri): File? {
         val file = uri2FileReal(uri)
         return file ?: copyUri2Cache(uri)
     }
@@ -102,26 +99,31 @@ object UriUtils {
                 }
             }
             file = null
-            if (path.startsWith("/files_path/")) {
-                file = File(
-                    Utils.app.filesDir.absolutePath
-                            + path.replace("/files_path/", "/")
-                )
-            } else if (path.startsWith("/cache_path/")) {
-                file = File(
-                    Utils.app.cacheDir.absolutePath
-                            + path.replace("/cache_path/", "/")
-                )
-            } else if (path.startsWith("/external_files_path/")) {
-                file = File(
-                    Utils.app.getExternalFilesDir(null)!!.absolutePath
-                            + path.replace("/external_files_path/", "/")
-                )
-            } else if (path.startsWith("/external_cache_path/")) {
-                file = File(
-                    Utils.app.externalCacheDir!!.absolutePath
-                            + path.replace("/external_cache_path/", "/")
-                )
+            when {
+                path.startsWith("/files_path/") -> {
+                    file = File(
+                        Utils.app.filesDir.absolutePath
+                                + path.replace("/files_path/", "/")
+                    )
+                }
+                path.startsWith("/cache_path/") -> {
+                    file = File(
+                        Utils.app.cacheDir.absolutePath
+                                + path.replace("/cache_path/", "/")
+                    )
+                }
+                path.startsWith("/external_files_path/") -> {
+                    file = File(
+                        Utils.app.getExternalFilesDir(null)!!.absolutePath
+                                + path.replace("/external_files_path/", "/")
+                    )
+                }
+                path.startsWith("/external_cache_path/") -> {
+                    file = File(
+                        Utils.app.externalCacheDir!!.absolutePath
+                                + path.replace("/external_cache_path/", "/")
+                    )
+                }
             }
             if (file != null && file.exists()) {
                 logD("$uri -> $path")
@@ -132,8 +134,7 @@ object UriUtils {
             if (path != null) return File(path)
             logD("$uri parse failed. -> 0")
             null
-        } // end 0
-        else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT
             && DocumentsContract.isDocumentUri(Utils.app, uri)
         ) {
             if ("com.android.externalstorage.documents" == authority) {
@@ -325,19 +326,19 @@ object UriUtils {
     @JvmStatic
     private fun copyUri2Cache(uri: Uri): File? {
         logD("copyUri2Cache() called")
-        var `is`: InputStream? = null
+        var inputStream: InputStream? = null
         return try {
-            `is` = Utils.contentResolver.openInputStream(uri)
+            inputStream = Utils.contentResolver.openInputStream(uri)
             val file = File(Utils.app.cacheDir, "" + System.currentTimeMillis())
-            writeFileFromIS(file.absolutePath, `is`)
+            FileIOUtils.writeFileFromIS(file.absolutePath, inputStream!!)
             file
         } catch (e: FileNotFoundException) {
             e.printStackTrace()
             null
         } finally {
-            if (`is` != null) {
+            if (inputStream != null) {
                 try {
-                    `is`.close()
+                    inputStream.close()
                 } catch (e: IOException) {
                     e.printStackTrace()
                 }

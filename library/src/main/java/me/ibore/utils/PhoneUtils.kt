@@ -7,9 +7,6 @@ import android.os.Build
 import android.telephony.TelephonyManager
 import android.text.TextUtils
 import androidx.annotation.RequiresPermission
-import me.ibore.utils.UtilsBridge.getCallIntent
-import me.ibore.utils.UtilsBridge.getDialIntent
-import me.ibore.utils.UtilsBridge.getSendSmsIntent
 import java.lang.reflect.InvocationTargetException
 
 /**
@@ -283,8 +280,8 @@ object PhoneUtils {
      *
      * @param phoneNumber The phone number.
      */
-    fun dial(phoneNumber: String?) {
-        Utils.app.startActivity(getDialIntent(phoneNumber))
+    fun dial(phoneNumber: String) {
+        Utils.app.startActivity(IntentUtils.getDialIntent(phoneNumber))
     }
 
     /**
@@ -295,8 +292,8 @@ object PhoneUtils {
      * @param phoneNumber The phone number.
      */
     @RequiresPermission(permission.CALL_PHONE)
-    fun call(phoneNumber: String?) {
-        Utils.app.startActivity(getCallIntent(phoneNumber))
+    fun call(phoneNumber: String) {
+        Utils.app.startActivity(IntentUtils.getCallIntent(phoneNumber))
     }
 
     /**
@@ -306,7 +303,7 @@ object PhoneUtils {
      * @param content     The content.
      */
     fun sendSms(phoneNumber: String?, content: String?) {
-        Utils.app.startActivity(getSendSmsIntent(phoneNumber, content))
+        Utils.app.startActivity(IntentUtils.getSendSmsIntent(phoneNumber, content))
     }
 
     private val telephonyManager: TelephonyManager

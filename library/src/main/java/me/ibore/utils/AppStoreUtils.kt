@@ -27,7 +27,7 @@ object AppStoreUtils {
     @JvmStatic
     @JvmOverloads
     fun getAppStoreIntent(
-        packageName: String = Utils.app.packageName, isIncludeGooglePlayStore: Boolean = false
+        packageName: String = Utils.packageName, isIncludeGooglePlayStore: Boolean = false
     ): Intent? {
         if (RomUtils.isSamsung) { // 三星单独处理跳转三星市场
             val samsungAppStoreIntent: Intent? = getSamsungAppStoreIntent(packageName)

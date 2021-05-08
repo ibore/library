@@ -21,7 +21,8 @@ import java.util.concurrent.atomic.AtomicLong
  */
 object ThreadUtils {
 
-    val mainHandler = Handler(Looper.getMainLooper())
+    @JvmStatic
+    private val mainHandler = Handler(Looper.getMainLooper())
 
     private val TYPE_PRIORITY_POOLS: MutableMap<Int, MutableMap<Int, ExecutorService?>> = HashMap()
     private val TASK_POOL_MAP: MutableMap<Task<*>, ExecutorService?> = ConcurrentHashMap()
@@ -145,8 +146,7 @@ object ThreadUtils {
     @JvmStatic
     @JvmOverloads
     fun <T> executeByFixed(
-        @IntRange(from = 1) size: Int,
-        task: Task<T>,
+        @IntRange(from = 1) size: Int, task: Task<T>,
         @IntRange(from = 1, to = 10) priority: Int = Thread.NORM_PRIORITY
     ) {
         execute(getPoolByTypeAndPriority(size, priority), task)

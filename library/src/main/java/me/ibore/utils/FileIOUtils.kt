@@ -168,7 +168,7 @@ object FileIOUtils {
         return try {
             fc = FileOutputStream(file, append).channel
             if (fc == null) {
-                Log.e("FileIOUtils", "fc is null.")
+                logD("fc is null.")
                 return false
             }
             fc.position(fc.size())
@@ -179,11 +179,7 @@ object FileIOUtils {
             e.printStackTrace()
             false
         } finally {
-            try {
-                fc?.close()
-            } catch (e: IOException) {
-                e.printStackTrace()
-            }
+            CloseUtils.closeIOQuietly(fc)
         }
     }
 
@@ -221,14 +217,14 @@ object FileIOUtils {
         file: File, bytes: ByteArray, append: Boolean = false, isForce: Boolean = true
     ): Boolean {
         if (!FileUtils.createOrExistsFile(file)) {
-            Log.e("FileIOUtils", "create file <$file> failed.")
+            logD("create file <$file> failed.")
             return false
         }
         var fc: FileChannel? = null
         return try {
             fc = FileOutputStream(file, append).channel
             if (fc == null) {
-                Log.e("FileIOUtils", "fc is null.")
+                logD("fc is null.")
                 return false
             }
             val mbb = fc.map(FileChannel.MapMode.READ_WRITE, fc.size(), bytes.size.toLong())
@@ -258,9 +254,8 @@ object FileIOUtils {
     @JvmStatic
     @JvmOverloads
     fun writeFileFromString(filePath: String, content: String, append: Boolean = false): Boolean {
-        return writeFileFromString(
-            FileUtils.getFileByPath(filePath) ?: return false, content, append
-        )
+        val file = FileUtils.getFileByPath(filePath) ?: return false
+        return writeFileFromString(file, content, append)
     }
 
     /**
@@ -275,7 +270,7 @@ object FileIOUtils {
     @JvmOverloads
     fun writeFileFromString(file: File, content: String, append: Boolean = false): Boolean {
         if (!FileUtils.createOrExistsFile(file)) {
-            Log.e("FileIOUtils", "create file <$file> failed.")
+            logD("create file <$file> failed.")
             return false
         }
         var bw: BufferedWriter? = null
@@ -287,11 +282,7 @@ object FileIOUtils {
             e.printStackTrace()
             false
         } finally {
-            try {
-                bw?.close()
-            } catch (e: IOException) {
-                e.printStackTrace()
-            }
+            CloseUtils.closeIOQuietly(bw)
         }
     }
 
@@ -350,11 +341,7 @@ object FileIOUtils {
             e.printStackTrace()
             emptyList()
         } finally {
-            try {
-                reader?.close()
-            } catch (e: IOException) {
-                e.printStackTrace()
-            }
+            CloseUtils.closeIOQuietly(reader)
         }
     }
 
@@ -475,7 +462,7 @@ object FileIOUtils {
         return try {
             fc = RandomAccessFile(file, "r").channel
             if (fc == null) {
-                Log.e("FileIOUtils", "fc is null.")
+                logD("fc is null.")
                 return ByteArray(0)
             }
             val byteBuffer = ByteBuffer.allocate(fc.size().toInt())
@@ -513,7 +500,7 @@ object FileIOUtils {
         return try {
             fc = RandomAccessFile(file, "r").channel
             if (fc == null) {
-                Log.e("FileIOUtils", "fc is null.")
+                logD("fc is null.")
                 return ByteArray(0)
             }
             val size = fc.size().toInt()

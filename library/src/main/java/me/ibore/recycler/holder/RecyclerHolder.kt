@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.annotation.*
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import me.ibore.ktx.getActivity
 import me.ibore.ktx.layoutInflater
 
 @Suppress("UNCHECKED_CAST")
@@ -33,7 +34,7 @@ open class RecyclerHolder @JvmOverloads constructor(itemView: View, var helper: 
         get() = itemView.context
 
     fun getActivity(): Activity? {
-        return ContextUtils.getActivity(itemView.context)
+        return context.getActivity()
     }
 
     fun <T : View> view(@IdRes id: Int): T {

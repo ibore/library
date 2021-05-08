@@ -340,7 +340,7 @@ object NotificationUtils {
         companion object {
             @JvmField
             val DEFAULT_CHANNEL_CONFIG = ChannelConfig(
-                Utils.app.packageName, Utils.app.packageName, IMPORTANCE_DEFAULT
+                Utils.packageName, Utils.packageName, IMPORTANCE_DEFAULT
             )
         }
 

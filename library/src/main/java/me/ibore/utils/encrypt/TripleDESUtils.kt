@@ -1,4 +1,4 @@
-package me.ibore.utils
+package me.ibore.utils.encrypt
 
 import android.annotation.SuppressLint
 import me.ibore.utils.LogUtils.d

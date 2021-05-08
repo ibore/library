@@ -7,7 +7,6 @@ import androidx.core.content.ContextCompat
 import me.ibore.utils.UtilsBridge.inputStream2Bytes
 import me.ibore.utils.UtilsBridge.inputStream2Lines
 import me.ibore.utils.UtilsBridge.isSpace
-import me.ibore.utils.UtilsBridge.writeFileFromIS
 import java.io.IOException
 import java.io.UnsupportedEncodingException
 import java.nio.charset.Charset
@@ -41,7 +40,7 @@ object ResourceUtils {
      * @return the id identifier by name
      */
     fun getIdByName(name: String?): Int {
-        return Utils.app.resources.getIdentifier(name, "id", Utils.app.packageName)
+        return Utils.app.resources.getIdentifier(name, "id", Utils.packageName)
     }
 
     /**
@@ -54,7 +53,7 @@ object ResourceUtils {
         return Utils.app.resources.getIdentifier(
             name,
             "string",
-            Utils.app.packageName
+            Utils.packageName
         )
     }
 
@@ -65,7 +64,7 @@ object ResourceUtils {
      * @return the color identifier by name
      */
     fun getColorIdByName(name: String?): Int {
-        return Utils.app.resources.getIdentifier(name, "color", Utils.app.packageName)
+        return Utils.app.resources.getIdentifier(name, "color", Utils.packageName)
     }
 
     /**
@@ -75,7 +74,7 @@ object ResourceUtils {
      * @return the dimen identifier by name
      */
     fun getDimenIdByName(name: String?): Int {
-        return Utils.app.resources.getIdentifier(name, "dimen", Utils.app.packageName)
+        return Utils.app.resources.getIdentifier(name, "dimen", Utils.packageName)
     }
 
     /**
@@ -88,7 +87,7 @@ object ResourceUtils {
         return Utils.app.resources.getIdentifier(
             name,
             "drawable",
-            Utils.app.packageName
+            Utils.packageName
         )
     }
 
@@ -102,7 +101,7 @@ object ResourceUtils {
         return Utils.app.resources.getIdentifier(
             name,
             "mipmap",
-            Utils.app.packageName
+            Utils.packageName
         )
     }
 
@@ -116,7 +115,7 @@ object ResourceUtils {
         return Utils.app.resources.getIdentifier(
             name,
             "layout",
-            Utils.app.packageName
+            Utils.packageName
         )
     }
 
@@ -127,7 +126,7 @@ object ResourceUtils {
      * @return the style identifier by name
      */
     fun getStyleIdByName(name: String?): Int {
-        return Utils.app.resources.getIdentifier(name, "style", Utils.app.packageName)
+        return Utils.app.resources.getIdentifier(name, "style", Utils.packageName)
     }
 
     /**
@@ -137,7 +136,7 @@ object ResourceUtils {
      * @return the anim identifier by name
      */
     fun getAnimIdByName(name: String?): Int {
-        return Utils.app.resources.getIdentifier(name, "anim", Utils.app.packageName)
+        return Utils.app.resources.getIdentifier(name, "anim", Utils.packageName)
     }
 
     /**
@@ -147,7 +146,7 @@ object ResourceUtils {
      * @return the menu identifier by name
      */
     fun getMenuIdByName(name: String?): Int {
-        return Utils.app.resources.getIdentifier(name, "menu", Utils.app.packageName)
+        return Utils.app.resources.getIdentifier(name, "menu", Utils.packageName)
     }
 
     /**
@@ -169,7 +168,7 @@ object ResourceUtils {
                     )
                 }
             } else {
-                res = writeFileFromIS(
+                res = FileIOUtils.writeFileFromIS(
                     destFilePath,
                     Utils.app.assets.open(assetsFilePath)
                 )
@@ -238,10 +237,9 @@ object ResourceUtils {
      * @param destFilePath The path of destination file.
      * @return `true`: success<br></br>`false`: fail
      */
-    fun copyFileFromRaw(@RawRes resId: Int, destFilePath: String?): Boolean {
-        return writeFileFromIS(
-            destFilePath,
-            Utils.app.resources.openRawResource(resId)
+    fun copyFileFromRaw(@RawRes resId: Int, destFilePath: String): Boolean {
+        return FileIOUtils.writeFileFromIS(
+            destFilePath, Utils.app.resources.openRawResource(resId)
         )
     }
     /**

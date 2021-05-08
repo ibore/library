@@ -1151,7 +1151,7 @@ object ActivityUtils  {
         requestCode: Int
     ) {
         startActivityForResult(
-            fragment, null, Utils.app.packageName, clz.name,
+            fragment, null, Utils.packageName, clz.name,
             requestCode, null
         )
     }
@@ -1172,7 +1172,7 @@ object ActivityUtils  {
         options: Bundle?
     ) {
         startActivityForResult(
-            fragment, null, Utils.app.packageName, clz.name,
+            fragment, null, Utils.packageName, clz.name,
             requestCode, options
         )
     }
@@ -1194,7 +1194,7 @@ object ActivityUtils  {
         vararg sharedElements: View
     ) {
         startActivityForResult(
-            fragment, null, Utils.app.packageName, clz.name,
+            fragment, null, Utils.packageName, clz.name,
             requestCode, getOptionsBundle(fragment, *sharedElements)
         )
     }
@@ -1219,7 +1219,7 @@ object ActivityUtils  {
         @AnimRes exitAnim: Int
     ) {
         startActivityForResult(
-            fragment, null, Utils.app.packageName, clz.name,
+            fragment, null, Utils.packageName, clz.name,
             requestCode, getOptionsBundle(fragment, enterAnim, exitAnim)
         )
     }
@@ -1240,7 +1240,7 @@ object ActivityUtils  {
         requestCode: Int
     ) {
         startActivityForResult(
-            fragment, extras, Utils.app.packageName, clz.name,
+            fragment, extras, Utils.packageName, clz.name,
             requestCode, null
         )
     }
@@ -1263,7 +1263,7 @@ object ActivityUtils  {
         options: Bundle?
     ) {
         startActivityForResult(
-            fragment, extras, Utils.app.packageName, clz.name,
+            fragment, extras, Utils.packageName, clz.name,
             requestCode, options
         )
     }
@@ -1287,7 +1287,7 @@ object ActivityUtils  {
         vararg sharedElements: View
     ) {
         startActivityForResult(
-            fragment, extras, Utils.app.packageName, clz.name,
+            fragment, extras, Utils.packageName, clz.name,
             requestCode, getOptionsBundle(fragment, *sharedElements)
         )
     }
@@ -1314,7 +1314,7 @@ object ActivityUtils  {
         @AnimRes exitAnim: Int
     ) {
         startActivityForResult(
-            fragment, extras, Utils.app.packageName, clz.name,
+            fragment, extras, Utils.packageName, clz.name,
             requestCode, getOptionsBundle(fragment, enterAnim, exitAnim)
         )
     }
@@ -1608,7 +1608,7 @@ object ActivityUtils  {
      * Start the launcher activity.
      */
     @JvmOverloads
-    fun startLauncherActivity(pkg: String = Utils.app.packageName) {
+    fun startLauncherActivity(pkg: String = Utils.packageName) {
         val launcherActivity = getLauncherActivity(pkg)
         if (TextUtils.isEmpty(launcherActivity)) return
         startActivity(pkg, launcherActivity)
@@ -1629,7 +1629,7 @@ object ActivityUtils  {
      */
     @JvmStatic
     val launcherActivity: String
-        get() = getLauncherActivity(Utils.app.packageName)
+        get() = getLauncherActivity(Utils.packageName)
 
     /**
      * Return the name of launcher activity.
@@ -1655,7 +1655,7 @@ object ActivityUtils  {
      * @return the list of main activities
      */
     val mainActivities: List<String>
-        get() = getMainActivities(Utils.app.packageName)
+        get() = getMainActivities(Utils.packageName)
 
     /**
      * Return the list of main activities.

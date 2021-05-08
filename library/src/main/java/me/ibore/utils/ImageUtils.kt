@@ -21,9 +21,6 @@ import android.view.View
 import androidx.annotation.*
 import me.ibore.permissions.XPermissions
 import me.ibore.utils.UtilsBridge.bytes2HexString
-import me.ibore.utils.UtilsBridge.createFileByDeleteOldFile
-import me.ibore.utils.UtilsBridge.getFileByPath
-import me.ibore.utils.UtilsBridge.notifySystemToScan
 import java.io.*
 import kotlin.math.abs
 
@@ -1310,34 +1307,6 @@ object ImageUtils {
      * @param src      The source of bitmap.
      * @param filePath The path of file.
      * @param format   The format of the image.
-     * @param recycle  True to recycle the source of bitmap, false otherwise.
-     * @return `true`: success<br></br>`false`: fail
-     */
-    @JvmStatic
-    fun save(src: Bitmap, filePath: String?, format: CompressFormat?, recycle: Boolean): Boolean {
-        return save(src, filePath, format, 100, recycle)
-    }
-
-    /**
-     * Save the bitmap.
-     *
-     * @param src     The source of bitmap.
-     * @param file    The file.
-     * @param format  The format of the image.
-     * @param recycle True to recycle the source of bitmap, false otherwise.
-     * @return `true`: success<br></br>`false`: fail
-     */
-    @JvmStatic
-    fun save(src: Bitmap, file: File?, format: CompressFormat?, recycle: Boolean): Boolean {
-        return save(src, file, format, 100, recycle)
-    }
-
-    /**
-     * Save the bitmap.
-     *
-     * @param src      The source of bitmap.
-     * @param filePath The path of file.
-     * @param format   The format of the image.
      * @param quality  Hint to the compressor, 0-100. 0 meaning compress for
      * small size, 100 meaning compress for max quality. Some
      * formats, like PNG which is lossless, will ignore the
@@ -1348,10 +1317,16 @@ object ImageUtils {
     @JvmStatic
     @JvmOverloads
     fun save(
-        src: Bitmap, filePath: String?, format: CompressFormat?,
+        src: Bitmap, filePath: String, format: CompressFormat? = null,
         quality: Int = 100, recycle: Boolean = false
     ): Boolean {
-        return save(src, FileUtils.getFileByPath(filePath), format, quality, recycle)
+        return save(
+            src,
+            FileUtils.getFileByPath(filePath) ?: return false,
+            format,
+            quality,
+            recycle
+        )
     }
 
     /**
@@ -1370,7 +1345,7 @@ object ImageUtils {
     @JvmStatic
     @JvmOverloads
     fun save(
-        src: Bitmap, file: File?, format: CompressFormat?, quality: Int = 100, recycle: Boolean = false
+        src: Bitmap, file: File, format: CompressFormat? = null, quality: Int = 100, recycle: Boolean = false
     ): Boolean {
         if (isEmptyBitmap(src)) {
             Log.e("ImageUtils", "bitmap is empty.")
@@ -1380,7 +1355,7 @@ object ImageUtils {
             Log.e("ImageUtils", "bitmap is recycled.")
             return false
         }
-        if (!createFileByDeleteOldFile(file)) {
+        if (!FileUtils.createFileByDeleteOldFile(file)) {
             Log.e("ImageUtils", "create or delete file <$file> failed.")
             return false
         }
@@ -1450,7 +1425,7 @@ object ImageUtils {
             }
             val picDir =
                 Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM)
-            val destFile = File(picDir, Utils.app.packageName + "/" + fileName)
+            val destFile = File(picDir, Utils.packageName + "/" + fileName)
             if (!save(src, destFile, format, quality, recycle)) {
                 return null
             }
@@ -1467,7 +1442,7 @@ object ImageUtils {
                 }
             contentValues.put(
                 MediaStore.Images.Media.RELATIVE_PATH,
-                Environment.DIRECTORY_DCIM + "/" + Utils.app.packageName
+                Environment.DIRECTORY_DCIM + "/" + Utils.packageName
             )
             contentValues.put(MediaStore.MediaColumns.IS_PENDING, 1)
             val uri = Utils.contentResolver.insert(contentUri, contentValues)
@@ -1529,8 +1504,8 @@ object ImageUtils {
      * @param filePath The path of file.
      * @return the type of image
      */
-    fun getImageType(filePath: String?): ImageType? {
-        return getImageType(getFileByPath(filePath))
+    fun getImageType(filePath: String): ImageType? {
+        return getImageType(FileUtils.getFileByPath(filePath) ?: return null)
     }
 
     /**
@@ -1539,12 +1514,11 @@ object ImageUtils {
      * @param file The file.
      * @return the type of image
      */
-    fun getImageType(file: File?): ImageType? {
-        if (file == null) return null
-        var `is`: InputStream? = null
+    fun getImageType(file: File): ImageType? {
+        var inputStream: InputStream? = null
         try {
-            `is` = FileInputStream(file)
-            val type = getImageType(`is`)
+            inputStream = FileInputStream(file)
+            val type = getImageType(inputStream)
             if (type != null) {
                 return type
             }
@@ -1552,7 +1526,7 @@ object ImageUtils {
             e.printStackTrace()
         } finally {
             try {
-                `is`?.close()
+                inputStream?.close()
             } catch (e: IOException) {
                 e.printStackTrace()
             }
@@ -1830,8 +1804,8 @@ object ImageUtils {
      * @param filePath The path of file.
      * @return the size of bitmap
      */
-    fun getSize(filePath: String?): IntArray {
-        return getSize(getFileByPath(filePath))
+    fun getSize(filePath: String): IntArray {
+        return getSize(FileUtils.getFileByPath(filePath) ?: return intArrayOf(0, 0))
     }
 
     /**
@@ -1840,8 +1814,7 @@ object ImageUtils {
      * @param file The file.
      * @return the size of bitmap
      */
-    fun getSize(file: File?): IntArray {
-        if (file == null) return intArrayOf(0, 0)
+    fun getSize(file: File): IntArray {
         val opts = BitmapFactory.Options()
         opts.inJustDecodeBounds = true
         BitmapFactory.decodeFile(file.absolutePath, opts)

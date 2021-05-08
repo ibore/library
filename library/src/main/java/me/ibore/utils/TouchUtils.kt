@@ -55,27 +55,13 @@ object TouchUtils {
 
         abstract fun onDown(view: View?, x: Int, y: Int, event: MotionEvent?): Boolean
         abstract fun onMove(
-            view: View?,
-            @Direction direction: Int,
-            x: Int,
-            y: Int,
-            dx: Int,
-            dy: Int,
-            totalX: Int,
-            totalY: Int,
-            event: MotionEvent?
+            view: View?, @Direction direction: Int,
+            x: Int, y: Int, dx: Int, dy: Int, totalX: Int, totalY: Int, event: MotionEvent?
         ): Boolean
 
         abstract fun onStop(
-            view: View?,
-            @Direction direction: Int,
-            x: Int,
-            y: Int,
-            totalX: Int,
-            totalY: Int,
-            vx: Int,
-            vy: Int,
-            event: MotionEvent?
+            view: View?, @Direction direction: Int,
+            x: Int, y: Int, totalX: Int, totalY: Int, vx: Int, vy: Int, event: MotionEvent?
         ): Boolean
 
         override fun onTouch(v: View, event: MotionEvent): Boolean {

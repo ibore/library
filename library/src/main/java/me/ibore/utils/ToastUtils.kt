@@ -24,6 +24,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import me.ibore.R
 import me.ibore.ktx.dp2px
+import me.ibore.ktx.layoutInflater
 import me.ibore.utils.UtilsBridge.activityList
 import me.ibore.utils.UtilsBridge.addActivityLifecycleCallbacks
 import me.ibore.utils.UtilsBridge.isActivityAlive
@@ -288,7 +289,7 @@ class ToastUtils {
         ) {
             return null
         }
-        val toastView = ViewUtils.layoutId2View(R.layout.utils_toast_view)
+        val toastView = Utils.app.applicationContext.layoutInflater.inflate(R.layout.utils_toast_view, null)
         val messageTv = toastView.findViewById<TextView>(android.R.id.message)
         if (MODE.DARK == mMode) {
             val bg = toastView.background.mutate() as GradientDrawable
@@ -320,6 +321,22 @@ class ToastUtils {
     }
 
     internal class SystemToast(toastUtils: ToastUtils) : AbsToast(toastUtils) {
+
+        init {
+            if (Build.VERSION.SDK_INT == Build.VERSION_CODES.N_MR1) {
+                try {
+                    val mTNField = Toast::class.java.getDeclaredField("mTN")
+                    mTNField.isAccessible = true
+                    val mTN = mTNField[mToast]
+                    val mTNmHandlerField = mTNField.type.getDeclaredField("mHandler")
+                    mTNmHandlerField.isAccessible = true
+                    val tnHandler = mTNmHandlerField[mTN] as Handler
+                    mTNmHandlerField[mTN] = SafeHandler(tnHandler)
+                } catch (ignored: Exception) { /**/
+                }
+            }
+        }
+
         override fun show(duration: Int) {
             if (mToast == null) return
             mToast!!.duration = duration
@@ -339,27 +356,20 @@ class ToastUtils {
                 }
             }
         }
-
-        init {
-            if (Build.VERSION.SDK_INT == Build.VERSION_CODES.N_MR1) {
-                try {
-                    val mTNField = Toast::class.java.getDeclaredField("mTN")
-                    mTNField.isAccessible = true
-                    val mTN = mTNField[mToast]
-                    val mTNmHandlerField = mTNField.type.getDeclaredField("mHandler")
-                    mTNmHandlerField.isAccessible = true
-                    val tnHandler = mTNmHandlerField[mTN] as Handler
-                    mTNmHandlerField[mTN] = SafeHandler(tnHandler)
-                } catch (ignored: Exception) { /**/
-                }
-            }
-        }
     }
 
     internal class WindowManagerToast(toastUtils: ToastUtils, type: Int) : AbsToast(toastUtils) {
+
         private var mWM: WindowManager? = null
+
         private val mParams: WindowManager.LayoutParams = WindowManager.LayoutParams()
+
         private val mActivityLifecycleCallbacks: Utils.ActivityLifecycleCallbacks? = null
+
+        init {
+            mParams.type = type
+        }
+
         override fun show(duration: Int) {
             if (mToast == null) return
             mParams.height = WindowManager.LayoutParams.WRAP_CONTENT
@@ -387,7 +397,7 @@ class ToastUtils {
                 if (mWM != null) {
                     mWM!!.addView(mToastView, mParams)
                 }
-            } catch (ignored: Exception) { /**/
+            } catch (ignored: Exception) {
             }
             ThreadUtils.runOnUiThreadDelayed(
                 { cancel() },
@@ -406,9 +416,6 @@ class ToastUtils {
             super.cancel()
         }
 
-        init {
-            mParams.type = type
-        }
     }
 
     internal class ActivityToast(toastUtils: ToastUtils) : AbsToast(toastUtils) {
@@ -542,7 +549,7 @@ class ToastUtils {
             }
             mToastView = mToast!!.view
             if (mToastView == null || mToastView!!.findViewById<View?>(android.R.id.message) == null) {
-                setToastView(ViewUtils.layoutId2View(R.layout.utils_toast_view))
+                setToastView(Utils.app.applicationContext.layoutInflater.inflate(R.layout.utils_toast_view, null))
             }
             val messageTv = mToastView!!.findViewById<TextView>(android.R.id.message)
             messageTv.text = text

@@ -1,6 +1,7 @@
 package me.ibore.utils
 
 import android.Manifest.permission
+import android.annotation.SuppressLint
 import android.content.ComponentName
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -16,6 +17,7 @@ import me.ibore.utils.UtilsBridge.getLauncherActivity
 import me.ibore.utils.UtilsBridge.isSpace
 import java.io.File
 import java.util.*
+import kotlin.collections.ArrayList
 
 /**
  * <pre>
@@ -32,6 +34,7 @@ object IntentUtils {
      * @param intent The intent.
      * @return `true`: yes<br></br>`false`: no
      */
+    @SuppressLint("QueryPermissionsNeeded")
     fun isIntentAvailable(intent: Intent): Boolean {
         return Utils.app
             .packageManager
@@ -66,7 +69,7 @@ object IntentUtils {
         val uri: Uri = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
             Uri.fromFile(file)
         } else {
-            val authority = Utils.app.packageName + ".provider"
+            val authority = Utils.packageName + ".provider"
             FileProvider.getUriForFile(Utils.app, authority, file)
         }
         return getInstallAppIntent(uri)
@@ -100,7 +103,7 @@ object IntentUtils {
      * @param pkgName The name of the package.
      * @return the intent of uninstall app
      */
-    fun getUninstallAppIntent(pkgName: String?): Intent {
+    fun getUninstallAppIntent(pkgName: String): Intent {
         val intent = Intent(Intent.ACTION_DELETE)
         intent.data = Uri.parse("package:$pkgName")
         return intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -127,190 +130,63 @@ object IntentUtils {
      * @param pkgName The name of the package.
      * @return the intent of launch app details settings
      */
-    fun getLaunchAppDetailsSettingsIntent(pkgName: String): Intent {
-        return getLaunchAppDetailsSettingsIntent(pkgName, false)
-    }
-
-    /**
-     * Return the intent of launch app details settings.
-     *
-     * @param pkgName The name of the package.
-     * @return the intent of launch app details settings
-     */
-    fun getLaunchAppDetailsSettingsIntent(pkgName: String?, isNewTask: Boolean): Intent {
+    @JvmStatic
+    @JvmOverloads
+    fun getLaunchAppDetailsSettingsIntent(pkgName: String?, isNewTask: Boolean = false): Intent {
         val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
         intent.data = Uri.parse("package:$pkgName")
         return getIntent(intent, isNewTask)
     }
 
     /**
-     * Return the intent of share text.
-     *
-     * @param content The content.
-     * @return the intent of share text
-     */
-    fun getShareTextIntent(content: String?): Intent {
-        var intent = Intent(Intent.ACTION_SEND)
-        intent.type = "text/plain"
-        intent.putExtra(Intent.EXTRA_TEXT, content)
-        intent = Intent.createChooser(intent, "")
-        return getIntent(intent, true)
-    }
-
-    /**
-     * Return the intent of share image.
-     *
-     * @param imagePath The path of image.
-     * @return the intent of share image
-     */
-    fun getShareImageIntent(imagePath: String): Intent {
-        return getShareTextImageIntent("", imagePath)
-    }
-
-    /**
-     * Return the intent of share image.
-     *
-     * @param imageFile The file of image.
-     * @return the intent of share image
-     */
-    fun getShareImageIntent(imageFile: File?): Intent {
-        return getShareTextImageIntent("", imageFile)
-    }
-
-    /**
-     * Return the intent of share image.
-     *
-     * @param imageUri The uri of image.
-     * @return the intent of share image
-     */
-    fun getShareImageIntent(imageUri: Uri?): Intent {
-        return getShareTextImageIntent("", imageUri)
-    }
-
-    /**
      * Return the intent of share image.
      *
      * @param content   The content.
      * @param imagePath The path of image.
      * @return the intent of share image
      */
-    fun getShareTextImageIntent(content: String, imagePath: String): Intent {
-        return getShareTextImageIntent(content, FileUtils.getFileByPath(imagePath))
-    }
-
-    /**
-     * Return the intent of share image.
-     *
-     * @param content   The content.
-     * @param imageFile The file of image.
-     * @return the intent of share image
-     */
-    fun getShareTextImageIntent(content: String?, imageFile: File?): Intent {
-        return getShareTextImageIntent(content, UriUtils.file2Uri(imageFile))
-    }
-
-    /**
-     * Return the intent of share image.
-     *
-     * @param content  The content.
-     * @param imageUri The uri of image.
-     * @return the intent of share image
-     */
-    fun getShareTextImageIntent(content: String?, imageUri: Uri?): Intent {
-        var intent = Intent(Intent.ACTION_SEND)
-        intent.putExtra(Intent.EXTRA_TEXT, content)
-        intent.putExtra(Intent.EXTRA_STREAM, imageUri)
-        intent.type = "image/*"
-        intent = Intent.createChooser(intent, "")
-        return getIntent(intent, true)
-    }
-
-    /**
-     * Return the intent of share images.
-     *
-     * @param imagePaths The paths of images.
-     * @return the intent of share images
-     */
-    fun getShareImageIntent(imagePaths: LinkedList<String?>?): Intent {
-        return getShareTextImageIntent("", imagePaths)
-    }
-
-    /**
-     * Return the intent of share images.
-     *
-     * @param images The files of images.
-     * @return the intent of share images
-     */
-    fun getShareImageIntent(images: List<File?>?): Intent {
-        return getShareTextImageIntent("", images)
-    }
-
-    /**
-     * Return the intent of share images.
-     *
-     * @param uris The uris of image.
-     * @return the intent of share image
-     */
-    fun getShareImageIntent(uris: ArrayList<Uri?>?): Intent {
-        return getShareTextImageIntent("", uris)
-    }
-
-    /**
-     * Return the intent of share images.
-     *
-     * @param content    The content.
-     * @param imagePaths The paths of images.
-     * @return the intent of share images
-     */
-    fun getShareTextImageIntent(
-        content: String,
-        imagePaths: List<String>
-    ): Intent {
-        val files: MutableList<File> = ArrayList()
+    fun getShareIntent(text: String = "", vararg imagePaths: String): Intent {
+        val imageUris = ArrayList<Uri>()
         for (imagePath in imagePaths) {
-            val file = FileUtils.getFileByPath(imagePath)
-            if (file != null) {
-                files.add(file)
-            }
+            val imageUri = UriUtils.file2Uri(FileUtils.getFileByPath(imagePath)) ?: continue
+            imageUris.add(imageUri)
         }
-        return getShareTextImageIntent(content, files)
+        return getShareIntent(text, imageUris)
     }
 
-    /**
-     * Return the intent of share images.
-     *
-     * @param content The content.
-     * @param images  The files of images.
-     * @return the intent of share images
-     */
-    fun getShareTextImageIntent(content: String, images: List<File>): Intent {
-        val uris = ArrayList<Uri?>()
-        if (images != null) {
-            for (image in images) {
-                val uri = UriUtils.file2Uri(image)
-                if (uri != null) {
-                    uris.add(uri)
-                }
-            }
+    fun getShareIntent(text: String = "", vararg imageFiles: File): Intent {
+        val imageUris = ArrayList<Uri>()
+        for (imageFile in imageFiles) {
+            val imageUri = UriUtils.file2Uri(imageFile) ?: continue
+            imageUris.add(imageUri)
         }
-        return getShareTextImageIntent(content, uris)
+        return getShareIntent(text, imageUris)
     }
 
-    /**
-     * Return the intent of share images.
-     *
-     * @param content The content.
-     * @param uris    The uris of image.
-     * @return the intent of share image
-     */
-    fun getShareTextImageIntent(content: String?, uris: ArrayList<Uri?>?): Intent {
-        var intent = Intent(Intent.ACTION_SEND_MULTIPLE)
-        intent.putExtra(Intent.EXTRA_TEXT, content)
-        intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris)
-        intent.type = "image/*"
+    fun getShareIntent(text: String = "", vararg imageUris: Uri): Intent {
+        return getShareIntent(text, ArrayList(imageUris.toMutableList()))
+    }
+
+    fun getShareIntent(text: String = "", imageUris: ArrayList<Uri>): Intent {
+        var intent = Intent(Intent.ACTION_SEND)
+        if (text.isNotBlank()) intent.putExtra(Intent.EXTRA_TEXT, text)
+        when {
+            imageUris.isEmpty() -> {
+                intent.type = "text/plain"
+            }
+            imageUris.size == 1 -> {
+                intent.putExtra(Intent.EXTRA_STREAM, imageUris[0])
+                intent.type = "image/*"
+            }
+            else -> {
+                intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, imageUris)
+                intent.type = "image/*"
+            }
+        }
         intent = Intent.createChooser(intent, "")
         return getIntent(intent, true)
     }
+
 
     /**
      * Return the intent of component.

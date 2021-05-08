@@ -79,7 +79,7 @@ class XPermissions private constructor(private val mActivity: FragmentActivity) 
         /** 调试模式  */
         @JvmStatic
         var debugMode: Boolean =
-            (Utils.app.applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE) != 0
+            (Utils.applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE) != 0
             private set
 
         fun init(debugMode: Boolean, permissionInterceptor: PermissionInterceptor) {

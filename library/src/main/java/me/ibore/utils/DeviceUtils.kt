@@ -417,8 +417,8 @@ object DeviceUtils {
         if (udid == null) {
             synchronized(DeviceUtils::class.java) {
                 if (udid == null) {
-                    val id = Utils.SP.getString(KEY_UDID, null)
-                    if (id != null) {
+                    val id = Utils.SP.getString(KEY_UDID, "")
+                    if (id.isEmpty()) {
                         udid = id
                         return udid!!
                     }
@@ -445,7 +445,7 @@ object DeviceUtils {
         // {prefix}{type}{32id}
         if (TextUtils.isEmpty(uniqueDeviceId) && uniqueDeviceId.length < 33) return false
         if (uniqueDeviceId == udid) return true
-        val cachedId = Utils.SP.getString(KEY_UDID, null)
+        val cachedId = Utils.SP.getString(KEY_UDID, "")
         if (uniqueDeviceId == cachedId) return true
         val st = uniqueDeviceId.length - 33
         val type = uniqueDeviceId.substring(st, st + 1)

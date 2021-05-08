@@ -27,7 +27,7 @@ object MapUtils {
     @SafeVarargs
     fun <K, V> newHashMap(vararg pairs: Pair<K, V>?): HashMap<K, V> {
         val map = HashMap<K, V>()
-        if (pairs == null || pairs.size == 0) {
+        if (pairs.isEmpty()) {
             return map
         }
         for (pair in pairs) {

@@ -13,13 +13,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Parcelable
 import android.view.View
-import androidx.annotation.LayoutRes
-import androidx.annotation.RequiresPermission
-import androidx.annotation.StringRes
 import androidx.core.app.NotificationCompat
-import me.ibore.utils.AdaptScreenUtils.preLoadRunnable
-import me.ibore.utils.AppUtils.appVersionCode
-import me.ibore.utils.AppUtils.appVersionName
 import me.ibore.utils.NotificationUtils.ChannelConfig
 import me.ibore.utils.ShellUtils.CommandResult
 import me.ibore.utils.Utils.OnAppStatusChangedListener
@@ -40,11 +34,6 @@ import java.util.*
 </pre> *
  */
 internal object UtilsBridge {
-
-    @JvmStatic
-    fun preLoad() {
-        preLoad(preLoadRunnable)
-    }
 
     @JvmStatic
     fun addOnAppStatusChangedListener(listener: OnAppStatusChangedListener) {
@@ -125,28 +114,6 @@ internal object UtilsBridge {
     @JvmStatic
     fun finishAllActivities() {
         ActivityUtils.finishAllActivities()
-    }
-
-    ///////////////////////////////////////////////////////////////////////////
-    // AppUtils
-    ///////////////////////////////////////////////////////////////////////////
-    @JvmStatic
-    fun isAppRunning(pkgName: String): Boolean {
-        return AppUtils.isAppRunning(pkgName)
-    }
-
-    @JvmStatic
-    fun isAppInstalled(pkgName: String?): Boolean {
-        return AppUtils.isAppInstalled(pkgName)
-    }
-
-    @JvmStatic
-    val isAppDebug: Boolean
-        get() = AppUtils.isAppDebug
-
-    @JvmStatic
-    fun relaunchApp() {
-        AppUtils.relaunchApp()
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -258,32 +225,6 @@ internal object UtilsBridge {
     }
 
     ///////////////////////////////////////////////////////////////////////////
-    // FileIOUtils
-    ///////////////////////////////////////////////////////////////////////////
-    @JvmStatic
-    fun writeFileFromBytes(
-        file: File?,
-        bytes: ByteArray?
-    ): Boolean {
-        return FileIOUtils.writeFileFromBytesByChannel(file, bytes, true)
-    }
-
-    @JvmStatic
-    fun readFile2Bytes(file: File?): ByteArray? {
-        return FileIOUtils.readFile2BytesByChannel(file)
-    }
-
-    @JvmStatic
-    fun writeFileFromString(filePath: String?, content: String?, append: Boolean): Boolean {
-        return FileIOUtils.writeFileFromString(filePath, content, append)
-    }
-
-    @JvmStatic
-    fun writeFileFromIS(filePath: String?, inputStream: InputStream?): Boolean {
-        return FileIOUtils.writeFileFromIS(filePath, inputStream)
-    }
-
-    ///////////////////////////////////////////////////////////////////////////
     // ImageUtils
     ///////////////////////////////////////////////////////////////////////////
     @JvmStatic
@@ -331,59 +272,6 @@ internal object UtilsBridge {
         return ImageUtils.bitmap2Drawable(bitmap)
     }
 
-    ///////////////////////////////////////////////////////////////////////////
-    // IntentUtils
-    ///////////////////////////////////////////////////////////////////////////
-    @JvmStatic
-    fun isIntentAvailable(intent: Intent?): Boolean {
-        return IntentUtils.isIntentAvailable(intent)
-    }
-
-    @JvmStatic
-    fun getLaunchAppIntent(pkgName: String): Intent? {
-        return IntentUtils.getLaunchAppIntent(pkgName)
-    }
-
-    @JvmStatic
-    fun getInstallAppIntent(file: File?): Intent? {
-        return IntentUtils.getInstallAppIntent(file)
-    }
-
-
-
-    @JvmStatic
-    fun getUninstallAppIntent(pkgName: String?): Intent {
-        return IntentUtils.getUninstallAppIntent(pkgName)
-    }
-
-    @JvmStatic
-    fun getDialIntent(phoneNumber: String?): Intent {
-        return IntentUtils.getDialIntent(phoneNumber)
-    }
-
-    @JvmStatic
-    @RequiresPermission(permission.CALL_PHONE)
-    fun getCallIntent(phoneNumber: String?): Intent {
-        return IntentUtils.getCallIntent(phoneNumber)
-    }
-
-    @JvmStatic
-    fun getSendSmsIntent(phoneNumber: String?, content: String?): Intent {
-        return IntentUtils.getSendSmsIntent(phoneNumber, content)
-    }
-
-    @JvmStatic
-    fun getLaunchAppDetailsSettingsIntent(pkgName: String?, isNewTask: Boolean): Intent {
-        return IntentUtils.getLaunchAppDetailsSettingsIntent(pkgName, isNewTask)
-    }
-
-    ///////////////////////////////////////////////////////////////////////////
-    // JsonUtils
-    ///////////////////////////////////////////////////////////////////////////
-    @JvmStatic
-    fun formatJson(json: String): String {
-        return JsonUtils.formatJson(json)
-    }
 
     ///////////////////////////////////////////////////////////////////////////
     // KeyboardUtils
@@ -520,8 +408,8 @@ internal object UtilsBridge {
             sb.append("Device Model       : ").append(Build.MODEL).append("\n")
             sb.append("Android Version    : ").append(Build.VERSION.RELEASE).append("\n")
             sb.append("Android SDK        : ").append(Build.VERSION.SDK_INT).append("\n")
-            sb.append("App VersionName    : ").append(appVersionName).append("\n")
-            sb.append("App VersionCode    : ").append(appVersionCode).append("\n")
+            sb.append("App VersionName    : ").append(AppUtils.getAppVersionName()).append("\n")
+            sb.append("App VersionCode    : ").append(AppUtils.getAppVersionCode()).append("\n")
             sb.append(appended)
             return sb.append(border).append("\n").toString()
         }

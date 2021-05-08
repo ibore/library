@@ -6,11 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import androidx.annotation.IntDef
-import androidx.core.text.TextUtilsCompat
 import androidx.core.view.*
 import me.ibore.R
-import me.ibore.ktx.activity
 import me.ibore.ktx.dp2px
+import me.ibore.ktx.getActivity
 import me.ibore.ktx.isLayoutRtl
 import me.ibore.utils.BarUtils
 import java.util.*
@@ -98,7 +97,7 @@ class TitleBar @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
             val childLp = child.layoutParams as LayoutParams
             val titleBackPress = childLp.titleBackPress
             if (titleBackPress ) {
-                context.activity?.apply { child.setOnClickListener { onBackPressed() } }
+                context.getActivity()?.apply { child.setOnClickListener { onBackPressed() } }
             }
             val titleType = childLp.titleType
             if (titleType == TITLE) {

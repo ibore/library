@@ -66,7 +66,7 @@ object ProcessUtils {
                     return ""
                 }
                 try { // Access to usage information.
-                    val info = pm.getApplicationInfo(Utils.app.packageName, 0)
+                    val info = pm.getApplicationInfo(Utils.packageName, 0)
                     val aom = Utils.app
                         .getSystemService(Context.APP_OPS_SERVICE) as AppOpsManager
                     if (aom.checkOpNoThrow(
@@ -202,7 +202,7 @@ object ProcessUtils {
      * @return `true`: yes<br></br>`false`: no
      */
     val isMainProcess: Boolean
-        get() = Utils.app.packageName == currentProcessName
+        get() = Utils.packageName == currentProcessName
 
     /**
      * Return the name of current process.

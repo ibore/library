@@ -193,9 +193,7 @@ object CacheDiskStaticUtils {
      */
     @JvmOverloads
     fun put(
-        key: String,
-        value: Bitmap?,
-        saveTime: Int = -1,
+        key: String, value: Bitmap?, saveTime: Int = -1,
         cacheDiskUtils: CacheDiskUtils = defaultCacheDiskUtils
     ) {
         cacheDiskUtils.put(key, value, saveTime)

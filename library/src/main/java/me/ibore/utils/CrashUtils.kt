@@ -4,8 +4,7 @@ import android.annotation.SuppressLint
 import me.ibore.utils.Utils.app
 import me.ibore.utils.UtilsBridge.FileHead
 import me.ibore.utils.UtilsBridge.isSpace
-import me.ibore.utils.UtilsBridge.writeFileFromString
-import java.io.File
+ import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -86,7 +85,7 @@ object CrashUtils {
             val info = CrashInfo(time, e)
             onCrashListener?.onCrash(info)
             val crashFile = "$dirPath$time.txt"
-            writeFileFromString(crashFile, info.toString(), true)
+            FileIOUtils.writeFileFromString(crashFile, info.toString(), true)
             DEFAULT_UNCAUGHT_EXCEPTION_HANDLER?.uncaughtException(t, e)
         }
     }

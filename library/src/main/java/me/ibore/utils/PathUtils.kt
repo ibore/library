@@ -95,7 +95,7 @@ object PathUtils {
      */
     val internalAppDataPath: String
         get() = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
-            Utils.app.applicationInfo.dataDir
+            Utils.applicationInfo.dataDir
         } else getAbsolutePath(Utils.app.dataDir)
 
     /**
@@ -105,7 +105,7 @@ object PathUtils {
      */
     val internalAppCodeCacheDir: String
         get() = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            Utils.app.applicationInfo.dataDir + "/code_cache"
+            Utils.applicationInfo.dataDir + "/code_cache"
         } else getAbsolutePath(Utils.app.codeCacheDir)
 
     /**
@@ -122,7 +122,7 @@ object PathUtils {
      * @return the path of /data/data/package/databases
      */
     val internalAppDbsPath: String
-        get() = Utils.app.applicationInfo.dataDir + "/databases"
+        get() = Utils.applicationInfo.dataDir + "/databases"
 
     /**
      * Return the path of /data/data/package/databases/name.
@@ -148,7 +148,7 @@ object PathUtils {
      * @return the path of /data/data/package/shared_prefs
      */
     val internalAppSpPath: String
-        get() = Utils.app.applicationInfo.dataDir + "/shared_prefs"
+        get() = Utils.applicationInfo.dataDir + "/shared_prefs"
 
     /**
      * Return the path of /data/data/package/no_backup.
@@ -157,7 +157,7 @@ object PathUtils {
      */
     val internalAppNoBackupFilesPath: String
         get() = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            Utils.app.applicationInfo.dataDir + "/no_backup"
+            Utils.applicationInfo.dataDir + "/no_backup"
         } else getAbsolutePath(Utils.app.noBackupFilesDir)
 
     /**

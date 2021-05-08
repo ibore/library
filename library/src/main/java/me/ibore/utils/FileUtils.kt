@@ -411,7 +411,7 @@ object FileUtils {
             }
         }
         return if (!createOrExistsDir(destFile.parentFile)) false else try {
-            (UtilsBridge.writeFileFromIS(destFile.absolutePath, FileInputStream(srcFile))
+            (FileIOUtils.writeFileFromIS(destFile.absolutePath, FileInputStream(srcFile))
                     && !(isMove && !deleteFile(srcFile)))
         } catch (e: FileNotFoundException) {
             e.printStackTrace()

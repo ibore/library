@@ -15,7 +15,6 @@ import androidx.appcompat.widget.AppCompatTextView
 import me.ibore.R
 import me.ibore.ktx.dp2px
 import me.ibore.utils.TimeUtils
-import me.ibore.utils.UIUtils
 import java.text.SimpleDateFormat
 
 class TimerPickerView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0):
@@ -202,7 +201,7 @@ class TimerPickerView @JvmOverloads constructor(context: Context, attrs: Attribu
                 selectMinute = selectedTimers[1].toInt()
                 field = value
             } catch (e: Exception) {
-                field = TimeUtils.getNowString(SimpleDateFormat("HH:mm"))
+                field = TimeUtils.nowString(SimpleDateFormat("HH:mm"))
                 val selectedTimers = field.split(":")
                 selectHour = selectedTimers[0].toInt()
                 selectMinute = selectedTimers[1].toInt()

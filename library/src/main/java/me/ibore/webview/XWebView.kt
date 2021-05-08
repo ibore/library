@@ -8,6 +8,7 @@ import android.util.AttributeSet
 import android.view.ViewGroup
 import android.webkit.*
 import androidx.fragment.app.Fragment
+import me.ibore.ktx.getActivity
 import java.lang.ref.WeakReference
 
 class XWebView : WebView {
@@ -32,7 +33,7 @@ class XWebView : WebView {
 
     init {
         XWebViewSettings.setSettings(this, context)
-        mActivity = WeakReference(ContextUtils.getXActivity(context)!!)
+        mActivity = WeakReference(context.getActivity()!!)
         setDownloadListener { url, userAgent, contentDisposition, mimeType, contentLength ->
             val suggestedFilename = URLUtil.guessFileName(url, contentDisposition, mimeType)
             mXWebViewListener?.onDownload(url, suggestedFilename, userAgent, contentDisposition, mimeType, contentLength)

@@ -18,12 +18,6 @@ import me.ibore.ktx.dp2px
 object UIUtils {
 
 
-
-
-    fun generateViewId(): Int {
-        return ViewCompat.generateViewId()
-    }
-
     fun getDisplayMetrics(context: Context): DisplayMetrics {
         val activity: Activity = if (context !is Activity && context is ContextWrapper) {
             context.baseContext as Activity

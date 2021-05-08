@@ -11,6 +11,7 @@ package me.ibore.utils
 </pre> *
  */
 object TemperatureUtils {
+
     fun cToF(temp: Float): Float {
         return temp * 9 / 5 + 32
     }

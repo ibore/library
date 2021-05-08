@@ -20,7 +20,7 @@ object ClipboardUtils {
     @JvmOverloads
     fun copyText(
         text: CharSequence?,
-        label: CharSequence = Utils.app.packageName,
+        label: CharSequence = Utils.packageName,
         context: Context = Utils.app
     ) {
         val cm = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager

@@ -24,7 +24,7 @@ object MetaDataUtils {
     fun getMetaDataInApp(key: String): String {
         var value = ""
         val pm = Utils.packageManager
-        val packageName = Utils.app.packageName
+        val packageName = Utils.packageName
         try {
             val ai = pm.getApplicationInfo(packageName, PackageManager.GET_META_DATA)
             value = ai.metaData[key].toString()

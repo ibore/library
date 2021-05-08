@@ -1,5 +1,6 @@
 package me.ibore.utils
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.ActivityManager
 import android.content.Context
@@ -9,10 +10,11 @@ import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Build
 import android.os.Process
-import android.util.Log
+import me.ibore.ktx.logD
 import me.ibore.utils.Utils.OnAppStatusChangedListener
 import java.io.File
 import java.util.*
+import kotlin.system.exitProcess
 
 /**
  * <pre>
@@ -93,9 +95,10 @@ object AppUtils  {
      *
      * @param packageName The name of the package.
      */
-    fun uninstallApp(packageName: String?) {
-        if (UtilsBridge.isSpace(packageName)) return
-        Utils.app.startActivity(UtilsBridge.getUninstallAppIntent(packageName))
+    @JvmStatic
+    fun uninstallApp(packageName: String) {
+        if (packageName.isBlank()) return
+        Utils.app.startActivity(IntentUtils.getUninstallAppIntent(packageName))
     }
 
     /**
@@ -105,11 +108,11 @@ object AppUtils  {
      * @return `true`: yes<br></br>`false`: no
      */
     @JvmStatic
-    fun isAppInstalled(pkgName: String?): Boolean {
-        if (UtilsBridge.isSpace(pkgName)) return false
+    fun isAppInstalled(pkgName: String): Boolean {
+        if (pkgName.isBlank()) return false
         val pm = Utils.packageManager
         return try {
-            pm.getApplicationInfo(pkgName!!, 0).enabled
+            pm.getApplicationInfo(pkgName, 0).enabled
         } catch (e: PackageManager.NameNotFoundException) {
             false
         }
@@ -129,41 +132,29 @@ object AppUtils  {
     /**
      * Return whether it is a debug application.
      *
-     * @return `true`: yes<br></br>`false`: no
-     */
-    val isAppDebug: Boolean
-        get() = isAppDebug(Utils.app.packageName)
-
-    /**
-     * Return whether it is a debug application.
-     *
      * @param packageName The name of the package.
      * @return `true`: yes<br></br>`false`: no
      */
-    fun isAppDebug(packageName: String?): Boolean {
-        if (UtilsBridge.isSpace(packageName)) return false
-        val ai = Utils.app.applicationInfo
-        return ai != null && ai.flags and ApplicationInfo.FLAG_DEBUGGABLE != 0
+    @JvmStatic
+    @JvmOverloads
+    fun isAppDebug(packageName: String = Utils.packageName): Boolean {
+        if (packageName.isBlank()) return false
+        val ai = Utils.applicationInfo
+        return ai.flags and ApplicationInfo.FLAG_DEBUGGABLE != 0
     }
 
     /**
      * Return whether it is a system application.
      *
-     * @return `true`: yes<br></br>`false`: no
-     */
-    val isAppSystem: Boolean
-        get() = isAppSystem(Utils.app.packageName)
-
-    /**
-     * Return whether it is a system application.
-     *
      * @param packageName The name of the package.
      * @return `true`: yes<br></br>`false`: no
      */
-    fun isAppSystem(packageName: String?): Boolean {
-        return if (UtilsBridge.isSpace(packageName)) false else try {
+    @JvmStatic
+    @JvmOverloads
+    fun isAppSystem(packageName: String = Utils.packageName): Boolean {
+        return if (packageName.isBlank()) false else try {
             val pm = Utils.packageManager
-            val ai : ApplicationInfo = pm.getApplicationInfo(packageName!!, 0)
+            val ai: ApplicationInfo = pm.getApplicationInfo(packageName, 0)
             ai.flags and ApplicationInfo.FLAG_SYSTEM != 0
         } catch (e: PackageManager.NameNotFoundException) {
             e.printStackTrace()
@@ -174,21 +165,15 @@ object AppUtils  {
     /**
      * Return whether application is foreground.
      *
-     * @return `true`: yes<br></br>`false`: no
-     */
-    val isAppForeground: Boolean
-        get() = UtilsBridge.isAppForeground
-
-    /**
-     * Return whether application is foreground.
-     *
      * Target APIs greater than 21 must hold
      * `<uses-permission android:name="android.permission.PACKAGE_USAGE_STATS" />`
      *
      * @param pkgName The name of the package.
      * @return `true`: yes<br></br>`false`: no
      */
-    fun isAppForeground(pkgName: String): Boolean {
+    @JvmStatic
+    @JvmOverloads
+    fun isAppForeground(pkgName: String= Utils.packageName): Boolean {
         return !UtilsBridge.isSpace(pkgName) && pkgName == UtilsBridge.foregroundProcessName
     }
 
@@ -199,9 +184,10 @@ object AppUtils  {
      * @return `true`: yes<br></br>`false`: no
      */
     @JvmStatic
-    fun isAppRunning(pkgName: String): Boolean {
+    @JvmOverloads
+    fun isAppRunning(pkgName: String = Utils.packageName): Boolean {
         if (UtilsBridge.isSpace(pkgName)) return false
-        val ai = Utils.app.applicationInfo
+        val ai = Utils.applicationInfo
         val uid = ai.uid
         val am = Utils.app.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager?
         if (am != null) {
@@ -232,25 +218,29 @@ object AppUtils  {
      *
      * @param packageName The name of the package.
      */
-    fun launchApp(packageName: String) {
-        if (UtilsBridge.isSpace(packageName)) return
-        val launchAppIntent = UtilsBridge.getLaunchAppIntent(packageName)
+    @JvmStatic
+    @JvmOverloads
+    fun launchApp(packageName: String = Utils.packageName) {
+        if (packageName.isBlank()) return
+        val launchAppIntent = IntentUtils.getLaunchAppIntent(packageName)
         if (launchAppIntent == null) {
-            Log.e("AppUtils", "Didn't exist launcher activity.")
+            logD("Didn't exist launcher activity.")
             return
         }
         Utils.app.startActivity(launchAppIntent)
     }
+
     /**
      * Relaunch the application.
      *
      * @param isKillProcess True to kill the process, false otherwise.
      */
+    @JvmStatic
     @JvmOverloads
     fun relaunchApp(isKillProcess: Boolean = false) {
-        val intent = UtilsBridge.getLaunchAppIntent(Utils.app.packageName)
+        val intent = IntentUtils.getLaunchAppIntent(Utils.packageName)
         if (intent == null) {
-            Log.e("AppUtils", "Didn't exist launcher activity.")
+            logD("Didn't exist launcher activity.")
             return
         }
         intent.addFlags(
@@ -260,7 +250,7 @@ object AppUtils  {
         Utils.app.startActivity(intent)
         if (!isKillProcess) return
         Process.killProcess(Process.myPid())
-        System.exit(0)
+        exitProcess(0)
     }
     /**
      * Launch the application's details settings.
@@ -270,13 +260,15 @@ object AppUtils  {
     /**
      * Launch the application's details settings.
      */
+    @JvmStatic
     @JvmOverloads
-    fun launchAppDetailsSettings(pkgName: String? = Utils.app.packageName) {
-        if (UtilsBridge.isSpace(pkgName)) return
-        val intent = UtilsBridge.getLaunchAppDetailsSettingsIntent(pkgName, true)
-        if (!UtilsBridge.isIntentAvailable(intent)) return
+    fun launchAppDetailsSettings(pkgName: String = Utils.packageName) {
+        if (pkgName.isBlank()) return
+        val intent = IntentUtils.getLaunchAppDetailsSettingsIntent(pkgName, true)
+        if (!IntentUtils.isIntentAvailable(intent)) return
         Utils.app.startActivity(intent)
     }
+
     /**
      * Launch the application's details settings.
      *
@@ -286,13 +278,12 @@ object AppUtils  {
      */
     @JvmOverloads
     fun launchAppDetailsSettings(
-        activity: Activity?,
-        requestCode: Int,
-        pkgName: String? = Utils.app.packageName
+        activity: Activity, requestCode: Int,
+        pkgName: String = Utils.packageName
     ) {
-        if (activity == null || UtilsBridge.isSpace(pkgName)) return
-        val intent = UtilsBridge.getLaunchAppDetailsSettingsIntent(pkgName, false)
-        if (!UtilsBridge.isIntentAvailable(intent)) return
+        if (pkgName.isBlank()) return
+        val intent = IntentUtils.getLaunchAppDetailsSettingsIntent(pkgName, false)
+        if (!IntentUtils.isIntentAvailable(intent)) return
         activity.startActivityForResult(intent, requestCode)
     }
 
@@ -300,17 +291,9 @@ object AppUtils  {
      * Exit the application.
      */
     fun exitApp() {
-        UtilsBridge.finishAllActivities()
-        System.exit(0)
+        ActivityUtils.finishAllActivities()
+        exitProcess(0)
     }
-
-    /**
-     * Return the application's icon.
-     *
-     * @return the application's icon
-     */
-    val appIcon: Drawable?
-        get() = getAppIcon(Utils.app.packageName)
 
     /**
      * Return the application's icon.
@@ -318,10 +301,12 @@ object AppUtils  {
      * @param packageName The name of the package.
      * @return the application's icon
      */
-    fun getAppIcon(packageName: String?): Drawable? {
-        return if (UtilsBridge.isSpace(packageName)) null else try {
+    @JvmStatic
+    @JvmOverloads
+    fun getAppIcon(packageName: String = Utils.packageName): Drawable? {
+        return if (packageName.isBlank()) null else try {
             val pm = Utils.packageManager
-            val pi = pm.getPackageInfo(packageName!!, 0)
+            val pi = pm.getPackageInfo(packageName, 0)
             pi?.applicationInfo?.loadIcon(pm)
         } catch (e: PackageManager.NameNotFoundException) {
             e.printStackTrace()
@@ -332,21 +317,15 @@ object AppUtils  {
     /**
      * Return the application's icon resource identifier.
      *
-     * @return the application's icon resource identifier
-     */
-    val appIconId: Int
-        get() = getAppIconId(Utils.app.packageName)
-
-    /**
-     * Return the application's icon resource identifier.
-     *
      * @param packageName The name of the package.
      * @return the application's icon resource identifier
      */
-    fun getAppIconId(packageName: String?): Int {
-        return if (UtilsBridge.isSpace(packageName)) 0 else try {
+    @JvmStatic
+    @JvmOverloads
+    fun getAppIconId(packageName: String = Utils.packageName): Int {
+        return if (packageName.isBlank()) 0 else try {
             val pm = Utils.packageManager
-            val pi = pm.getPackageInfo(packageName!!, 0)
+            val pi = pm.getPackageInfo(packageName, 0)
             pi?.applicationInfo?.icon ?: 0
         } catch (e: PackageManager.NameNotFoundException) {
             e.printStackTrace()
@@ -360,15 +339,7 @@ object AppUtils  {
      * @return the application's package name
      */
     val appPackageName: String
-        get() = Utils.app.packageName
-
-    /**
-     * Return the application's name.
-     *
-     * @return the application's name
-     */
-    val appName: String?
-        get() = getAppName(Utils.app.packageName)
+        get() = Utils.packageName
 
     /**
      * Return the application's name.
@@ -376,11 +347,13 @@ object AppUtils  {
      * @param packageName The name of the package.
      * @return the application's name
      */
-    fun getAppName(packageName: String?): String? {
-        return if (UtilsBridge.isSpace(packageName)) "" else try {
+    @JvmStatic
+    @JvmOverloads
+    fun getAppName(packageName: String = Utils.packageName): String {
+        return if (packageName.isBlank()) "" else try {
             val pm = Utils.packageManager
-            val pi = pm.getPackageInfo(packageName!!, 0)
-            pi?.applicationInfo?.loadLabel(pm)?.toString()
+            val pi = pm.getPackageInfo(packageName, 0)
+            pi?.applicationInfo?.loadLabel(pm)?.toString() ?: ""
         } catch (e: PackageManager.NameNotFoundException) {
             e.printStackTrace()
             ""
@@ -390,21 +363,15 @@ object AppUtils  {
     /**
      * Return the application's path.
      *
-     * @return the application's path
-     */
-    val appPath: String?
-        get() = getAppPath(Utils.app.packageName)
-
-    /**
-     * Return the application's path.
-     *
      * @param packageName The name of the package.
      * @return the application's path
      */
-    fun getAppPath(packageName: String?): String? {
-        return if (UtilsBridge.isSpace(packageName)) "" else try {
+    @JvmStatic
+    @JvmOverloads
+    fun getAppPath(packageName: String = Utils.packageName): String? {
+        return if (packageName.isBlank()) "" else try {
             val pm = Utils.packageManager
-            val pi = pm.getPackageInfo(packageName!!, 0)
+            val pi = pm.getPackageInfo(packageName, 0)
             pi?.applicationInfo?.sourceDir
         } catch (e: PackageManager.NameNotFoundException) {
             e.printStackTrace()
@@ -415,22 +382,16 @@ object AppUtils  {
     /**
      * Return the application's version name.
      *
-     * @return the application's version name
-     */
-    val appVersionName: String?
-        get() = getAppVersionName(Utils.app.packageName)
-
-    /**
-     * Return the application's version name.
-     *
      * @param packageName The name of the package.
      * @return the application's version name
      */
-    fun getAppVersionName(packageName: String?): String? {
-        return if (UtilsBridge.isSpace(packageName)) "" else try {
+    @JvmStatic
+    @JvmOverloads
+    fun getAppVersionName(packageName: String = Utils.packageName): String {
+        return if (packageName.isBlank()) "" else try {
             val pm = Utils.packageManager
-            val pi = pm.getPackageInfo(packageName!!, 0)
-            pi?.versionName
+            val pi = pm.getPackageInfo(packageName, 0)
+            pi?.versionName ?: ""
         } catch (e: PackageManager.NameNotFoundException) {
             e.printStackTrace()
             ""
@@ -440,21 +401,15 @@ object AppUtils  {
     /**
      * Return the application's version code.
      *
-     * @return the application's version code
-     */
-    val appVersionCode: Int
-        get() = getAppVersionCode(Utils.app.packageName)
-
-    /**
-     * Return the application's version code.
-     *
      * @param packageName The name of the package.
      * @return the application's version code
      */
-    fun getAppVersionCode(packageName: String?): Int {
-        return if (UtilsBridge.isSpace(packageName)) -1 else try {
+    @JvmStatic
+    @JvmOverloads
+    fun getAppVersionCode(packageName: String = Utils.packageName): Int {
+        return if (packageName.isBlank()) -1 else try {
             val pm = Utils.packageManager
-            val pi = pm.getPackageInfo(packageName!!, 0)
+            val pi = pm.getPackageInfo(packageName, 0)
             pi?.versionCode ?: -1
         } catch (e: PackageManager.NameNotFoundException) {
             e.printStackTrace()
@@ -465,23 +420,18 @@ object AppUtils  {
     /**
      * Return the application's signature.
      *
-     * @return the application's signature
-     */
-    val appSignatures: Array<Signature>?
-        get() = getAppSignatures(Utils.app.packageName)
-
-    /**
-     * Return the application's signature.
-     *
      * @param packageName The name of the package.
      * @return the application's signature
      */
-    fun getAppSignatures(packageName: String?): Array<Signature>? {
-        return if (UtilsBridge.isSpace(packageName)) null else try {
+    @SuppressLint("PackageManagerGetSignatures")
+    @JvmStatic
+    @JvmOverloads
+    fun getAppSignatures(packageName: String = Utils.packageName): Array<Signature>? {
+        return if (packageName.isBlank()) null else try {
             val pm = Utils.packageManager
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                 val pi =
-                    pm.getPackageInfo(packageName!!, PackageManager.GET_SIGNING_CERTIFICATES)
+                    pm.getPackageInfo(packageName, PackageManager.GET_SIGNING_CERTIFICATES)
                         ?: return null
                 val signingInfo = pi.signingInfo
                 if (signingInfo.hasMultipleSigners()) {
@@ -490,9 +440,8 @@ object AppUtils  {
                     signingInfo.signingCertificateHistory
                 }
             } else {
-                val pi = pm.getPackageInfo(packageName!!, PackageManager.GET_SIGNATURES)
-                    ?: return null
-                pi.signatures
+                val pi = pm.getPackageInfo(packageName, PackageManager.GET_SIGNATURES)
+                pi?.signatures ?: return null
             }
         } catch (e: PackageManager.NameNotFoundException) {
             e.printStackTrace()
@@ -506,8 +455,7 @@ object AppUtils  {
      * @param file The file.
      * @return the application's signature
      */
-    fun getAppSignatures(file: File?): Array<Signature>? {
-        if (file == null) return null
+    fun getAppSignatures(file: File): Array<Signature>? {
         val pm = Utils.packageManager
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             val pi =
@@ -532,54 +480,36 @@ object AppUtils  {
     /**
      * Return the application's signature for SHA1 value.
      *
-     * @return the application's signature for SHA1 value
-     */
-    val appSignaturesSHA1: List<String>
-        get() = getAppSignaturesSHA1(Utils.app.packageName)
-
-    /**
-     * Return the application's signature for SHA1 value.
-     *
      * @param packageName The name of the package.
      * @return the application's signature for SHA1 value
      */
-    fun getAppSignaturesSHA1(packageName: String): List<String> {
+    @JvmStatic
+    @JvmOverloads
+    fun getAppSignaturesSHA1(packageName: String = Utils.packageName): List<String> {
         return getAppSignaturesHash(packageName, "SHA1")
     }
 
     /**
      * Return the application's signature for SHA256 value.
      *
-     * @return the application's signature for SHA256 value
-     */
-    val appSignaturesSHA256: List<String>
-        get() = getAppSignaturesSHA256(Utils.app.packageName)
-
-    /**
-     * Return the application's signature for SHA256 value.
-     *
      * @param packageName The name of the package.
      * @return the application's signature for SHA256 value
      */
-    fun getAppSignaturesSHA256(packageName: String): List<String> {
+    @JvmStatic
+    @JvmOverloads
+    fun getAppSignaturesSHA256(packageName: String = Utils.packageName): List<String> {
         return getAppSignaturesHash(packageName, "SHA256")
     }
 
     /**
      * Return the application's signature for MD5 value.
      *
-     * @return the application's signature for MD5 value
-     */
-    val appSignaturesMD5: List<String>
-        get() = getAppSignaturesMD5(Utils.app.packageName)
-
-    /**
-     * Return the application's signature for MD5 value.
-     *
      * @param packageName The name of the package.
      * @return the application's signature for MD5 value
      */
-    fun getAppSignaturesMD5(packageName: String): List<String> {
+    @JvmStatic
+    @JvmOverloads
+    fun getAppSignaturesMD5(packageName: String = Utils.packageName): List<String> {
         return getAppSignaturesHash(packageName, "MD5")
     }
 
@@ -591,7 +521,7 @@ object AppUtils  {
      */
     @JvmStatic
     @JvmOverloads
-    fun getAppUid(pkgName: String = Utils.app.packageName): Int {
+    fun getAppUid(pkgName: String = Utils.packageName): Int {
         return try {
             Utils.packageManager.getApplicationInfo(pkgName, 0).uid
         } catch (e: Exception) {
@@ -602,17 +532,13 @@ object AppUtils  {
 
     private fun getAppSignaturesHash(packageName: String, algorithm: String): List<String> {
         val result = ArrayList<String>()
-        if (UtilsBridge.isSpace(packageName)) return result
+        if (packageName.isBlank()) return result
         val signatures = getAppSignatures(packageName)
         if (signatures == null || signatures.isEmpty()) return result
         for (signature in signatures) {
             val hash = UtilsBridge.bytes2HexString(
-                EncryptUtils.hashTemplate(
-                    signature.toByteArray(),
-                    algorithm
-                )
-            )
-                .replace("(?<=[0-9A-F]{2})[0-9A-F]{2}".toRegex(), ":$0")
+                EncryptUtils.hashTemplate(signature.toByteArray(), algorithm)
+            ).replace("(?<=[0-9A-F]{2})[0-9A-F]{2}".toRegex(), ":$0")
             result.add(hash)
         }
         return result
@@ -630,30 +556,15 @@ object AppUtils  {
      *  * is system
      *
      *
-     * @return the application's information
-     */
-    val appInfo: AppInfo?
-        get() = getAppInfo(Utils.app.packageName)
-
-    /**
-     * Return the application's information.
-     *
-     *  * name of package
-     *  * icon
-     *  * name
-     *  * path of package
-     *  * version name
-     *  * version code
-     *  * is system
-     *
-     *
      * @param packageName The name of the package.
      * @return the application's information
      */
-    fun getAppInfo(packageName: String?): AppInfo? {
+    @JvmStatic
+    @JvmOverloads
+    fun getAppInfo(packageName: String = Utils.packageName): AppInfo? {
         return try {
-            val pm = Utils.packageManager ?: return null
-            getBean(pm, pm.getPackageInfo(packageName!!, 0))
+            val pm = Utils.packageManager
+            getBean(pm, pm.getPackageInfo(packageName, 0))
         } catch (e: PackageManager.NameNotFoundException) {
             e.printStackTrace()
             null
@@ -665,27 +576,17 @@ object AppUtils  {
      *
      * @return the applications' information
      */
-    val appsInfo: List<AppInfo>
-        get() {
-            val list: MutableList<AppInfo> = ArrayList()
-            val pm = Utils.packageManager ?: return list
-            val installedPackages = pm.getInstalledPackages(0)
-            for (pi in installedPackages) {
-                val ai = getBean(pm, pi) ?: continue
-                list.add(ai)
-            }
-            return list
+    @JvmStatic
+    @SuppressLint("QueryPermissionsNeeded")
+    fun getAppInfo(): List<AppInfo> {
+        val list: MutableList<AppInfo> = ArrayList()
+        val pm = Utils.packageManager
+        val installedPackages = pm.getInstalledPackages(0)
+        for (pi in installedPackages) {
+            val ai = getBean(pm, pi) ?: continue
+            list.add(ai)
         }
-
-    /**
-     * Return the application's package information.
-     *
-     * @return the application's package information
-     */
-    fun getApkInfo(apkFile: File?): AppInfo? {
-        return if (apkFile == null || !apkFile.isFile || !apkFile.exists()) null else getApkInfo(
-            apkFile.absolutePath
-        )
+        return list
     }
 
     /**
@@ -693,16 +594,29 @@ object AppUtils  {
      *
      * @return the application's package information
      */
-    fun getApkInfo(apkFilePath: String?): AppInfo? {
-        if (UtilsBridge.isSpace(apkFilePath)) return null
-        val pm = Utils.packageManager ?: return null
-        val pi = pm.getPackageArchiveInfo(apkFilePath!!, 0) ?: return null
+    @JvmStatic
+    fun getApkInfo(apkFile: File): AppInfo? {
+        return if (!apkFile.isFile || !apkFile.exists()) null
+        else getApkInfo(apkFile.absolutePath)
+    }
+
+    /**
+     * Return the application's package information.
+     *
+     * @return the application's package information
+     */
+    @JvmStatic
+    fun getApkInfo(apkFilePath: String): AppInfo? {
+        if (apkFilePath.isBlank()) return null
+        val pm = Utils.packageManager
+        val pi = pm.getPackageArchiveInfo(apkFilePath, 0) ?: return null
         val appInfo = pi.applicationInfo
         appInfo.sourceDir = apkFilePath
         appInfo.publicSourceDir = apkFilePath
         return getBean(pm, pi)
     }
 
+    @JvmStatic
     private fun getBean(pm: PackageManager, pi: PackageInfo?): AppInfo? {
         if (pi == null) return null
         val ai = pi.applicationInfo
@@ -719,37 +633,16 @@ object AppUtils  {
     /**
      * The application's information.
      */
-    class AppInfo(
-        packageName: String?, name: String?, icon: Drawable?, packagePath: String?,
-        versionName: String?, versionCode: Int, isSystem: Boolean
+    data class AppInfo(
+        val packageName: String, val appName: String, val appIcon: Drawable,
+        val packagePath: String, val versionName: String, val versionCode: Int = 0,
+        val isSystem: Boolean = false
     ) {
-        var packageName: String? = null
-        var name: String? = null
-        var icon: Drawable? = null
-        var packagePath: String? = null
-        var versionName: String? = null
-        var versionCode = 0
-        var isSystem = false
+
         override fun toString(): String {
-            return """{
-    pkg name: $packageName
-    app icon: $icon
-    app name: $name
-    app path: $packagePath
-    app v name: $versionName
-    app v code: $versionCode
-    is system: $isSystem
-}"""
+            return """{packageName: $packageName appName: $appName appIcon: $appIcon
+                 packagePath: $packagePath versionName: $versionName versionCode: $versionCode isSystem: $isSystem}"""
         }
 
-        init {
-            this.name = name
-            this.icon = icon
-            this.packageName = packageName
-            this.packagePath = packagePath
-            this.versionName = versionName
-            this.versionCode = versionCode
-            this.isSystem = isSystem
-        }
     }
 }

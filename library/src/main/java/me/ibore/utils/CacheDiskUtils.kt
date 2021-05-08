@@ -67,7 +67,7 @@ class CacheDiskUtils private constructor(
         val diskCacheManager = diskCacheManager ?: return
         if (saveTime >= 0) valueTemp = DiskCacheHelper.newByteArrayWithTime(saveTime, valueTemp)
         val file = diskCacheManager.getFileBeforePut(key)
-        UtilsBridge.writeFileFromBytes(file, valueTemp)
+        FileIOUtils.writeFileFromBytesByChannel(file, valueTemp, true)
         diskCacheManager.updateModify(file)
         diskCacheManager.put(file)
     }
@@ -87,7 +87,7 @@ class CacheDiskUtils private constructor(
     private fun realGetBytes(key: String, defaultValue: ByteArray? = null): ByteArray? {
         val diskCacheManager = diskCacheManager ?: return defaultValue
         val file = diskCacheManager.getFileIfExists(key) ?: return defaultValue
-        val data = UtilsBridge.readFile2Bytes(file)
+        val data = FileIOUtils.readFile2BytesByChannel(file)
         if (DiskCacheHelper.isDue(data)) {
             diskCacheManager.removeByKey(key)
             return defaultValue
@@ -469,7 +469,9 @@ class CacheDiskUtils private constructor(
     }
 
     internal object DiskCacheHelper {
+
         const val TIME_INFO_LEN = 14
+
         internal fun newByteArrayWithTime(second: Int, data: ByteArray): ByteArray {
             val time = createDueTime(second).toByteArray()
             val content = ByteArray(time.size + data.size)
