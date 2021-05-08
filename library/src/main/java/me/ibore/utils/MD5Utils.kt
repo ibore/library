@@ -6,11 +6,7 @@ import java.security.DigestInputStream
 import java.security.MessageDigest
 
 /**
- * detail: MD5 加密工具类
- * @author Ttt
- * <pre>
- * Message Digest 消息摘要算法
-</pre> *
+ * MD5 加密工具类
  */
 object MD5Utils {
 
@@ -19,14 +15,8 @@ object MD5Utils {
      * @param data 待加密数据
      * @return MD5 加密后的字符串
      */
-    fun md5(data: String?): String? {
-        if (data == null) return null
-        try {
-            return md5(data.toByteArray())
-        } catch (e: Exception) {
-            LogUtils.d(e)
-        }
-        return null
+    fun md5(data: String): String {
+        return md5(data.toByteArray())
     }
 
     /**
@@ -34,19 +24,13 @@ object MD5Utils {
      * @param data 待加密数据
      * @return MD5 加密后的字符串
      */
-    fun md5(data: ByteArray?): String? {
-        if (data == null) return null
-        try {
-            // 获取 MD5 摘要算法的 MessageDigest 对象
-            val digest = MessageDigest.getInstance("MD5")
-            // 使用指定的字节更新摘要
-            digest.update(data)
-            // 获取密文
-            return ConvertUtils.bytes2HexString(digest.digest(), true)
-        } catch (e: Exception) {
-            LogUtils.d(e)
-        }
-        return null
+    fun md5(data: ByteArray): String {
+        // 获取 MD5 摘要算法的 MessageDigest 对象
+        val digest = MessageDigest.getInstance("MD5")
+        // 使用指定的字节更新摘要
+        digest.update(data)
+        // 获取密文
+        return ConvertUtils.bytes2HexString(digest.digest(), true)
     }
 
     /**
@@ -54,14 +38,8 @@ object MD5Utils {
      * @param data 待加密数据
      * @return MD5 加密后的字符串
      */
-    fun md5Upper(data: String?): String? {
-        if (data == null) return null
-        try {
-            return md5Upper(data.toByteArray())
-        } catch (e: Exception) {
-            LogUtils.d(e)
-        }
-        return null
+    fun md5Upper(data: String): String {
+        return md5Upper(data.toByteArray())
     }
 
     /**
@@ -69,19 +47,13 @@ object MD5Utils {
      * @param data 待加密数据
      * @return MD5 加密后的字符串
      */
-    fun md5Upper(data: ByteArray?): String? {
-        if (data == null) return null
-        try {
-            // 获取 MD5 摘要算法的 MessageDigest 对象
-            val digest = MessageDigest.getInstance("MD5")
-            // 使用指定的字节更新摘要
-            digest.update(data)
-            // 获取密文
-            return ConvertUtils.bytes2HexString(digest.digest(), false)
-        } catch (e: Exception) {
-            LogUtils.d(e)
-        }
-        return null
+    fun md5Upper(data: ByteArray): String {
+        // 获取 MD5 摘要算法的 MessageDigest 对象
+        val digest = MessageDigest.getInstance("MD5")
+        // 使用指定的字节更新摘要
+        digest.update(data)
+        // 获取密文
+        return ConvertUtils.bytes2HexString(digest.digest(), false)
     }
     // =
     /**

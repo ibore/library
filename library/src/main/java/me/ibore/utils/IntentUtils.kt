@@ -32,10 +32,10 @@ object IntentUtils {
      * @param intent The intent.
      * @return `true`: yes<br></br>`false`: no
      */
-    fun isIntentAvailable(intent: Intent?): Boolean {
+    fun isIntentAvailable(intent: Intent): Boolean {
         return Utils.app
             .packageManager
-            .queryIntentActivities(intent!!, PackageManager.MATCH_DEFAULT_ONLY)
+            .queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY)
             .size > 0
     }
 
@@ -163,7 +163,7 @@ object IntentUtils {
      * @param imagePath The path of image.
      * @return the intent of share image
      */
-    fun getShareImageIntent(imagePath: String?): Intent {
+    fun getShareImageIntent(imagePath: String): Intent {
         return getShareTextImageIntent("", imagePath)
     }
 
@@ -194,8 +194,8 @@ object IntentUtils {
      * @param imagePath The path of image.
      * @return the intent of share image
      */
-    fun getShareTextImageIntent(content: String?, imagePath: String?): Intent {
-        return getShareTextImageIntent(content, getFileByPath(imagePath))
+    fun getShareTextImageIntent(content: String, imagePath: String): Intent {
+        return getShareTextImageIntent(content, FileUtils.getFileByPath(imagePath))
     }
 
     /**
@@ -263,16 +263,14 @@ object IntentUtils {
      * @return the intent of share images
      */
     fun getShareTextImageIntent(
-        content: String?,
-        imagePaths: LinkedList<String?>?
+        content: String,
+        imagePaths: List<String>
     ): Intent {
-        val files: MutableList<File?> = ArrayList()
-        if (imagePaths != null) {
-            for (imagePath in imagePaths) {
-                val file = getFileByPath(imagePath)
-                if (file != null) {
-                    files.add(file)
-                }
+        val files: MutableList<File> = ArrayList()
+        for (imagePath in imagePaths) {
+            val file = FileUtils.getFileByPath(imagePath)
+            if (file != null) {
+                files.add(file)
             }
         }
         return getShareTextImageIntent(content, files)
@@ -285,7 +283,7 @@ object IntentUtils {
      * @param images  The files of images.
      * @return the intent of share images
      */
-    fun getShareTextImageIntent(content: String?, images: List<File?>?): Intent {
+    fun getShareTextImageIntent(content: String, images: List<File>): Intent {
         val uris = ArrayList<Uri?>()
         if (images != null) {
             for (image in images) {

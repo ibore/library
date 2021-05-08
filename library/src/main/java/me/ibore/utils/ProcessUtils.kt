@@ -54,7 +54,7 @@ object ProcessUtils {
                 }
             }
             if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
-                val pm = Utils.app.packageManager
+                val pm = Utils.packageManager
                 val intent = Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS)
                 val list = pm.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY)
                 Log.i("ProcessUtils", list.toString())

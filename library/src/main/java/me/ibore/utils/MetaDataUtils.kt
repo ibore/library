@@ -23,7 +23,7 @@ object MetaDataUtils {
      */
     fun getMetaDataInApp(key: String): String {
         var value = ""
-        val pm = Utils.app.packageManager
+        val pm = Utils.packageManager
         val packageName = Utils.app.packageName
         try {
             val ai = pm.getApplicationInfo(packageName, PackageManager.GET_META_DATA)
@@ -54,7 +54,7 @@ object MetaDataUtils {
      */
     fun getMetaDataInActivity(clz: Class<out Activity?>, key: String): String {
         var value = ""
-        val pm = Utils.app.packageManager
+        val pm = Utils.packageManager
         val componentName = ComponentName(Utils.app, clz)
         try {
             val ai = pm.getActivityInfo(componentName, PackageManager.GET_META_DATA)
@@ -85,7 +85,7 @@ object MetaDataUtils {
      */
     fun getMetaDataInService(clz: Class<out Service?>, key: String): String {
         var value = ""
-        val pm = Utils.app.packageManager
+        val pm = Utils.packageManager
         val componentName = ComponentName(Utils.app, clz)
         try {
             val info = pm.getServiceInfo(componentName, PackageManager.GET_META_DATA)
@@ -116,7 +116,7 @@ object MetaDataUtils {
      */
     fun getMetaDataInReceiver(clz: Class<out BroadcastReceiver?>, key: String): String {
         var value = ""
-        val pm = Utils.app.packageManager
+        val pm = Utils.packageManager
         val componentName = ComponentName(Utils.app, clz)
         try {
             val info = pm.getReceiverInfo(componentName, PackageManager.GET_META_DATA)

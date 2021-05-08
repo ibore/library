@@ -5,19 +5,13 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.pm.ResolveInfo
 import android.net.Uri
-import android.util.Log
+import me.ibore.ktx.logD
 
 /**
- * <pre>
- * author: Blankj
- * blog  : http://blankj.com
- * time  : 2019/05/20
- * desc  : utils about app store
-</pre> *
+ *  utils about app store
  */
 object AppStoreUtils {
 
-    private const val TAG = "AppStoreUtils"
     private const val GOOGLE_PLAY_APP_STORE_PACKAGE_NAME = "com.android.vending"
 
     /**
@@ -32,7 +26,9 @@ object AppStoreUtils {
     @SuppressLint("QueryPermissionsNeeded")
     @JvmStatic
     @JvmOverloads
-    fun getAppStoreIntent(packageName: String = Utils.app.packageName, isIncludeGooglePlayStore: Boolean = false): Intent? {
+    fun getAppStoreIntent(
+        packageName: String = Utils.app.packageName, isIncludeGooglePlayStore: Boolean = false
+    ): Intent? {
         if (RomUtils.isSamsung) { // 三星单独处理跳转三星市场
             val samsungAppStoreIntent: Intent? = getSamsungAppStoreIntent(packageName)
             if (samsungAppStoreIntent != null) return samsungAppStoreIntent
@@ -45,10 +41,10 @@ object AppStoreUtils {
         val intent = Intent()
         intent.data = uri
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        val resolveInfos: List<ResolveInfo> = Utils.app.packageManager
+        val resolveInfos: List<ResolveInfo> = Utils.packageManager
             .queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY)
         if (resolveInfos.isEmpty()) {
-            Log.e(TAG, "No app store!")
+            logD("No app store!")
             return null
         }
         var googleIntent: Intent? = null
@@ -73,11 +69,11 @@ object AppStoreUtils {
 
     private fun getSamsungAppStoreIntent(packageName: String): Intent? {
         val intent = Intent()
-        intent.setClassName(
-            "com.sec.android.app.samsungapps",
-            "com.sec.android.app.samsungapps.Main"
-        )
-        intent.setData(Uri.parse("http://www.samsungapps.com/appquery/appDetail.as?appId=$packageName"))
+        val samsungPackageName = "com.sec.android.app.samsungapps"
+        val className = "com.sec.android.app.samsungapps.Main"
+        intent.setClassName(samsungPackageName, className)
+        intent.data =
+            Uri.parse("http://www.samsungapps.com/appquery/appDetail.as?appId=$packageName")
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         return if (getAvailableIntentSize(intent) > 0) {
             intent
@@ -86,11 +82,10 @@ object AppStoreUtils {
 
     private fun getLeecoAppStoreIntent(packageName: String): Intent? {
         val intent = Intent()
-        intent.setClassName(
-            "com.letv.app.appstore",
-            "com.letv.app.appstore.appmodule.details.DetailsActivity"
-        )
-        intent.setAction("com.letv.app.appstore.appdetailactivity")
+        val letvPackageName = "com.letv.app.appstore"
+        val className = "com.letv.app.appstore.appmodule.details.DetailsActivity"
+        intent.setClassName(letvPackageName, className)
+        intent.action = "com.letv.app.appstore.appdetailactivity"
         intent.putExtra("packageName", packageName)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         return if (getAvailableIntentSize(intent) > 0) {
@@ -98,9 +93,10 @@ object AppStoreUtils {
         } else null
     }
 
+    @SuppressLint("QueryPermissionsNeeded")
     private fun getAvailableIntentSize(intent: Intent): Int {
-        return Utils.app.packageManager
+        val resolveInfoList = Utils.packageManager
             .queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY)
-            .size
+        return resolveInfoList.size
     }
 }

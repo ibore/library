@@ -8,7 +8,6 @@ import android.util.AttributeSet
 import android.view.ViewGroup
 import android.webkit.*
 import androidx.fragment.app.Fragment
-import me.ibore.utils.ContextUtils
 import java.lang.ref.WeakReference
 
 class XWebView : WebView {

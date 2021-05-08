@@ -107,7 +107,7 @@ object AppUtils  {
     @JvmStatic
     fun isAppInstalled(pkgName: String?): Boolean {
         if (UtilsBridge.isSpace(pkgName)) return false
-        val pm = Utils.app.packageManager
+        val pm = Utils.packageManager
         return try {
             pm.getApplicationInfo(pkgName!!, 0).enabled
         } catch (e: PackageManager.NameNotFoundException) {
@@ -162,7 +162,7 @@ object AppUtils  {
      */
     fun isAppSystem(packageName: String?): Boolean {
         return if (UtilsBridge.isSpace(packageName)) false else try {
-            val pm = Utils.app.packageManager
+            val pm = Utils.packageManager
             val ai : ApplicationInfo = pm.getApplicationInfo(packageName!!, 0)
             ai.flags and ApplicationInfo.FLAG_SYSTEM != 0
         } catch (e: PackageManager.NameNotFoundException) {
@@ -320,7 +320,7 @@ object AppUtils  {
      */
     fun getAppIcon(packageName: String?): Drawable? {
         return if (UtilsBridge.isSpace(packageName)) null else try {
-            val pm = Utils.app.packageManager
+            val pm = Utils.packageManager
             val pi = pm.getPackageInfo(packageName!!, 0)
             pi?.applicationInfo?.loadIcon(pm)
         } catch (e: PackageManager.NameNotFoundException) {
@@ -345,7 +345,7 @@ object AppUtils  {
      */
     fun getAppIconId(packageName: String?): Int {
         return if (UtilsBridge.isSpace(packageName)) 0 else try {
-            val pm = Utils.app.packageManager
+            val pm = Utils.packageManager
             val pi = pm.getPackageInfo(packageName!!, 0)
             pi?.applicationInfo?.icon ?: 0
         } catch (e: PackageManager.NameNotFoundException) {
@@ -378,7 +378,7 @@ object AppUtils  {
      */
     fun getAppName(packageName: String?): String? {
         return if (UtilsBridge.isSpace(packageName)) "" else try {
-            val pm = Utils.app.packageManager
+            val pm = Utils.packageManager
             val pi = pm.getPackageInfo(packageName!!, 0)
             pi?.applicationInfo?.loadLabel(pm)?.toString()
         } catch (e: PackageManager.NameNotFoundException) {
@@ -403,7 +403,7 @@ object AppUtils  {
      */
     fun getAppPath(packageName: String?): String? {
         return if (UtilsBridge.isSpace(packageName)) "" else try {
-            val pm = Utils.app.packageManager
+            val pm = Utils.packageManager
             val pi = pm.getPackageInfo(packageName!!, 0)
             pi?.applicationInfo?.sourceDir
         } catch (e: PackageManager.NameNotFoundException) {
@@ -428,7 +428,7 @@ object AppUtils  {
      */
     fun getAppVersionName(packageName: String?): String? {
         return if (UtilsBridge.isSpace(packageName)) "" else try {
-            val pm = Utils.app.packageManager
+            val pm = Utils.packageManager
             val pi = pm.getPackageInfo(packageName!!, 0)
             pi?.versionName
         } catch (e: PackageManager.NameNotFoundException) {
@@ -453,7 +453,7 @@ object AppUtils  {
      */
     fun getAppVersionCode(packageName: String?): Int {
         return if (UtilsBridge.isSpace(packageName)) -1 else try {
-            val pm = Utils.app.packageManager
+            val pm = Utils.packageManager
             val pi = pm.getPackageInfo(packageName!!, 0)
             pi?.versionCode ?: -1
         } catch (e: PackageManager.NameNotFoundException) {
@@ -478,7 +478,7 @@ object AppUtils  {
      */
     fun getAppSignatures(packageName: String?): Array<Signature>? {
         return if (UtilsBridge.isSpace(packageName)) null else try {
-            val pm = Utils.app.packageManager
+            val pm = Utils.packageManager
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                 val pi =
                     pm.getPackageInfo(packageName!!, PackageManager.GET_SIGNING_CERTIFICATES)
@@ -508,7 +508,7 @@ object AppUtils  {
      */
     fun getAppSignatures(file: File?): Array<Signature>? {
         if (file == null) return null
-        val pm = Utils.app.packageManager
+        val pm = Utils.packageManager
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             val pi =
                 pm.getPackageArchiveInfo(
@@ -593,7 +593,7 @@ object AppUtils  {
     @JvmOverloads
     fun getAppUid(pkgName: String = Utils.app.packageName): Int {
         return try {
-            Utils.app.packageManager.getApplicationInfo(pkgName, 0).uid
+            Utils.packageManager.getApplicationInfo(pkgName, 0).uid
         } catch (e: Exception) {
             e.printStackTrace()
             -1
@@ -652,7 +652,7 @@ object AppUtils  {
      */
     fun getAppInfo(packageName: String?): AppInfo? {
         return try {
-            val pm = Utils.app.packageManager ?: return null
+            val pm = Utils.packageManager ?: return null
             getBean(pm, pm.getPackageInfo(packageName!!, 0))
         } catch (e: PackageManager.NameNotFoundException) {
             e.printStackTrace()
@@ -668,7 +668,7 @@ object AppUtils  {
     val appsInfo: List<AppInfo>
         get() {
             val list: MutableList<AppInfo> = ArrayList()
-            val pm = Utils.app.packageManager ?: return list
+            val pm = Utils.packageManager ?: return list
             val installedPackages = pm.getInstalledPackages(0)
             for (pi in installedPackages) {
                 val ai = getBean(pm, pi) ?: continue
@@ -695,7 +695,7 @@ object AppUtils  {
      */
     fun getApkInfo(apkFilePath: String?): AppInfo? {
         if (UtilsBridge.isSpace(apkFilePath)) return null
-        val pm = Utils.app.packageManager ?: return null
+        val pm = Utils.packageManager ?: return null
         val pi = pm.getPackageArchiveInfo(apkFilePath!!, 0) ?: return null
         val appInfo = pi.applicationInfo
         appInfo.sourceDir = apkFilePath

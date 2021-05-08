@@ -142,7 +142,7 @@ object ActivityUtils  {
     ): Boolean {
         val intent = Intent()
         intent.setClassName(pkg, cls)
-        val pm = Utils.app.packageManager
+        val pm = Utils.packageManager
         return !(pm.resolveActivity(
             intent,
             0
@@ -1642,7 +1642,7 @@ object ActivityUtils  {
         val intent = Intent(Intent.ACTION_MAIN, null)
         intent.addCategory(Intent.CATEGORY_LAUNCHER)
         intent.setPackage(pkg)
-        val pm = Utils.app.packageManager
+        val pm = Utils.packageManager
         val info = pm.queryIntentActivities(intent, 0)
         return if (info == null || info.size == 0) {
             ""
@@ -1667,7 +1667,7 @@ object ActivityUtils  {
         val ret: MutableList<String> = ArrayList()
         val intent = Intent(Intent.ACTION_MAIN, null)
         intent.setPackage(pkg)
-        val pm = Utils.app.packageManager
+        val pm = Utils.packageManager
         val info = pm.queryIntentActivities(intent, 0)
         val size = info.size
         if (size == 0) return ret
@@ -2091,7 +2091,7 @@ object ActivityUtils  {
      * @return the icon of activity
      */
     fun getActivityIcon(activityName: ComponentName): Drawable? {
-        val pm = Utils.app.packageManager
+        val pm = Utils.packageManager
         return try {
             pm.getActivityIcon(activityName)
         } catch (e: PackageManager.NameNotFoundException) {
@@ -2127,7 +2127,7 @@ object ActivityUtils  {
      * @return the logo of activity
      */
     fun getActivityLogo(activityName: ComponentName): Drawable? {
-        val pm = Utils.app.packageManager
+        val pm = Utils.packageManager
         return try {
             pm.getActivityLogo(activityName)
         } catch (e: PackageManager.NameNotFoundException) {

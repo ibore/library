@@ -3,6 +3,8 @@ package me.ibore.utils
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Application
+import android.content.ContentResolver
+import android.content.pm.PackageManager
 import android.util.Log
 import androidx.lifecycle.Lifecycle
 import me.ibore.utils.ThreadUtils.SimpleTask
@@ -70,6 +72,12 @@ object Utils {
             Log.i("Utils", "${ProcessUtils.currentProcessName} reflect app success.")
             return sApp!!
         }
+
+    val packageManager: PackageManager
+        get() = app.packageManager
+
+    val contentResolver: ContentResolver
+        get() = app.contentResolver
 
     ///////////////////////////////////////////////////////////////////////////
     // interface

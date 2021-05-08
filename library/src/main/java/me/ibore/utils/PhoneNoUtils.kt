@@ -89,7 +89,7 @@ object PhoneNoUtils {
      * @param phone 待校验的手机号
      * @return `true` yes, `false` no
      */
-    fun isPhoneCNSimple(phone: String?): Boolean {
+    fun isPhoneCNSimple(phone: String): Boolean {
         return ValidatorUtils.match(CHINA_PHONE_PATTERN_SIMPLE, phone)
     }
 
@@ -98,7 +98,7 @@ object PhoneNoUtils {
      * @param phone 待校验的手机号
      * @return `true` yes, `false` no
      */
-    fun isPhoneCN(phone: String?): Boolean {
+    fun isPhoneCN(phone: String): Boolean {
         return ValidatorUtils.match(CHINA_PHONE_PATTERN, phone)
     }
 
@@ -107,7 +107,7 @@ object PhoneNoUtils {
      * @param phone 待校验的手机号
      * @return `true` yes, `false` no
      */
-    fun isPhoneCTCC(phone: String?): Boolean {
+    fun isPhoneCTCC(phone: String): Boolean {
         return ValidatorUtils.match(CHINA_TELECOM_PATTERN, phone)
     }
 
@@ -116,7 +116,7 @@ object PhoneNoUtils {
      * @param phone 待校验的手机号
      * @return `true` yes, `false` no
      */
-    fun isPhoneCUCC(phone: String?): Boolean {
+    fun isPhoneCUCC(phone: String): Boolean {
         return ValidatorUtils.match(CHINA_UNICON_PATTERN, phone)
     }
 
@@ -125,7 +125,7 @@ object PhoneNoUtils {
      * @param phone 待校验的手机号
      * @return `true` yes, `false` no
      */
-    fun isPhoneCMCC(phone: String?): Boolean {
+    fun isPhoneCMCC(phone: String): Boolean {
         return ValidatorUtils.match(CHINA_MOBILE_PATTERN, phone)
     }
 
@@ -134,7 +134,7 @@ object PhoneNoUtils {
      * @param phone 待校验的手机号
      * @return `true` yes, `false` no
      */
-    fun isPhoneHkMobile(phone: String?): Boolean {
+    fun isPhoneHkMobile(phone: String): Boolean {
         return ValidatorUtils.match(HK_PHONE_PATTERN, phone)
     }
 
@@ -143,7 +143,7 @@ object PhoneNoUtils {
      * @param phone 待校验的号码
      * @return `true` yes, `false` no
      */
-    fun isPhoneCallNum(phone: String?): Boolean {
+    fun isPhoneCallNum(phone: String): Boolean {
         return ValidatorUtils.match(PHONE_CALL_PATTERN, phone)
     }
 

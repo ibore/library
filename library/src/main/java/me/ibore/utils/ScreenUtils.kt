@@ -252,7 +252,7 @@ object ScreenUtils {
     var sleepDuration: Int
         get() = try {
             Settings.System.getInt(
-                Utils.app.contentResolver,
+                Utils.contentResolver,
                 Settings.System.SCREEN_OFF_TIMEOUT
             )
         } catch (e: SettingNotFoundException) {
@@ -261,7 +261,7 @@ object ScreenUtils {
         }
         set(duration) {
             Settings.System.putInt(
-                Utils.app.contentResolver,
+                Utils.contentResolver,
                 Settings.System.SCREEN_OFF_TIMEOUT,
                 duration
             )

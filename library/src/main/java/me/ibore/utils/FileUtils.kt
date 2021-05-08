@@ -65,7 +65,7 @@ object FileUtils {
         if (Build.VERSION.SDK_INT >= 29) {
             try {
                 val uri = Uri.parse(filePath)
-                val cr = Utils.app.contentResolver
+                val cr = Utils.contentResolver
                 val afd = cr.openAssetFileDescriptor(uri, "r") ?: return false
                 try {
                     afd.close()

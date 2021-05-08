@@ -1470,18 +1470,18 @@ object ImageUtils {
                 Environment.DIRECTORY_DCIM + "/" + Utils.app.packageName
             )
             contentValues.put(MediaStore.MediaColumns.IS_PENDING, 1)
-            val uri = Utils.app.contentResolver.insert(contentUri, contentValues)
+            val uri = Utils.contentResolver.insert(contentUri, contentValues)
                 ?: return null
             var os: OutputStream? = null
             try {
-                os = Utils.app.contentResolver.openOutputStream(uri)
+                os = Utils.contentResolver.openOutputStream(uri)
                 src.compress(format, quality, os)
                 contentValues.clear()
                 contentValues.put(MediaStore.MediaColumns.IS_PENDING, 0)
-                Utils.app.contentResolver.update(uri, contentValues, null, null)
+                Utils.contentResolver.update(uri, contentValues, null, null)
                 UriUtils.uri2File(uri)
             } catch (e: Exception) {
-                Utils.app.contentResolver.delete(uri, null, null)
+                Utils.contentResolver.delete(uri, null, null)
                 e.printStackTrace()
                 null
             } finally {

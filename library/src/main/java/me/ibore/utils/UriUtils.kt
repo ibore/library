@@ -294,7 +294,7 @@ object UriUtils {
                 return File(path.replace("/root", ""))
             }
         }
-        val cursor = Utils.app.contentResolver.query(
+        val cursor = Utils.contentResolver.query(
             uri, arrayOf("_data"), selection, selectionArgs, null
         )
         if (cursor == null) {
@@ -327,7 +327,7 @@ object UriUtils {
         logD("copyUri2Cache() called")
         var `is`: InputStream? = null
         return try {
-            `is` = Utils.app.contentResolver.openInputStream(uri)
+            `is` = Utils.contentResolver.openInputStream(uri)
             val file = File(Utils.app.cacheDir, "" + System.currentTimeMillis())
             writeFileFromIS(file.absolutePath, `is`)
             file
@@ -356,7 +356,7 @@ object UriUtils {
         if (uri == null) return null
         var `is`: InputStream? = null
         return try {
-            `is` = Utils.app.contentResolver.openInputStream(uri)
+            `is` = Utils.contentResolver.openInputStream(uri)
             inputStream2Bytes(`is`)
         } catch (e: FileNotFoundException) {
             e.printStackTrace()

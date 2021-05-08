@@ -4,7 +4,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import me.ibore.exception.ClientException
 import java.lang.reflect.ParameterizedType
-import kotlin.jvm.Throws
 
 object ViewBindingUtils {
 
@@ -17,7 +16,7 @@ object ViewBindingUtils {
             val method = clazz.getMethod("inflate", LayoutInflater::class.java, ViewGroup::class.java, Boolean::class.java)
             method.invoke(null, layoutInflater, container, false) as T
         } catch (e: Exception) {
-            throw ClientException( "${any.javaClass.simpleName} ViewBinding inflate failure")
+            throw ClientException("${any.javaClass.simpleName} ViewBinding inflate failure")
         }
     }
 

@@ -1186,7 +1186,7 @@ class SpanUtils() {
                     mContentUri != null -> {
                         val bitmap: Bitmap
                         try {
-                            val `is` = Utils.app.contentResolver.openInputStream(
+                            val `is` = Utils.contentResolver.openInputStream(
                                 mContentUri!!
                             )
                             bitmap = BitmapFactory.decodeStream(`is`)

@@ -593,7 +593,7 @@ object BarUtils {
             ) {
                 try {
                     return Settings.Global.getInt(
-                        Utils.app.contentResolver,
+                        Utils.contentResolver,
                         "navigationbar_hide_bar_enabled"
                     ) == 0
                 } catch (ignore: Exception) {

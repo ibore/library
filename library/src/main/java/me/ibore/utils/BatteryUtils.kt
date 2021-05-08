@@ -23,7 +23,7 @@ object BatteryUtils {
      *
      * @param listener The status of battery changed listener.
      */
-    fun registerBatteryStatusChangedListener(listener: OnBatteryStatusChangedListener?) {
+    fun registerBatteryStatusChangedListener(listener: OnBatteryStatusChangedListener) {
         BatteryChangedReceiver.getInstance().registerListener(listener)
     }
 
@@ -33,7 +33,7 @@ object BatteryUtils {
      * @param listener The status of battery changed listener.
      * @return true to registered, false otherwise.
      */
-    fun isRegistered(listener: OnBatteryStatusChangedListener?): Boolean {
+    fun isRegistered(listener: OnBatteryStatusChangedListener): Boolean {
         return BatteryChangedReceiver.getInstance().isRegistered(listener)
     }
 
@@ -42,7 +42,7 @@ object BatteryUtils {
      *
      * @param listener The status of battery changed listener.
      */
-    fun unregisterBatteryStatusChangedListener(listener: OnBatteryStatusChangedListener?) {
+    fun unregisterBatteryStatusChangedListener(listener: OnBatteryStatusChangedListener) {
         BatteryChangedReceiver.getInstance().unregisterListener(listener)
     }
 
@@ -59,9 +59,10 @@ object BatteryUtils {
     }
 
     class BatteryChangedReceiver : BroadcastReceiver() {
+
         private val mListeners: MutableSet<OnBatteryStatusChangedListener> = HashSet()
-        fun registerListener(listener: OnBatteryStatusChangedListener?) {
-            if (listener == null) return
+
+        fun registerListener(listener: OnBatteryStatusChangedListener) {
             ThreadUtils.runOnUiThread {
                 val preSize = mListeners.size
                 mListeners.add(listener)
@@ -73,12 +74,11 @@ object BatteryUtils {
             }
         }
 
-        fun isRegistered(listener: OnBatteryStatusChangedListener?): Boolean {
-            return if (listener == null) false else mListeners.contains(listener)
+        fun isRegistered(listener: OnBatteryStatusChangedListener): Boolean {
+            return mListeners.contains(listener)
         }
 
-        fun unregisterListener(listener: OnBatteryStatusChangedListener?) {
-            if (listener == null) return
+        fun unregisterListener(listener: OnBatteryStatusChangedListener) {
             ThreadUtils.runOnUiThread {
                 val preSize = mListeners.size
                 mListeners.remove(listener)

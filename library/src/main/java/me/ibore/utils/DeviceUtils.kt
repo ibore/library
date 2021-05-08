@@ -69,7 +69,7 @@ object DeviceUtils {
     @get:RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     val isAdbEnabled: Boolean
         get() = Settings.Secure.getInt(
-            Utils.app.contentResolver,
+            Utils.contentResolver,
             Settings.Global.ADB_ENABLED, 0
         ) > 0
 
@@ -98,7 +98,7 @@ object DeviceUtils {
     val androidID: String
         get() {
             val id = Settings.Secure.getString(
-                Utils.app.contentResolver,
+                Utils.contentResolver,
                 Settings.Secure.ANDROID_ID
             )
             return if ("9774d56d682e549c" == id) "" else id ?: ""
@@ -376,7 +376,7 @@ object DeviceUtils {
             val intent = Intent()
             intent.data = Uri.parse(url)
             intent.action = Intent.ACTION_DIAL
-            return intent.resolveActivity(Utils.app.packageManager) == null
+            return intent.resolveActivity(Utils.packageManager) == null
 
 //        boolean checkDebuggerConnected = Debug.isDebuggerConnected();
 //        if (checkDebuggerConnected) return true;
@@ -390,7 +390,7 @@ object DeviceUtils {
     @get:RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     val isDevelopmentSettingsEnabled: Boolean
         get() = Settings.Global.getInt(
-            Utils.app.contentResolver,
+            Utils.contentResolver,
             Settings.Global.DEVELOPMENT_SETTINGS_ENABLED, 0
         ) > 0
     private const val KEY_UDID = "KEY_UDID"

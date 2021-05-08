@@ -6,6 +6,7 @@ import android.util.Base64
 import java.io.UnsupportedEncodingException
 import java.net.URLDecoder
 import java.net.URLEncoder
+import kotlin.jvm.Throws
 
 /**
  * <pre>
@@ -25,8 +26,8 @@ object EncodeUtils  {
      */
     @JvmStatic
     @JvmOverloads
-    fun urlEncode(input: String?, charsetName: String = "UTF-8"): String {
-        return if (input == null || input.isEmpty()) "" else try {
+    fun urlEncode(input: String, charsetName: String = "UTF-8"): String {
+        return if (input.isEmpty()) "" else try {
             URLEncoder.encode(input, charsetName)
         } catch (e: UnsupportedEncodingException) {
             throw AssertionError(e)
@@ -41,8 +42,9 @@ object EncodeUtils  {
      */
     @JvmStatic
     @JvmOverloads
-    fun urlDecode(input: String?, charsetName: String = "UTF-8"): String {
-        return if (input == null || input.isEmpty()) "" else try {
+    @Throws
+    fun urlDecode(input: String, charsetName: String = "UTF-8"): String {
+        return if (input.isEmpty()) "" else try {
             val safeInput = input.replace("%(?![0-9a-fA-F]{2})".toRegex(), "%25")
                 .replace("\\+".toRegex(), "%2B")
             URLDecoder.decode(safeInput, charsetName)
@@ -117,8 +119,8 @@ object EncodeUtils  {
      * @return html-encode string
      */
     @JvmStatic
-    fun htmlEncode(input: CharSequence?): String {
-        if (input == null || input.isEmpty()) return ""
+    fun htmlEncode(input: CharSequence): String {
+        if (input.isEmpty()) return ""
         val sb = StringBuilder()
         var c: Char
         var i = 0
@@ -150,8 +152,8 @@ object EncodeUtils  {
      * @return the string of decode html-encode string
      */
     @JvmStatic
-    fun htmlDecode(input: String?): CharSequence {
-        if (input == null || input.isEmpty()) return ""
+    fun htmlDecode(input: String): CharSequence {
+        if (input.isEmpty()) return ""
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             Html.fromHtml(input, Html.FROM_HTML_MODE_LEGACY)
         } else {

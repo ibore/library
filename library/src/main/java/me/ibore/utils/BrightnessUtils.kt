@@ -4,14 +4,10 @@ import android.provider.Settings
 import android.provider.Settings.SettingNotFoundException
 import android.view.Window
 import androidx.annotation.IntRange
+import me.ibore.ktx.logD
 
 /**
- * <pre>
- * author: Blankj
- * blog  : http://blankj.com
- * time  : 2018/02/08
- * desc  : utils about brightness
-</pre> *
+ * utils about brightness
  */
 object BrightnessUtils {
     /**
@@ -19,17 +15,19 @@ object BrightnessUtils {
      *
      * @return `true`: yes<br></br>`false`: no
      */
-    val isAutoBrightnessEnabled: Boolean
-        get() = try {
+    @JvmStatic
+    fun isAutoEnabled(): Boolean {
+        try {
             val mode = Settings.System.getInt(
-                Utils.app.contentResolver,
+                Utils.contentResolver,
                 Settings.System.SCREEN_BRIGHTNESS_MODE
             )
-            mode == Settings.System.SCREEN_BRIGHTNESS_MODE_AUTOMATIC
+            return mode == Settings.System.SCREEN_BRIGHTNESS_MODE_AUTOMATIC
         } catch (e: SettingNotFoundException) {
-            e.printStackTrace()
-            false
+            logD(e)
         }
+        return false
+    }
 
     /**
      * Enable or disable automatic brightness mode.
@@ -39,11 +37,12 @@ object BrightnessUtils {
      * @param enabled True to enabled, false otherwise.
      * @return `true`: success<br></br>`false`: fail
      */
-    fun setAutoBrightnessEnabled(enabled: Boolean): Boolean {
+    @JvmStatic
+    fun setAutoEnabled(enabled: Boolean): Boolean {
         return Settings.System.putInt(
-            Utils.app.contentResolver,
-            Settings.System.SCREEN_BRIGHTNESS_MODE,
-            if (enabled) Settings.System.SCREEN_BRIGHTNESS_MODE_AUTOMATIC else Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL
+            Utils.contentResolver, Settings.System.SCREEN_BRIGHTNESS_MODE,
+            if (enabled) Settings.System.SCREEN_BRIGHTNESS_MODE_AUTOMATIC
+            else Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL
         )
     }
 
@@ -52,16 +51,15 @@ object BrightnessUtils {
      *
      * @return 屏幕亮度 0-255
      */
-    val brightness: Int
-        get() = try {
-            Settings.System.getInt(
-                Utils.app.contentResolver,
-                Settings.System.SCREEN_BRIGHTNESS
-            )
+    @JvmStatic
+    fun getBrightness(): Int {
+        try {
+            return Settings.System.getInt(Utils.contentResolver, Settings.System.SCREEN_BRIGHTNESS)
         } catch (e: SettingNotFoundException) {
-            e.printStackTrace()
-            0
+            logD(e)
         }
+        return 0
+    }
 
     /**
      * 设置屏幕亮度
@@ -71,8 +69,9 @@ object BrightnessUtils {
      *
      * @param brightness 亮度值
      */
+    @JvmStatic
     fun setBrightness(@IntRange(from = 0, to = 255) brightness: Int): Boolean {
-        val resolver = Utils.app.contentResolver
+        val resolver = Utils.contentResolver
         val b = Settings.System.putInt(resolver, Settings.System.SCREEN_BRIGHTNESS, brightness)
         resolver.notifyChange(Settings.System.getUriFor("screen_brightness"), null)
         return b
@@ -84,10 +83,8 @@ object BrightnessUtils {
      * @param window     窗口
      * @param brightness 亮度值
      */
-    fun setWindowBrightness(
-        window: Window,
-        @IntRange(from = 0, to = 255) brightness: Int
-    ) {
+    @JvmStatic
+    fun setWindowBrightness(window: Window, @IntRange(from = 0, to = 255) brightness: Int) {
         val lp = window.attributes
         lp.screenBrightness = brightness / 255f
         window.attributes = lp
@@ -99,9 +96,10 @@ object BrightnessUtils {
      * @param window 窗口
      * @return 屏幕亮度 0-255
      */
+    @JvmStatic
     fun getWindowBrightness(window: Window): Int {
         val lp = window.attributes
         val brightness = lp.screenBrightness
-        return if (brightness < 0) this.brightness else (brightness * 255).toInt()
+        return if (brightness < 0) getBrightness() else (brightness * 255).toInt()
     }
 }

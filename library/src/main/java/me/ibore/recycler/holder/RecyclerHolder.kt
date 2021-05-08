@@ -10,7 +10,6 @@ import androidx.annotation.*
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import me.ibore.ktx.layoutInflater
-import me.ibore.utils.ContextUtils
 
 @Suppress("UNCHECKED_CAST")
 open class RecyclerHolder @JvmOverloads constructor(itemView: View, var helper: Any? = null) :
