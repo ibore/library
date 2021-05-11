@@ -101,8 +101,7 @@ class CacheMemoryUtils private constructor(
         @JvmStatic
         @JvmOverloads
         fun getInstance(
-            maxCount: Int = DEFAULT_MAX_COUNT,
-            cacheKey: String = maxCount.toString()
+            maxCount: Int = DEFAULT_MAX_COUNT, cacheKey: String = maxCount.toString()
         ): CacheMemoryUtils {
             var cache = CACHE_MAP[cacheKey]
             if (cache == null) {

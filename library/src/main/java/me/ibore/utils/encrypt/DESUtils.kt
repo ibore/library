@@ -1,4 +1,4 @@
-package me.ibore.utils
+package me.ibore.utils.encrypt
 
 import java.security.Key
 import javax.crypto.Cipher

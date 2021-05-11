@@ -1,6 +1,10 @@
-package me.ibore.utils
+package me.ibore.utils.encrypt
 
 import android.util.Base64
+import me.ibore.ktx.logD
+import me.ibore.utils.ArrayUtils
+import me.ibore.utils.CloseUtils
+import me.ibore.utils.ConvertUtils
 import java.io.File
 import java.io.FileInputStream
 import java.security.DigestInputStream
@@ -143,7 +147,7 @@ object EncryptUtils {
             digest = dis.messageDigest
             digest.digest()
         } catch (e: Exception) {
-            LogUtils.d(e)
+            logD(e)
             ByteArray(0)
         } finally {
             CloseUtils.closeIOQuietly(dis)
@@ -514,7 +518,7 @@ object EncryptUtils {
             mac.init(secretKey)
             mac.doFinal(data)
         } catch (e: Exception) {
-            LogUtils.d(e)
+            logD(e)
             ByteArray(0)
         }
     }
@@ -814,7 +818,7 @@ object EncryptUtils {
             }
             cipher.doFinal(data)
         } catch (e: Exception) {
-            LogUtils.d(e)
+            logD(e)
             ByteArray(0)
         }
     }
@@ -951,7 +955,7 @@ object EncryptUtils {
                 cipher.doFinal(data)
             }
         } catch (e: Exception) {
-            LogUtils.d(e)
+            logD(e)
         }
         return ByteArray(0)
     }

@@ -25,6 +25,7 @@ import java.util.*
 </pre> *
  */
 object ConvertUtils {
+
     private const val BUFFER_SIZE = 8192
 
     private val HEX_DIGITS_UPPER = charArrayOf(

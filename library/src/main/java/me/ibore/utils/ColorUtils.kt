@@ -24,7 +24,7 @@ object ColorUtils {
      * @return a color associated with a particular resource ID
      */
     @JvmStatic
-    fun getColor(@ColorRes id: Int, context: Context = Utils.app): Int {
+    fun color(@ColorRes id: Int, context: Context = Utils.app): Int {
         return ContextCompat.getColor(context, id)
     }
 
@@ -36,7 +36,7 @@ object ColorUtils {
      * @return the `color` with `alpha`
      */
     @JvmStatic
-    fun setAlpha(@ColorInt color: Int, @IntRange(from = 0x0, to = 0xFF) alpha: Int): Int {
+    fun alpha(@ColorInt color: Int, @IntRange(from = 0x0, to = 0xFF) alpha: Int): Int {
         return color and 0x00ffffff or (alpha shl 24)
     }
 
@@ -48,10 +48,7 @@ object ColorUtils {
      * @return the `color` with `alpha`
      */
     @JvmStatic
-    fun setAlpha(
-        @ColorInt color: Int,
-        @FloatRange(from = 0.0, to = 1.0) alpha: Float
-    ): Int {
+    fun alpha(@ColorInt color: Int, @FloatRange(from = 0.0, to = 1.0) alpha: Float): Int {
         return color and 0x00ffffff or ((alpha * 255.0f + 0.5f).toInt() shl 24)
     }
 
@@ -63,10 +60,7 @@ object ColorUtils {
      * @return the `color` with `red`
      */
     @JvmStatic
-    fun setRed(
-        @ColorInt color: Int,
-        @IntRange(from = 0x0, to = 0xFF) red: Int
-    ): Int {
+    fun red(@ColorInt color: Int, @IntRange(from = 0x0, to = 0xFF) red: Int): Int {
         return color and -0xff0001 or (red shl 16)
     }
 
@@ -78,10 +72,7 @@ object ColorUtils {
      * @return the `color` with `red`
      */
     @JvmStatic
-    fun setRed(
-        @ColorInt color: Int,
-        @FloatRange(from = 0.0, to = 1.0) red: Float
-    ): Int {
+    fun red(@ColorInt color: Int, @FloatRange(from = 0.0, to = 1.0) red: Float): Int {
         return color and -0xff0001 or ((red * 255.0f + 0.5f).toInt() shl 16)
     }
 
@@ -93,10 +84,7 @@ object ColorUtils {
      * @return the `color` with `green`
      */
     @JvmStatic
-    fun setGreen(
-        @ColorInt color: Int,
-        @IntRange(from = 0x0, to = 0xFF) green: Int
-    ): Int {
+    fun green(@ColorInt color: Int, @IntRange(from = 0x0, to = 0xFF) green: Int): Int {
         return color and -0xff01 or (green shl 8)
     }
 
@@ -108,10 +96,7 @@ object ColorUtils {
      * @return the `color` with `green`
      */
     @JvmStatic
-    fun setGreen(
-        @ColorInt color: Int,
-        @FloatRange(from = 0.0, to = 1.0) green: Float
-    ): Int {
+    fun green(@ColorInt color: Int, @FloatRange(from = 0.0, to = 1.0) green: Float): Int {
         return color and -0xff01 or ((green * 255.0f + 0.5f).toInt() shl 8)
     }
 
@@ -123,10 +108,7 @@ object ColorUtils {
      * @return the `color` with `blue`
      */
     @JvmStatic
-    fun setBlue(
-        @ColorInt color: Int,
-        @IntRange(from = 0x0, to = 0xFF) blue: Int
-    ): Int {
+    fun blue(@ColorInt color: Int, @IntRange(from = 0x0, to = 0xFF) blue: Int): Int {
         return color and -0x100 or blue
     }
 
@@ -138,10 +120,7 @@ object ColorUtils {
      * @return the `color` with `blue`
      */
     @JvmStatic
-    fun setBlue(
-        @ColorInt color: Int,
-        @FloatRange(from = 0.0, to = 1.0) blue: Float
-    ): Int {
+    fun blue(@ColorInt color: Int, @FloatRange(from = 0.0, to = 1.0) blue: Float): Int {
         return color and -0x100 or (blue * 255.0f + 0.5f).toInt()
     }
 
@@ -169,7 +148,7 @@ object ColorUtils {
      * @throws IllegalArgumentException The string cannot be parsed.
      */
     @JvmStatic
-    fun string2Int(colorString: String): Int {
+    fun color(colorString: String): Int {
         return Color.parseColor(colorString)
     }
 
@@ -215,7 +194,7 @@ object ColorUtils {
      */
     @JvmStatic
     val randomColor: Int
-        get() = getRandomColor(true)
+        get() = randomColor(true)
 
     /**
      * Return the random color.
@@ -224,7 +203,7 @@ object ColorUtils {
      * @return the random color
      */
     @JvmStatic
-    fun getRandomColor(supportAlpha: Boolean): Int {
+    fun randomColor(supportAlpha: Boolean): Int {
         val high = if (supportAlpha) (Math.random() * 0x100).toInt() shl 24 else -0x1000000
         return high or (Math.random() * 0x1000000).toInt()
     }

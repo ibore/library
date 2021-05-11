@@ -67,9 +67,14 @@ fun View.widthAndHeight(width: Int, height: Int): View {
 fun View.hideSoftInputKeyBoard() {
     val binder = windowToken
     if (binder != null) {
-        val imd = this.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        val imd = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imd.hideSoftInputFromWindow(binder, InputMethodManager.HIDE_IMPLICIT_ONLY)
     }
+}
+
+fun View.showSoftInputKeyBoard() {
+    val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+    imm.showSoftInput(this, InputMethodManager.SHOW_FORCED)
 }
 
 /**
@@ -180,6 +185,14 @@ fun View.animateWidthAndHeight(
 
 val View.layoutInflater: LayoutInflater
     get() = LayoutInflater.from(this.context)
+
+
+fun View.getWarpParams(): ViewGroup.LayoutParams {
+    return ViewGroup.LayoutParams(
+        ViewGroup.LayoutParams.WRAP_CONTENT,
+        ViewGroup.LayoutParams.WRAP_CONTENT
+    )
+}
 
 /**
  * 获取View id，如果没有id：SDK>17, 使用[View.generateViewId]；否则使用[View.hashCode]

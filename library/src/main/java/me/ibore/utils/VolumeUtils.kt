@@ -5,12 +5,7 @@ import android.media.AudioManager
 import android.os.Build
 
 /**
- * <pre>
- * author: blankj
- * blog  : http://blankj.com
- * time  : 2020/09/08
- * desc  : utils about volume
-</pre> *
+ * volume
  */
 object VolumeUtils {
     /**

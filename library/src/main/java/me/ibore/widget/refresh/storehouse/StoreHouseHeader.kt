@@ -10,8 +10,7 @@ import android.util.AttributeSet
 import android.view.View
 import android.view.animation.Transformation
 import me.ibore.ktx.dp2px
-import me.ibore.utils.UIUtils
-import me.ibore.utils.UIUtils.getScreenWidth
+import me.ibore.utils.ScreenUtils
 import me.ibore.widget.refresh.RefreshHeader
 import me.ibore.widget.refresh.RefreshLayout
 import java.util.*
@@ -55,7 +54,7 @@ class StoreHouseHeader : View, RefreshHeader {
     private fun initView() {
         mLineWidth = dp2px(1F)
         mDropHeight = dp2px(40F)
-        mHorizontalRandomness = getScreenWidth(context) / 2
+        mHorizontalRandomness = ScreenUtils.appScreenWidth / 2
         initWithString("REFRESHLAYOUT", 25)
         setPadding(0, 20, 0, 20)
     }

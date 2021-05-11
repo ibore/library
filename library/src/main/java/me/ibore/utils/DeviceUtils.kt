@@ -4,7 +4,6 @@ import android.Manifest.permission
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.net.Uri
@@ -13,7 +12,6 @@ import android.os.Build
 import android.provider.Settings
 import android.telephony.TelephonyManager
 import android.text.TextUtils
-import androidx.annotation.NonNull
 import androidx.annotation.RequiresApi
 import androidx.annotation.RequiresPermission
 import java.io.File
@@ -41,17 +39,9 @@ object DeviceUtils {
         get() {
             val su = "su"
             val locations = arrayOf(
-                "/system/bin/",
-                "/system/xbin/",
-                "/sbin/",
-                "/system/sd/xbin/",
-                "/system/bin/failsafe/",
-                "/data/local/xbin/",
-                "/data/local/bin/",
-                "/data/local/",
-                "/system/sbin/",
-                "/usr/bin/",
-                "/vendor/bin/"
+                "/system/bin/", "/system/xbin/", "/sbin/", "/system/sd/xbin/",
+                "/system/bin/failsafe/", "/data/local/xbin/", "/data/local/bin/",
+                "/data/local/", "/system/sbin/", "/usr/bin/", "/vendor/bin/"
             )
             for (location in locations) {
                 if (File(location + su).exists()) {
@@ -97,10 +87,7 @@ object DeviceUtils {
     @get:SuppressLint("HardwareIds")
     val androidID: String
         get() {
-            val id = Settings.Secure.getString(
-                Utils.contentResolver,
-                Settings.Secure.ANDROID_ID
-            )
+            val id = Settings.Secure.getString(Utils.contentResolver, Settings.Secure.ANDROID_ID)
             return if ("9774d56d682e549c" == id) "" else id ?: ""
         }
 
@@ -433,11 +420,11 @@ object DeviceUtils {
         try {
             val androidId = androidID
             if (!TextUtils.isEmpty(androidId)) {
-                return saveUdid(prefix + 2, androidId)
+                return saveUUID(prefix + 2, androidId)
             }
         } catch (ignore: Exception) { /**/
         }
-        return saveUdid(prefix + 9, "")
+        return saveUUID(prefix + 9, "")
     }
 
     @RequiresPermission(allOf = [permission.ACCESS_WIFI_STATE, permission.INTERNET, permission.CHANGE_WIFI_STATE])
@@ -453,7 +440,7 @@ object DeviceUtils {
             val macAddress = macAddress
             return if (macAddress == "") {
                 false
-            } else uniqueDeviceId.substring(st + 1) == getUdid(
+            } else uniqueDeviceId.substring(st + 1) == getUUID(
                 "",
                 macAddress
             )
@@ -461,18 +448,18 @@ object DeviceUtils {
             val androidId = androidID
             return if (TextUtils.isEmpty(androidId)) {
                 false
-            } else uniqueDeviceId.substring(st + 1) == getUdid("", androidId)
+            } else uniqueDeviceId.substring(st + 1) == getUUID("", androidId)
         }
         return false
     }
 
-    private fun saveUdid(prefix: String, id: String): String {
-        udid = getUdid(prefix, id)
+    private fun saveUUID(prefix: String, id: String): String {
+        udid = getUUID(prefix, id)
         Utils.SP.put(KEY_UDID, udid)
         return udid!!
     }
 
-    private fun getUdid(prefix: String, id: String): String {
+    private fun getUUID(prefix: String, id: String): String {
         return if (id == "") {
             prefix + UUID.randomUUID().toString().replace("-", "")
         } else prefix + UUID.nameUUIDFromBytes(id.toByteArray()).toString()

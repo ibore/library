@@ -12,6 +12,7 @@ import android.os.Build
 import android.os.Process
 import me.ibore.ktx.logD
 import me.ibore.utils.Utils.OnAppStatusChangedListener
+import me.ibore.utils.encrypt.EncryptUtils
 import java.io.File
 import java.util.*
 import kotlin.system.exitProcess

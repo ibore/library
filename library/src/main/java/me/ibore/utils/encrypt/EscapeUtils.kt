@@ -1,4 +1,4 @@
-package me.ibore.utils
+package me.ibore.utils.encrypt
 
 /**
  * 字符串 ( 编解码 ) 工具类

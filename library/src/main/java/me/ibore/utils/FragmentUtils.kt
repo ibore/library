@@ -20,6 +20,7 @@ import java.util.*
 </pre> *
  */
 object FragmentUtils {
+
     private const val TYPE_ADD_FRAGMENT = 0x01
     private const val TYPE_SHOW_FRAGMENT = 0x01 shl 1
     private const val TYPE_HIDE_FRAGMENT = 0x01 shl 2
@@ -38,229 +39,15 @@ object FragmentUtils {
      * @param fm          The manager of fragment.
      * @param add         The fragment will be add.
      * @param containerId The id of container.
-     * @param isHide      True to hide, false otherwise.
-     */
-    fun add(
-        fm: FragmentManager,
-        add: Fragment,
-        @IdRes containerId: Int,
-        isHide: Boolean
-    ) {
-        add(fm, add, containerId, null, isHide, false)
-    }
-
-    /**
-     * Add fragment.
-     *
-     * @param fm          The manager of fragment.
-     * @param add         The fragment will be add.
-     * @param containerId The id of container.
-     * @param isHide      True to hide, false otherwise.
-     * @param isAddStack  True to add fragment in stack, false otherwise.
-     */
-    fun add(
-        fm: FragmentManager,
-        add: Fragment,
-        @IdRes containerId: Int,
-        isHide: Boolean,
-        isAddStack: Boolean
-    ) {
-        add(fm, add, containerId, null, isHide, isAddStack)
-    }
-
-    /**
-     * Add fragment.
-     *
-     * @param fm          The manager of fragment.
-     * @param add         The fragment will be add.
-     * @param containerId The id of container.
-     * @param enterAnim   An animation or animator resource ID used for the enter animation on the
-     * view of the fragment being added or attached.
-     * @param exitAnim    An animation or animator resource ID used for the exit animation on the
-     * view of the fragment being removed or detached.
-     */
-    fun add(
-        fm: FragmentManager,
-        add: Fragment,
-        @IdRes containerId: Int,
-        @AnimatorRes @AnimRes enterAnim: Int,
-        @AnimatorRes @AnimRes exitAnim: Int
-    ) {
-        add(fm, add, containerId, null, false, enterAnim, exitAnim, 0, 0)
-    }
-
-    /**
-     * Add fragment.
-     *
-     * @param fm          The manager of fragment.
-     * @param containerId The id of container.
-     * @param add         The fragment will be add.
-     * @param isAddStack  True to add fragment in stack, false otherwise.
-     * @param enterAnim   An animation or animator resource ID used for the enter animation on the
-     * view of the fragment being added or attached.
-     * @param exitAnim    An animation or animator resource ID used for the exit animation on the
-     * view of the fragment being removed or detached.
-     */
-    fun add(
-        fm: FragmentManager,
-        add: Fragment,
-        @IdRes containerId: Int,
-        isAddStack: Boolean,
-        @AnimatorRes @AnimRes enterAnim: Int,
-        @AnimatorRes @AnimRes exitAnim: Int
-    ) {
-        add(fm, add, containerId, null, isAddStack, enterAnim, exitAnim, 0, 0)
-    }
-
-    /**
-     * Add fragment.
-     *
-     * @param fm           The manager of fragment.
-     * @param containerId  The id of container.
-     * @param add          The fragment will be add.
-     * @param enterAnim    An animation or animator resource ID used for the enter animation on the
-     * view of the fragment being added or attached.
-     * @param exitAnim     An animation or animator resource ID used for the exit animation on the
-     * view of the fragment being removed or detached.
-     * @param popEnterAnim An animation or animator resource ID used for the enter animation on the
-     * view of the fragment being readded or reattached caused by
-     * popBackStack() or similar methods.
-     * @param popExitAnim  An animation or animator resource ID used for the enter animation on the
-     * view of the fragment being removed or detached caused by
-     * popBackStack() or similar methods.
-     */
-    fun add(
-        fm: FragmentManager,
-        add: Fragment,
-        @IdRes containerId: Int,
-        @AnimatorRes @AnimRes enterAnim: Int,
-        @AnimatorRes @AnimRes exitAnim: Int,
-        @AnimatorRes @AnimRes popEnterAnim: Int,
-        @AnimatorRes @AnimRes popExitAnim: Int
-    ) {
-        add(fm, add, containerId, null, false, enterAnim, exitAnim, popEnterAnim, popExitAnim)
-    }
-
-    /**
-     * Add fragment.
-     *
-     * @param fm           The manager of fragment.
-     * @param containerId  The id of container.
-     * @param add          The fragment will be add.
-     * @param isAddStack   True to add fragment in stack, false otherwise.
-     * @param enterAnim    An animation or animator resource ID used for the enter animation on the
-     * view of the fragment being added or attached.
-     * @param exitAnim     An animation or animator resource ID used for the exit animation on the
-     * view of the fragment being removed or detached.
-     * @param popEnterAnim An animation or animator resource ID used for the enter animation on the
-     * view of the fragment being readded or reattached caused by
-     * popBackStack() or similar methods.
-     * @param popExitAnim  An animation or animator resource ID used for the enter animation on the
-     * view of the fragment being removed or detached caused by
-     * popBackStack() or similar methods.
-     */
-    fun add(
-        fm: FragmentManager,
-        add: Fragment,
-        @IdRes containerId: Int,
-        isAddStack: Boolean,
-        @AnimatorRes @AnimRes enterAnim: Int,
-        @AnimatorRes @AnimRes exitAnim: Int,
-        @AnimatorRes @AnimRes popEnterAnim: Int,
-        @AnimatorRes @AnimRes popExitAnim: Int
-    ) {
-        add(fm, add, containerId, null, isAddStack, enterAnim, exitAnim, popEnterAnim, popExitAnim)
-    }
-
-    /**
-     * Add fragment.
-     *
-     * @param fm             The manager of fragment.
-     * @param add            The fragment will be add.
-     * @param containerId    The id of container.
-     * @param sharedElements A View in a disappearing Fragment to match with a View in an
-     * appearing Fragment.
-     */
-    fun add(
-        fm: FragmentManager,
-        add: Fragment,
-        @IdRes containerId: Int,
-        vararg sharedElements: View
-    ) {
-        add(fm, add, containerId, null, false, *sharedElements)
-    }
-
-    /**
-     * Add fragment.
-     *
-     * @param fm             The manager of fragment.
-     * @param add            The fragment will be add.
-     * @param containerId    The id of container.
-     * @param isAddStack     True to add fragment in stack, false otherwise.
-     * @param sharedElements A View in a disappearing Fragment to match with a View in an
-     * appearing Fragment.
-     */
-    fun add(
-        fm: FragmentManager,
-        add: Fragment,
-        @IdRes containerId: Int,
-        isAddStack: Boolean,
-        vararg sharedElements: View
-    ) {
-        add(fm, add, containerId, null, isAddStack, *sharedElements)
-    }
-
-    /**
-     * Add fragment.
-     *
-     * @param fm          The manager of fragment.
-     * @param adds        The fragments will be add.
-     * @param containerId The id of container.
-     * @param showIndex   The index of fragment will be shown.
-     */
-    fun add(
-        fm: FragmentManager,
-        adds: List<Fragment>,
-        @IdRes containerId: Int,
-        showIndex: Int
-    ) {
-        add(fm, adds.toTypedArray(), containerId, null, showIndex)
-    }
-
-    /**
-     * Add fragment.
-     *
-     * @param fm          The manager of fragment.
-     * @param adds        The fragments will be add.
-     * @param containerId The id of container.
-     * @param showIndex   The index of fragment will be shown.
-     */
-    fun add(
-        fm: FragmentManager,
-        adds: Array<Fragment>,
-        @IdRes containerId: Int,
-        showIndex: Int
-    ) {
-        add(fm, adds, containerId, null, showIndex)
-    }
-    /**
-     * Add fragment.
-     *
-     * @param fm          The manager of fragment.
-     * @param add         The fragment will be add.
-     * @param containerId The id of container.
      * @param tag         The tag of fragment.
      * @param isHide      True to hide, false otherwise.
      * @param isAddStack  True to add fragment in stack, false otherwise.
      */
+    @JvmStatic
     @JvmOverloads
     fun add(
-        fm: FragmentManager,
-        add: Fragment,
-        @IdRes containerId: Int,
-        tag: String? = null,
-        isHide: Boolean = false,
-        isAddStack: Boolean = false
+        fm: FragmentManager, add: Fragment, @IdRes containerId: Int,
+        tag: String? = null, isHide: Boolean = false, isAddStack: Boolean = false
     ) {
         putArgs(add, Args(containerId, tag, isHide, isAddStack))
         operateNoAnim(TYPE_ADD_FRAGMENT, fm, null, add)
@@ -269,59 +56,6 @@ object FragmentUtils {
     /**
      * Add fragment.
      *
-     * @param fm          The manager of fragment.
-     * @param add         The fragment will be add.
-     * @param containerId The id of container.
-     * @param tag         The tag of fragment.
-     * @param enterAnim   An animation or animator resource ID used for the enter animation on the
-     * view of the fragment being added or attached.
-     * @param exitAnim    An animation or animator resource ID used for the exit animation on the
-     * view of the fragment being removed or detached.
-     */
-    fun add(
-        fm: FragmentManager,
-        add: Fragment,
-        @IdRes containerId: Int,
-        tag: String?,
-        @AnimatorRes @AnimRes enterAnim: Int,
-        @AnimatorRes @AnimRes exitAnim: Int
-    ) {
-        add(fm, add, containerId, tag, false, enterAnim, exitAnim, 0, 0)
-    }
-
-    /**
-     * Add fragment.
-     *
-     * @param fm           The manager of fragment.
-     * @param add          The fragment will be add.
-     * @param containerId  The id of container.
-     * @param tag          The tag of fragment.
-     * @param enterAnim    An animation or animator resource ID used for the enter animation on the
-     * view of the fragment being added or attached.
-     * @param exitAnim     An animation or animator resource ID used for the exit animation on the
-     * view of the fragment being removed or detached.
-     * @param popEnterAnim An animation or animator resource ID used for the enter animation on the
-     * view of the fragment being readded or reattached caused by
-     * popBackStack() or similar methods.
-     * @param popExitAnim  An animation or animator resource ID used for the enter animation on the
-     * view of the fragment being removed or detached caused by
-     * popBackStack() or similar methods.
-     */
-    fun add(
-        fm: FragmentManager,
-        add: Fragment,
-        @IdRes containerId: Int,
-        tag: String?,
-        @AnimatorRes @AnimRes enterAnim: Int,
-        @AnimatorRes @AnimRes exitAnim: Int,
-        @AnimatorRes @AnimRes popEnterAnim: Int,
-        @AnimatorRes @AnimRes popExitAnim: Int
-    ) {
-        add(fm, add, containerId, tag, false, enterAnim, exitAnim, popEnterAnim, popExitAnim)
-    }
-    /**
-     * Add fragment.
-     *
      * @param fm           The manager of fragment.
      * @param add          The fragment will be add.
      * @param containerId  The id of container.
@@ -338,13 +72,11 @@ object FragmentUtils {
      * view of the fragment being removed or detached caused by
      * popBackStack() or similar methods.
      */
+    @JvmStatic
     @JvmOverloads
     fun add(
-        fm: FragmentManager,
-        add: Fragment,
-        @IdRes containerId: Int,
-        tag: String?,
-        isAddStack: Boolean,
+        fm: FragmentManager, add: Fragment, @IdRes containerId: Int,
+        tag: String? = null, isAddStack: Boolean = false,
         @AnimatorRes @AnimRes enterAnim: Int,
         @AnimatorRes @AnimRes exitAnim: Int,
         @AnimatorRes @AnimRes popEnterAnim: Int = 0,
@@ -356,25 +88,6 @@ object FragmentUtils {
         operate(TYPE_ADD_FRAGMENT, fm, ft, null, add)
     }
 
-    /**
-     * Add fragment.
-     *
-     * @param fm             The manager of fragment.
-     * @param add            The fragment will be add.
-     * @param tag            The tag of fragment.
-     * @param containerId    The id of container.
-     * @param sharedElements A View in a disappearing Fragment to match with a View in an
-     * appearing Fragment.
-     */
-    fun add(
-        fm: FragmentManager,
-        add: Fragment,
-        @IdRes containerId: Int,
-        tag: String?,
-        vararg sharedElements: View
-    ) {
-        add(fm, add, containerId, tag, false, *sharedElements)
-    }
 
     /**
      * Add fragment.
@@ -386,12 +99,14 @@ object FragmentUtils {
      * @param sharedElements A View in a disappearing Fragment to match with a View in an
      * appearing Fragment.
      */
+    @JvmStatic
+    @JvmOverloads
     fun add(
         fm: FragmentManager,
         add: Fragment,
         @IdRes containerId: Int,
-        tag: String?,
-        isAddStack: Boolean,
+        tag: String? = null,
+        isAddStack: Boolean = false,
         vararg sharedElements: View
     ) {
         val ft = fm.beginTransaction()
@@ -408,30 +123,11 @@ object FragmentUtils {
      * @param containerId The id of container.
      * @param showIndex   The index of fragment will be shown.
      */
+    @JvmStatic
+    @JvmOverloads
     fun add(
-        fm: FragmentManager,
-        adds: List<Fragment>,
-        @IdRes containerId: Int,
-        tags: Array<String?>?,
-        showIndex: Int
-    ) {
-        add(fm, adds.toTypedArray(), containerId, tags, showIndex)
-    }
-
-    /**
-     * Add fragment.
-     *
-     * @param fm          The manager of fragment.
-     * @param adds        The fragments will be add.
-     * @param containerId The id of container.
-     * @param showIndex   The index of fragment will be shown.
-     */
-    fun add(
-        fm: FragmentManager,
-        adds: Array<Fragment>,
-        @IdRes containerId: Int,
-        tags: Array<String?>?,
-        showIndex: Int
+        fm: FragmentManager, adds: List<Fragment>, @IdRes containerId: Int,
+        tags: Array<String?>? = null, showIndex: Int
     ) {
         if (tags == null) {
             var i = 0
@@ -448,7 +144,7 @@ object FragmentUtils {
                 ++i
             }
         }
-        operateNoAnim(TYPE_ADD_FRAGMENT, fm, null, *adds)
+        operateNoAnim(TYPE_ADD_FRAGMENT, fm, null, *adds.toTypedArray())
     }
 
     /**
@@ -503,10 +199,7 @@ object FragmentUtils {
      * @param show The fragment will be show.
      * @param hide The fragment will be hide.
      */
-    fun showHide(
-        show: Fragment,
-        hide: Fragment
-    ) {
+    fun showHide(show: Fragment, hide: Fragment) {
         showHide(show, listOf(hide))
     }
 
@@ -560,8 +253,8 @@ object FragmentUtils {
      * @param hide The fragment will be hide.
      */
     fun showHide(
-        show: Fragment,
-        hide: Fragment, @AnimatorRes @AnimRes enterAnim: Int,
+        show: Fragment, hide: Fragment,
+        @AnimatorRes @AnimRes enterAnim: Int,
         @AnimatorRes @AnimRes exitAnim: Int,
         @AnimatorRes @AnimRes popEnterAnim: Int,
         @AnimatorRes @AnimRes popExitAnim: Int
@@ -577,10 +270,8 @@ object FragmentUtils {
      */
     fun showHide(
         showIndex: Int, fragments: List<Fragment>,
-        @AnimatorRes @AnimRes enterAnim: Int,
-        @AnimatorRes @AnimRes exitAnim: Int,
-        @AnimatorRes @AnimRes popEnterAnim: Int,
-        @AnimatorRes @AnimRes popExitAnim: Int
+        @AnimatorRes @AnimRes enterAnim: Int, @AnimatorRes @AnimRes exitAnim: Int,
+        @AnimatorRes @AnimRes popEnterAnim: Int, @AnimatorRes @AnimRes popExitAnim: Int
     ) {
         showHide(fragments[showIndex], fragments, enterAnim, exitAnim, popEnterAnim, popExitAnim)
     }
@@ -593,10 +284,8 @@ object FragmentUtils {
      */
     fun showHide(
         show: Fragment, hide: List<Fragment>,
-        @AnimatorRes @AnimRes enterAnim: Int,
-        @AnimatorRes @AnimRes exitAnim: Int,
-        @AnimatorRes @AnimRes popEnterAnim: Int,
-        @AnimatorRes @AnimRes popExitAnim: Int
+        @AnimatorRes @AnimRes enterAnim: Int, @AnimatorRes @AnimRes exitAnim: Int,
+        @AnimatorRes @AnimRes popEnterAnim: Int, @AnimatorRes @AnimRes popExitAnim: Int
     ) {
         for (fragment in hide) {
             putArgs(fragment, fragment !== show)

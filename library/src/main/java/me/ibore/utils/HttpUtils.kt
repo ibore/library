@@ -49,8 +49,7 @@ object HttpUtils {
                 val startBytes = builder.download!!.downloadUnit!!.startBytes
                 val endBytes = builder.download!!.downloadUnit!!.endBytes
                 connection.setRequestProperty(
-                    "Range",
-                    "bytes=" + startBytes + "-" + if (endBytes > 0) endBytes else ""
+                    "Range", "bytes=" + startBytes + "-" + if (endBytes > 0) endBytes else ""
                 )
             }
             if (POST == builder.method && !builder.args.isNullOrEmpty()) {
@@ -88,12 +87,8 @@ object HttpUtils {
         } catch (e: Exception) {
             e.printStackTrace()
         } finally {
-            close(bis)
-            close(bos)
-            close(reader)
-            close(writer)
-            close(raf)
-            disconnect(connection)
+            CloseUtils.closeIOQuietly(bis, bos, reader, writer, raf)
+            connection?.disconnect()
         }
         return null
     }
@@ -160,20 +155,6 @@ object HttpUtils {
         return sb.toString()
     }
 
-    private fun disconnect(connection: HttpURLConnection?) {
-        connection?.disconnect()
-    }
-
-    private fun close(closeable: Closeable?) {
-        if (closeable != null) {
-            try {
-                closeable.close()
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }
-    }
-
     private fun createDownloadUnits(length: Int, units: Int): Array<DownloadUnit?> {
         return if (units > 1) {
             val unitLength = length / units
@@ -225,7 +206,7 @@ object HttpUtils {
         } catch (e: Exception) {
             e.printStackTrace()
         } finally {
-            close(raf)
+            CloseUtils.closeIOQuietly(raf)
         }
     }
 
@@ -246,7 +227,7 @@ object HttpUtils {
         } catch (e: Exception) {
             e.printStackTrace()
         } finally {
-            close(raf)
+            CloseUtils.closeIOQuietly(raf)
         }
         return null
     }
@@ -263,7 +244,7 @@ object HttpUtils {
         } catch (e: Exception) {
             e.printStackTrace()
         } finally {
-            close(raf)
+            CloseUtils.closeIOQuietly(raf)
         }
     }
 
@@ -292,7 +273,7 @@ object HttpUtils {
         } catch (e: Exception) {
             e.printStackTrace()
         } finally {
-            close(raf)
+            CloseUtils.closeIOQuietly(raf)
         }
         rangeFile.delete()
     }
@@ -508,9 +489,7 @@ object HttpUtils {
         }
     }
 
-    class DownloadUnit {
-        var id = -1
-        var startBytes = -1
-        var endBytes = -1
-    }
+    data class DownloadUnit(
+        var id: Int = -1, var startBytes: Int = -1, var endBytes: Int = -1
+    )
 }

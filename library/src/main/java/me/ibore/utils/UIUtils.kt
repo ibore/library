@@ -2,82 +2,14 @@
 
 package me.ibore.utils
 
-import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Context
-import android.content.ContextWrapper
-import android.content.res.Resources
-import android.util.DisplayMetrics
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
-import android.view.inputmethod.InputMethodManager
-import androidx.core.view.ViewCompat
 import me.ibore.ktx.dp2px
 
 object UIUtils {
 
 
-    fun getDisplayMetrics(context: Context): DisplayMetrics {
-        val activity: Activity = if (context !is Activity && context is ContextWrapper) {
-            context.baseContext as Activity
-        } else {
-            context as Activity
-        }
-        val metrics = DisplayMetrics()
-        activity.windowManager.defaultDisplay.getMetrics(metrics)
-        return metrics
-    }
-
-    /**
-     * 获取屏幕大小
-     *
-     * @param context
-     * @return
-     */
-    fun getScreenPixelSize(context: Context): IntArray {
-        val metrics = getDisplayMetrics(context)
-        return intArrayOf(metrics.widthPixels, metrics.heightPixels)
-    }
-
-    fun hideSoftInputKeyBoard(context: Context, focusView: View?) {
-        if (focusView != null) {
-            val binder = focusView.windowToken
-            if (binder != null) {
-                val imd = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                imd.hideSoftInputFromWindow(binder, InputMethodManager.HIDE_IMPLICIT_ONLY)
-            }
-        }
-    }
-
-    fun showSoftInputKeyBoard(context: Context, focusView: View) {
-        val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.showSoftInput(focusView, InputMethodManager.SHOW_FORCED)
-    }
-
-    fun getScreenWidth(context: Context): Int {
-        return context.resources.displayMetrics.widthPixels
-    }
-
-    fun getScreenHeight(context: Context): Int {
-        return context.resources.displayMetrics.heightPixels
-    }
-
-    @SuppressLint("PrivateApi")
-    fun getStatusBarHeight(context: Context): Int {
-        var statusBarHeight = 0
-        try {
-            val c = Class.forName("com.android.internal.R\$dimen")
-            val obj = c.newInstance()
-            val field = c.getField("status_bar_height")
-            val x = Integer.parseInt(field.get(obj).toString())
-            statusBarHeight = context.resources.getDimensionPixelSize(x)
-        } catch (e1: Exception) {
-            e1.printStackTrace()
-        }
-
-        return statusBarHeight
-    }
 
     @JvmOverloads
     fun getCornerRadii(context: Context, topStartRadius: Float, topEndRadius: Float,
@@ -121,10 +53,6 @@ object UIUtils {
         val rightTemp: Int = if (dp) context.dp2px( right) else right.toInt()
         val bottomTemp: Int = if (dp) context.dp2px( bottom) else bottom.toInt()
         layoutParams.setMargins(leftTemp, topTemp, rightTemp, bottomTemp)
-    }
-
-    fun getWarpParams(): ViewGroup.LayoutParams {
-        return ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT)
     }
 
 

@@ -11,8 +11,15 @@ object VersionUtils {
      * 获取 SDK 版本
      */
     @JvmStatic
-    val SDKVersion: Int
+    val SDK_INT: Int
         get() = Build.VERSION.SDK_INT
+
+    /**
+     * 获取 SDK 版本
+     */
+    @JvmStatic
+    val SDK_STRING: String
+        get() = convertSDKInt(Build.VERSION.SDK_INT)
 
     /**
      * 是否在 5.0.1 版本及以上
@@ -79,12 +86,12 @@ object VersionUtils {
 
     /**
      * 转换 SDK 版本 convertSDKVersion(14) = Android 4.0.0-2
-     * @param sdkVersion SDK 版本
+     * @param sdk_int SDK 版本
      * @return SDK 版本
      */
     @JvmOverloads
-    fun convertSDKVersion(sdkVersion: Int = SDKVersion): String {
-        when (sdkVersion) {
+    fun convertSDKInt(sdk_int: Int = SDK_INT): String {
+        when (sdk_int) {
             21 -> return "Android 5.0"
             22 -> return "Android 5.1"
             23 -> return "Android 6.0"

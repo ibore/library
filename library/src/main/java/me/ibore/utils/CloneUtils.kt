@@ -19,12 +19,7 @@ object CloneUtils {
      * @param <T>  The value type.
      * @return The object of cloned.
     </T> */
-    fun <T> deepClone(data: T, type: Type): T? {
-        return try {
-            GsonUtils.fromJson(GsonUtils.toJson(data), type)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            null
-        }
+    fun <T> deepClone(data: T, type: Type): T {
+        return GsonUtils.fromJson(GsonUtils.toJson(data), type)
     }
 }

@@ -24,8 +24,7 @@ object CountryUtils {
      * @return the country code
      */
     fun getCountryCodeBySim(defaultValue: String): String {
-        return countryCodeMap[countryBySim]
-            ?: return defaultValue
+        return countryCodeMap[countryBySim] ?: return defaultValue
     }
 
     /**
@@ -35,8 +34,7 @@ object CountryUtils {
      * @return the country code
      */
     fun getCountryCodeByLanguage(defaultValue: String): String {
-        return countryCodeMap[countryByLanguage]
-            ?: return defaultValue
+        return countryCodeMap[countryByLanguage] ?: return defaultValue
     }
 
     /**
@@ -46,9 +44,8 @@ object CountryUtils {
      */
     val countryBySim: String
         get() {
-            val manager: TelephonyManager? =
-                Utils.app.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager?
-            return manager?.simCountryIso?.toUpperCase() ?: ""
+            val manager = Utils.app.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager?
+            return manager?.simCountryIso?.toUpperCase(Locale.ROOT) ?: ""
         }
 
     /**

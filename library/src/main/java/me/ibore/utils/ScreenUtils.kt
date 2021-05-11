@@ -64,8 +64,7 @@ object ScreenUtils {
      */
     val appScreenWidth: Int
         get() {
-            val wm = Utils.app
-                .getSystemService(Context.WINDOW_SERVICE) as WindowManager?
+            val wm = Utils.app.getSystemService(Context.WINDOW_SERVICE) as WindowManager?
                 ?: return -1
             val point = Point()
             wm.defaultDisplay.getSize(point)
@@ -79,8 +78,7 @@ object ScreenUtils {
      */
     val appScreenHeight: Int
         get() {
-            val wm = Utils.app
-                .getSystemService(Context.WINDOW_SERVICE) as WindowManager?
+            val wm = Utils.app.getSystemService(Context.WINDOW_SERVICE) as WindowManager?
                 ?: return -1
             val point = Point()
             wm.defaultDisplay.getSize(point)
@@ -217,11 +215,7 @@ object ScreenUtils {
         return if (isDeleteStatusBar) {
             val statusBarHeight = BarUtils.getStatusBarHeight(activity)
             Bitmap.createBitmap(
-                bmp,
-                0,
-                statusBarHeight,
-                dm.widthPixels,
-                dm.heightPixels - statusBarHeight
+                bmp, 0, statusBarHeight, dm.widthPixels, dm.heightPixels - statusBarHeight
             )
         } else {
             Bitmap.createBitmap(bmp, 0, 0, dm.widthPixels, dm.heightPixels)
@@ -235,8 +229,7 @@ object ScreenUtils {
      */
     val isScreenLock: Boolean
         get() {
-            val km = Utils.app
-                .getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager?
+            val km = Utils.app.getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager?
                 ?: return false
             return km.inKeyguardRestrictedInputMode()
         }
@@ -251,19 +244,14 @@ object ScreenUtils {
     @set:RequiresPermission(permission.WRITE_SETTINGS)
     var sleepDuration: Int
         get() = try {
-            Settings.System.getInt(
-                Utils.contentResolver,
-                Settings.System.SCREEN_OFF_TIMEOUT
-            )
+            Settings.System.getInt(Utils.contentResolver, Settings.System.SCREEN_OFF_TIMEOUT)
         } catch (e: SettingNotFoundException) {
             e.printStackTrace()
             -123
         }
         set(duration) {
             Settings.System.putInt(
-                Utils.contentResolver,
-                Settings.System.SCREEN_OFF_TIMEOUT,
-                duration
+                Utils.contentResolver, Settings.System.SCREEN_OFF_TIMEOUT, duration
             )
         }
 }

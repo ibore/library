@@ -11,13 +11,13 @@ import me.ibore.demo.databinding.ActivityDialogBinding
 import me.ibore.demo.databinding.ItemActivityBinding
 import me.ibore.demo.databinding.TitleBarBinding
 import me.ibore.demo.model.TitleItem
+import me.ibore.ktx.logD
 import me.ibore.recycler.delegate.Delegate
 import me.ibore.recycler.delegate.DelegateAdapter
 import me.ibore.recycler.delegate.DelegateBindingHolder
 import me.ibore.recycler.delegate.DelegateHolder
 import me.ibore.recycler.holder.RecyclerHolder
-import me.ibore.utils.DialogUtils
-import me.ibore.utils.ToastUtils
+import me.ibore.utils.*
 
 @Suppress("UNCHECKED_CAST")
 class DialogActivity : BaseActivity<ActivityDialogBinding>() {
@@ -36,6 +36,7 @@ class DialogActivity : BaseActivity<ActivityDialogBinding>() {
     override fun onBindData() {
 
         adapter.addData(TitleItem("普通内容") {
+            logD(GsonUtils.toJson(AppUtils.getAppInfo()))
             ToastUtils.showShort("普通内容")
         })
 
