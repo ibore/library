@@ -90,7 +90,7 @@ object ActivityUtils  {
      */
     @JvmStatic
     fun getActivityByContext(context: Context): Activity? {
-        val activity = getActivityByContextInner(context)
+        val activity = getActivityByContextInner(context) ?: return null
         return if (!isActivityAlive(activity)) null else activity
     }
 
@@ -1695,7 +1695,7 @@ object ActivityUtils  {
      * @return `true`: yes<br></br>`false`: no
      */
     fun isActivityAlive(context: Context): Boolean {
-        return isActivityAlive(getActivityByContext(context))
+        return isActivityAlive(getActivityByContext(context) ?: return false)
     }
 
     /**
@@ -1705,9 +1705,8 @@ object ActivityUtils  {
      * @return `true`: yes<br></br>`false`: no
      */
     @JvmStatic
-    fun isActivityAlive(activity: Activity?): Boolean {
-        return (activity != null && !activity.isFinishing
-                && (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1 || !activity.isDestroyed))
+    fun isActivityAlive(activity: Activity): Boolean {
+        return (!activity.isFinishing && !activity.isDestroyed)
     }
 
     /**

@@ -25,14 +25,8 @@ object DialogUtils {
         XAlertDialog.show(
             activity,
             XAlertDialog.Builder(
-                title,
-                content,
-                negative,
-                negativeListener,
-                positive,
-                positiveListener,
-                touchBack,
-                touchOutside
+                title, content, negative, negativeListener, positive, positiveListener,
+                touchBack, touchOutside
             )
         )
     }
@@ -48,15 +42,8 @@ object DialogUtils {
         XInputDialog.show(
             activity,
             XInputDialog.Builder(
-                title,
-                hint,
-                defaultInput,
-                negative,
-                negativeListener,
-                positive,
-                positiveListener,
-                touchBack,
-                touchOutside
+                title, hint, defaultInput, negative, negativeListener, positive, positiveListener,
+                touchBack, touchOutside
             )
         )
     }

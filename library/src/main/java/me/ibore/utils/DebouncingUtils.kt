@@ -6,14 +6,10 @@ import android.view.View
 import java.util.concurrent.ConcurrentHashMap
 
 /**
- * <pre>
- * author: Blankj
- * blog  : http://blankj.com
- * time  : 2020/09/01
- * desc  : utils about debouncing
-</pre> *
+ * debouncing
  */
 object DebouncingUtils {
+
     private const val CACHE_SIZE = 64
     private val KEY_MILLIS_MAP: MutableMap<String, Long> = ConcurrentHashMap(CACHE_SIZE)
     private const val DEBOUNCING_DEFAULT_VALUE: Long = 1000

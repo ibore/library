@@ -18,11 +18,18 @@ import java.util.*
  */
 object BatteryUtils {
 
+    const val UNKNOWN: Int = BatteryManager.BATTERY_STATUS_UNKNOWN
+    const val DISCHARGING: Int = BatteryManager.BATTERY_STATUS_DISCHARGING
+    const val CHARGING: Int = BatteryManager.BATTERY_STATUS_CHARGING
+    const val NOT_CHARGING: Int = BatteryManager.BATTERY_STATUS_NOT_CHARGING
+    const val FULL: Int = BatteryManager.BATTERY_STATUS_FULL
+
     /**
      * Register the status of battery changed listener.
      *
      * @param listener The status of battery changed listener.
      */
+    @JvmStatic
     fun registerBatteryStatusChangedListener(listener: OnBatteryStatusChangedListener) {
         BatteryChangedReceiver.getInstance().registerListener(listener)
     }
@@ -33,6 +40,7 @@ object BatteryUtils {
      * @param listener The status of battery changed listener.
      * @return true to registered, false otherwise.
      */
+    @JvmStatic
     fun isRegistered(listener: OnBatteryStatusChangedListener): Boolean {
         return BatteryChangedReceiver.getInstance().isRegistered(listener)
     }
@@ -42,21 +50,14 @@ object BatteryUtils {
      *
      * @param listener The status of battery changed listener.
      */
+    @JvmStatic
     fun unregisterBatteryStatusChangedListener(listener: OnBatteryStatusChangedListener) {
         BatteryChangedReceiver.getInstance().unregisterListener(listener)
     }
 
-    @IntDef(value = [BatteryStatus.UNKNOWN, BatteryStatus.DISCHARGING, BatteryStatus.CHARGING, BatteryStatus.NOT_CHARGING, BatteryStatus.FULL])
+    @IntDef(value = [UNKNOWN, DISCHARGING, CHARGING, NOT_CHARGING, FULL])
     @Retention(AnnotationRetention.SOURCE)
-    annotation class BatteryStatus {
-        companion object {
-            const val UNKNOWN: Int = BatteryManager.BATTERY_STATUS_UNKNOWN
-            const val DISCHARGING: Int = BatteryManager.BATTERY_STATUS_DISCHARGING
-            const val CHARGING: Int = BatteryManager.BATTERY_STATUS_CHARGING
-            const val NOT_CHARGING: Int = BatteryManager.BATTERY_STATUS_NOT_CHARGING
-            const val FULL: Int = BatteryManager.BATTERY_STATUS_FULL
-        }
-    }
+    annotation class BatteryStatus
 
     class BatteryChangedReceiver : BroadcastReceiver() {
 
@@ -93,7 +94,7 @@ object BatteryUtils {
                 ThreadUtils.runOnUiThread {
                     val level: Int = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1)
                     val status: Int =
-                        intent.getIntExtra(BatteryManager.EXTRA_STATUS, BatteryStatus.UNKNOWN)
+                        intent.getIntExtra(BatteryManager.EXTRA_STATUS, UNKNOWN)
                     for (listener in mListeners) {
                         listener.onBatteryStatusChanged(Status(level, status))
                     }
@@ -124,16 +125,16 @@ object BatteryUtils {
 
         companion object {
             fun batteryStatus2String(@BatteryStatus status: Int): String {
-                if (status == BatteryStatus.DISCHARGING) {
+                if (status == DISCHARGING) {
                     return "discharging"
                 }
-                if (status == BatteryStatus.CHARGING) {
+                if (status == CHARGING) {
                     return "charging"
                 }
-                if (status == BatteryStatus.NOT_CHARGING) {
+                if (status == NOT_CHARGING) {
                     return "not_charging"
                 }
-                return if (status == BatteryStatus.FULL) {
+                return if (status == FULL) {
                     "full"
                 } else "unknown"
             }

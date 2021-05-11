@@ -10,12 +10,16 @@ import android.graphics.Point
 import android.os.Build
 import android.provider.Settings
 import android.util.TypedValue
-import android.view.*
+import android.view.View
+import android.view.ViewGroup
 import android.view.ViewGroup.MarginLayoutParams
+import android.view.Window
+import android.view.WindowManager
 import androidx.annotation.ColorInt
 import androidx.annotation.RequiresApi
 import androidx.annotation.RequiresPermission
 import androidx.drawerlayout.widget.DrawerLayout
+import me.ibore.ktx.getActivity
 
 /**
  * <pre>
@@ -26,9 +30,7 @@ import androidx.drawerlayout.widget.DrawerLayout
 </pre> *
  */
 object BarUtils {
-    ///////////////////////////////////////////////////////////////////////////
-    // status bar
-    ///////////////////////////////////////////////////////////////////////////
+
     private const val TAG_STATUS_BAR = "TAG_STATUS_BAR"
     private const val TAG_OFFSET = "TAG_OFFSET"
     private const val KEY_OFFSET = -123
@@ -52,10 +54,8 @@ object BarUtils {
      * @param activity  The activity.
      * @param isVisible True to set status bar visible, false otherwise.
      */
-    fun setStatusBarVisibility(
-        activity: Activity,
-        isVisible: Boolean
-    ) {
+    @JvmStatic
+    fun setStatusBarVisibility(activity: Activity, isVisible: Boolean) {
         setStatusBarVisibility(activity.window, isVisible)
     }
 
@@ -65,10 +65,8 @@ object BarUtils {
      * @param window    The window.
      * @param isVisible True to set status bar visible, false otherwise.
      */
-    fun setStatusBarVisibility(
-        window: Window,
-        isVisible: Boolean
-    ) {
+    @JvmStatic
+    fun setStatusBarVisibility(window: Window, isVisible: Boolean) {
         if (isVisible) {
             window.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
             showStatusBarView(window)
@@ -86,6 +84,7 @@ object BarUtils {
      * @param activity The activity.
      * @return `true`: yes<br></br>`false`: no
      */
+    @JvmStatic
     fun isStatusBarVisible(activity: Activity): Boolean {
         val flags = activity.window.attributes.flags
         return flags and WindowManager.LayoutParams.FLAG_FULLSCREEN == 0
@@ -97,10 +96,8 @@ object BarUtils {
      * @param activity    The activity.
      * @param isLightMode True to set status bar light mode, false otherwise.
      */
-    fun setStatusBarLightMode(
-        activity: Activity,
-        isLightMode: Boolean
-    ) {
+    @JvmStatic
+    fun setStatusBarLightMode(activity: Activity, isLightMode: Boolean) {
         setStatusBarLightMode(activity.window, isLightMode)
     }
 
@@ -110,10 +107,8 @@ object BarUtils {
      * @param window      The window.
      * @param isLightMode True to set status bar light mode, false otherwise.
      */
-    fun setStatusBarLightMode(
-        window: Window,
-        isLightMode: Boolean
-    ) {
+    @JvmStatic
+    fun setStatusBarLightMode(window: Window, isLightMode: Boolean) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             val decorView = window.decorView
             var vis = decorView.systemUiVisibility
@@ -132,6 +127,7 @@ object BarUtils {
      * @param activity The activity.
      * @return `true`: yes<br></br>`false`: no
      */
+    @JvmStatic
     fun isStatusBarLightMode(activity: Activity): Boolean {
         return isStatusBarLightMode(activity.window)
     }
@@ -142,6 +138,7 @@ object BarUtils {
      * @param window The window.
      * @return `true`: yes<br></br>`false`: no
      */
+    @JvmStatic
     fun isStatusBarLightMode(window: Window): Boolean {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             val decorView = window.decorView
@@ -156,8 +153,8 @@ object BarUtils {
      *
      * @param view The view.
      */
+    @JvmStatic
     fun addMarginTopEqualStatusBarHeight(view: View) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) return
         view.tag = TAG_OFFSET
         val haveSetOffset = view.getTag(KEY_OFFSET)
         if (haveSetOffset != null && haveSetOffset as Boolean) return
@@ -176,8 +173,8 @@ object BarUtils {
      *
      * @param view The view.
      */
+    @JvmStatic
     fun subtractMarginTopEqualStatusBarHeight(view: View) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) return
         val haveSetOffset = view.getTag(KEY_OFFSET)
         if (haveSetOffset == null || !(haveSetOffset as Boolean)) return
         val layoutParams = view.layoutParams as MarginLayoutParams
@@ -190,17 +187,15 @@ object BarUtils {
         view.setTag(KEY_OFFSET, false)
     }
 
+    @JvmStatic
     private fun addMarginTopEqualStatusBarHeight(window: Window) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) return
-        val withTag = window.decorView.findViewWithTag<View>(TAG_OFFSET)
-            ?: return
+        val withTag = window.decorView.findViewWithTag<View>(TAG_OFFSET) ?: return
         addMarginTopEqualStatusBarHeight(withTag)
     }
 
+    @JvmStatic
     private fun subtractMarginTopEqualStatusBarHeight(window: Window) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) return
-        val withTag = window.decorView.findViewWithTag<View>(TAG_OFFSET)
-            ?: return
+        val withTag = window.decorView.findViewWithTag<View>(TAG_OFFSET) ?: return
         subtractMarginTopEqualStatusBarHeight(withTag)
     }
 
@@ -210,10 +205,8 @@ object BarUtils {
      * @param activity The activity.
      * @param color    The status bar's color.
      */
-    fun setStatusBarColor(
-        activity: Activity,
-        @ColorInt color: Int
-    ): View? {
+    @JvmStatic
+    fun setStatusBarColor(activity: Activity, @ColorInt color: Int): View? {
         return setStatusBarColor(activity, color, false)
     }
 
@@ -225,12 +218,8 @@ object BarUtils {
      * @param isDecor  True to add fake status bar in DecorView,
      * false to add fake status bar in ContentView.
      */
-    fun setStatusBarColor(
-        activity: Activity,
-        @ColorInt color: Int,
-        isDecor: Boolean
-    ): View? {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) return null
+    @JvmStatic
+    fun setStatusBarColor(activity: Activity, @ColorInt color: Int, isDecor: Boolean): View? {
         transparentStatusBar(activity)
         return applyStatusBarColor(activity, color, isDecor)
     }
@@ -241,10 +230,8 @@ object BarUtils {
      * @param window The window.
      * @param color  The status bar's color.
      */
-    fun setStatusBarColor(
-        window: Window,
-        @ColorInt color: Int
-    ): View? {
+    @JvmStatic
+    fun setStatusBarColor(window: Window, @ColorInt color: Int): View? {
         return setStatusBarColor(window, color, false)
     }
 
@@ -256,12 +243,8 @@ object BarUtils {
      * @param isDecor True to add fake status bar in DecorView,
      * false to add fake status bar in ContentView.
      */
-    fun setStatusBarColor(
-        window: Window,
-        @ColorInt color: Int,
-        isDecor: Boolean
-    ): View? {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) return null
+    @JvmStatic
+    fun setStatusBarColor(window: Window, @ColorInt color: Int, isDecor: Boolean): View {
         transparentStatusBar(window)
         return applyStatusBarColor(window, color, isDecor)
     }
@@ -272,12 +255,9 @@ object BarUtils {
      * @param fakeStatusBar The fake status bar view.
      * @param color         The status bar's color.
      */
-    fun setStatusBarColor(
-        fakeStatusBar: View,
-        @ColorInt color: Int
-    ) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) return
-        val activity = UtilsBridge.getActivityByContext(fakeStatusBar.context) ?: return
+    @JvmStatic
+    fun setStatusBarColor(fakeStatusBar: View, @ColorInt color: Int) {
+        val activity = fakeStatusBar.context.getActivity() ?: return
         transparentStatusBar(activity)
         fakeStatusBar.visibility = View.VISIBLE
         val layoutParams = fakeStatusBar.layoutParams
@@ -291,9 +271,9 @@ object BarUtils {
      *
      * @param fakeStatusBar The fake status bar view.
      */
+    @JvmStatic
     fun setStatusBarCustom(fakeStatusBar: View) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) return
-        val activity = UtilsBridge.getActivityByContext(fakeStatusBar.context) ?: return
+        val activity = fakeStatusBar.context.getActivity() ?: return
         transparentStatusBar(activity)
         fakeStatusBar.visibility = View.VISIBLE
         var layoutParams = fakeStatusBar.layoutParams
@@ -318,11 +298,8 @@ object BarUtils {
      * @param fakeStatusBar The fake status bar view.
      * @param color         The status bar's color.
      */
-    fun setStatusBarColor4Drawer(
-        drawer: DrawerLayout,
-        fakeStatusBar: View,
-        @ColorInt color: Int
-    ) {
+    @JvmStatic
+    fun setStatusBarColor4Drawer(drawer: DrawerLayout, fakeStatusBar: View, @ColorInt color: Int) {
         setStatusBarColor4Drawer(drawer, fakeStatusBar, color, false)
     }
 
@@ -336,14 +313,11 @@ object BarUtils {
      * @param color         The status bar's color.
      * @param isTop         True to set DrawerLayout at the top layer, false otherwise.
      */
+    @JvmStatic
     fun setStatusBarColor4Drawer(
-        drawer: DrawerLayout,
-        fakeStatusBar: View,
-        @ColorInt color: Int,
-        isTop: Boolean
+        drawer: DrawerLayout, fakeStatusBar: View, @ColorInt color: Int, isTop: Boolean
     ) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) return
-        val activity = UtilsBridge.getActivityByContext(fakeStatusBar.context) ?: return
+        val activity = fakeStatusBar.context.getActivity() ?: return
         transparentStatusBar(activity)
         drawer.fitsSystemWindows = false
         setStatusBarColor(fakeStatusBar, color)
@@ -360,22 +334,15 @@ object BarUtils {
         }
     }
 
-    private fun applyStatusBarColor(
-        activity: Activity,
-        color: Int,
-        isDecor: Boolean
-    ): View? {
+    @JvmStatic
+    private fun applyStatusBarColor(activity: Activity, color: Int, isDecor: Boolean): View {
         return applyStatusBarColor(activity.window, color, isDecor)
     }
 
-    private fun applyStatusBarColor(
-        window: Window,
-        color: Int,
-        isDecor: Boolean
-    ): View {
-        val parent = if (isDecor) window.decorView as ViewGroup else (window.findViewById<View>(
-            R.id.content
-        ) as ViewGroup)
+    @JvmStatic
+    private fun applyStatusBarColor(window: Window, color: Int, isDecor: Boolean): View {
+        val parent = if (isDecor) window.decorView as ViewGroup
+        else (window.findViewById<View>(R.id.content) as ViewGroup)
         var fakeStatusBarView = parent.findViewWithTag<View>(TAG_STATUS_BAR)
         if (fakeStatusBarView != null) {
             if (fakeStatusBarView.visibility == View.GONE) {
@@ -389,10 +356,12 @@ object BarUtils {
         return fakeStatusBarView
     }
 
+    @JvmStatic
     private fun hideStatusBarView(activity: Activity) {
         hideStatusBarView(activity.window)
     }
 
+    @JvmStatic
     private fun hideStatusBarView(window: Window) {
         val decorView = window.decorView as ViewGroup
         val fakeStatusBarView = decorView.findViewWithTag<View>(TAG_STATUS_BAR)
@@ -400,17 +369,15 @@ object BarUtils {
         fakeStatusBarView.visibility = View.GONE
     }
 
+    @JvmStatic
     private fun showStatusBarView(window: Window) {
         val decorView = window.decorView as ViewGroup
-        val fakeStatusBarView = decorView.findViewWithTag<View>(TAG_STATUS_BAR)
-            ?: return
+        val fakeStatusBarView = decorView.findViewWithTag<View>(TAG_STATUS_BAR) ?: return
         fakeStatusBarView.visibility = View.VISIBLE
     }
 
-    private fun createStatusBarView(
-        context: Context,
-        color: Int
-    ): View {
+    @JvmStatic
+    private fun createStatusBarView(context: Context, color: Int): View {
         val statusBarView = View(context)
         statusBarView.layoutParams = ViewGroup.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT, getStatusBarHeight()
@@ -420,12 +387,13 @@ object BarUtils {
         return statusBarView
     }
 
+    @JvmStatic
     fun transparentStatusBar(activity: Activity) {
         transparentStatusBar(activity.window)
     }
 
+    @JvmStatic
     fun transparentStatusBar(window: Window) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) return
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
@@ -438,21 +406,18 @@ object BarUtils {
             window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
         }
     }
-    ///////////////////////////////////////////////////////////////////////////
-    // action bar
-    ///////////////////////////////////////////////////////////////////////////
+
     /**
      * Return the action bar's height.
      *
      * @return the action bar's height
      */
+    @JvmStatic
     val actionBarHeight: Int
         get() {
             val tv = TypedValue()
             return if (Utils.app.theme.resolveAttribute(R.attr.actionBarSize, tv, true)) {
-                TypedValue.complexToDimensionPixelSize(
-                    tv.data, Utils.app.resources.displayMetrics
-                )
+                TypedValue.complexToDimensionPixelSize(tv.data, Utils.app.resources.displayMetrics)
             } else 0
         }
     ///////////////////////////////////////////////////////////////////////////
@@ -465,22 +430,22 @@ object BarUtils {
      *
      * @param isVisible True to set notification bar visible, false otherwise.
      */
+    @JvmStatic
     @RequiresPermission(permission.EXPAND_STATUS_BAR)
     fun setNotificationBarVisibility(isVisible: Boolean) {
-        val methodName: String = if (isVisible) {
-            if (Build.VERSION.SDK_INT <= 16) "expand" else "expandNotificationsPanel"
-        } else {
-            if (Build.VERSION.SDK_INT <= 16) "collapse" else "collapsePanels"
-        }
+        val methodName: String = if (isVisible) "expandNotificationsPanel"
+        else "collapsePanels"
         invokePanels(methodName)
     }
 
+    @JvmStatic
     private fun invokePanels(methodName: String) {
         try {
-            @SuppressLint("WrongConstant") val service =
-                Utils.app.getSystemService("statusbar")
-            @SuppressLint("PrivateApi") val statusBarManager =
-                Class.forName("android.app.StatusBarManager")
+            @SuppressLint("WrongConstant")
+            val service = Utils.app.getSystemService("statusbar")
+
+            @SuppressLint("PrivateApi")
+            val statusBarManager = Class.forName("android.app.StatusBarManager")
             val expand = statusBarManager.getMethod(methodName)
             expand.invoke(service)
         } catch (e: Exception) {
@@ -499,11 +464,8 @@ object BarUtils {
     fun getNavBarHeight(context: Context = Utils.app): Int {
         val res = context.resources
         val resourceId = res.getIdentifier("navigation_bar_height", "dimen", "android")
-        return if (resourceId != 0) {
-            res.getDimensionPixelSize(resourceId)
-        } else {
-            0
-        }
+        return if (resourceId != 0) res.getDimensionPixelSize(resourceId)
+        else 0
     }
     /**
      * Set the navigation bar's visibility.
@@ -512,7 +474,6 @@ object BarUtils {
      * @param isVisible True to set navigation bar visible, false otherwise.
      */
     fun setNavBarVisibility(activity: Activity, isVisible: Boolean) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) return
         setNavBarVisibility(activity.window, isVisible)
     }
 
@@ -522,8 +483,8 @@ object BarUtils {
      * @param window    The window.
      * @param isVisible True to set navigation bar visible, false otherwise.
      */
+    @JvmStatic
     fun setNavBarVisibility(window: Window, isVisible: Boolean) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) return
         val decorView = window.decorView as ViewGroup
         var i = 0
         val count = decorView.childCount
@@ -556,6 +517,7 @@ object BarUtils {
      * @param activity The activity.
      * @return `true`: yes<br></br>`false`: no
      */
+    @JvmStatic
     fun isNavBarVisible(activity: Activity): Boolean {
         return isNavBarVisible(activity.window)
     }
@@ -568,6 +530,7 @@ object BarUtils {
      * @param window The window.
      * @return `true`: yes<br></br>`false`: no
      */
+    @JvmStatic
     fun isNavBarVisible(window: Window): Boolean {
         var isVisible = false
         val decorView = window.decorView as ViewGroup
@@ -585,26 +548,23 @@ object BarUtils {
             }
             i++
         }
-        if (isVisible) {
+        if (isVisible && RomUtils.isSamsung && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
             // 对于三星手机，android10以下非OneUI2的版本，比如 s8，note8 等设备上，
             // 导航栏显示存在bug："当用户隐藏导航栏时显示输入法的时候导航栏会跟随显示"，会导致隐藏输入法之后判断错误
             // 这个问题在 OneUI 2 & android 10 版本已修复
-            if (RomUtils.isSamsung && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q
-            ) {
-                try {
-                    return Settings.Global.getInt(
-                        Utils.contentResolver,
-                        "navigationbar_hide_bar_enabled"
-                    ) == 0
-                } catch (ignore: Exception) {
-                }
+            try {
+                val name = "navigationbar_hide_bar_enabled"
+                return Settings.Global.getInt(Utils.contentResolver, name) == 0
+            } catch (ignore: Exception) {
             }
+        } else if (isVisible) {
             val visibility = decorView.systemUiVisibility
             isVisible = visibility and View.SYSTEM_UI_FLAG_HIDE_NAVIGATION == 0
         }
         return isVisible
     }
 
+    @JvmStatic
     private fun getResNameById(id: Int): String {
         return try {
             Utils.app.resources.getResourceEntryName(id)
@@ -619,6 +579,7 @@ object BarUtils {
      * @param activity The activity.
      * @param color    The navigation bar's color.
      */
+    @JvmStatic
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     fun setNavBarColor(activity: Activity, @ColorInt color: Int) {
         setNavBarColor(activity.window, color)
@@ -630,6 +591,7 @@ object BarUtils {
      * @param window The window.
      * @param color  The navigation bar's color.
      */
+    @JvmStatic
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     fun setNavBarColor(window: Window, @ColorInt color: Int) {
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
@@ -642,6 +604,7 @@ object BarUtils {
      * @param activity The activity.
      * @return the color of navigation bar
      */
+    @JvmStatic
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     fun getNavBarColor(activity: Activity): Int {
         return getNavBarColor(activity.window)
@@ -653,6 +616,7 @@ object BarUtils {
      * @param window The window.
      * @return the color of navigation bar
      */
+    @JvmStatic
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     fun getNavBarColor(window: Window): Int {
         return window.navigationBarColor
@@ -663,22 +627,16 @@ object BarUtils {
      *
      * @return `true`: yes<br></br>`false`: no
      */
+    @JvmStatic
     val isSupportNavBar: Boolean
         get() {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                val wm = Utils.app
-                    .getSystemService(Context.WINDOW_SERVICE) as WindowManager
-                    ?: return false
-                val display = wm.defaultDisplay
-                val size = Point()
-                val realSize = Point()
-                display.getSize(size)
-                display.getRealSize(realSize)
-                return realSize.y != size.y || realSize.x != size.x
-            }
-            val menu = ViewConfiguration.get(Utils.app).hasPermanentMenuKey()
-            val back = KeyCharacterMap.deviceHasKey(KeyEvent.KEYCODE_BACK)
-            return !menu && !back
+            val wm = Utils.app.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+            val display = wm.defaultDisplay
+            val size = Point()
+            val realSize = Point()
+            display.getSize(size)
+            display.getRealSize(realSize)
+            return realSize.y != size.y || realSize.x != size.x
         }
 
     /**
@@ -687,10 +645,8 @@ object BarUtils {
      * @param activity    The activity.
      * @param isLightMode True to set nav bar light mode, false otherwise.
      */
-    fun setNavBarLightMode(
-        activity: Activity,
-        isLightMode: Boolean
-    ) {
+    @JvmStatic
+    fun setNavBarLightMode(activity: Activity, isLightMode: Boolean) {
         setNavBarLightMode(activity.window, isLightMode)
     }
 
@@ -700,10 +656,8 @@ object BarUtils {
      * @param window      The window.
      * @param isLightMode True to set nav bar light mode, false otherwise.
      */
-    fun setNavBarLightMode(
-        window: Window,
-        isLightMode: Boolean
-    ) {
+    @JvmStatic
+    fun setNavBarLightMode(window: Window, isLightMode: Boolean) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val decorView = window.decorView
             var vis = decorView.systemUiVisibility
@@ -722,6 +676,7 @@ object BarUtils {
      * @param activity The activity.
      * @return `true`: yes<br></br>`false`: no
      */
+    @JvmStatic
     fun isNavBarLightMode(activity: Activity): Boolean {
         return isNavBarLightMode(activity.window)
     }
@@ -732,6 +687,7 @@ object BarUtils {
      * @param window The window.
      * @return `true`: yes<br></br>`false`: no
      */
+    @JvmStatic
     fun isNavBarLightMode(window: Window): Boolean {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val decorView = window.decorView
@@ -740,4 +696,10 @@ object BarUtils {
         }
         return false
     }
+
+    @JvmStatic
+    fun getStatusNavBarHeight(context: Context = Utils.app): Int {
+        return getStatusNavBarHeight(context) + getNavBarHeight(context)
+    }
+
 }

@@ -10,8 +10,7 @@ import android.util.Log
 import android.view.WindowManager
 import androidx.lifecycle.Lifecycle
 import me.ibore.utils.Utils.OnAppStatusChangedListener
-import me.ibore.utils.UtilsBridge.fixSoftInputLeaks
-import me.ibore.utils.UtilsBridge.isActivityAlive
+import java.lang.ref.WeakReference
 import java.lang.reflect.InvocationTargetException
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
@@ -48,7 +47,7 @@ internal class UtilsActivityLifecycleImpl : Application.ActivityLifecycleCallbac
         get() {
             val activityList = activityList
             for (activity in activityList) {
-                if (!isActivityAlive(activity)) {
+                if (!ActivityUtils.isActivityAlive(activity)) {
                     continue
                 }
                 return activity
@@ -273,7 +272,7 @@ internal class UtilsActivityLifecycleImpl : Application.ActivityLifecycleCallbac
 
     override fun onActivityDestroyed(activity: Activity) {
         mActivityList.remove(activity)
-        fixSoftInputLeaks(activity)
+        KeyboardUtils.fixSoftInputLeaks(activity)
         consumeActivityLifecycleCallbacks(activity, Lifecycle.Event.ON_DESTROY)
     }
 

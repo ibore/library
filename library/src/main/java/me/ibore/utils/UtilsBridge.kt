@@ -88,33 +88,6 @@ internal object UtilsBridge {
     val isAppForeground: Boolean
         get() = UtilsActivityLifecycleImpl.INSTANCE.isAppForeground
 
-    ///////////////////////////////////////////////////////////////////////////
-    // ActivityUtils
-    ///////////////////////////////////////////////////////////////////////////
-    @JvmStatic
-    fun isActivityAlive(activity: Activity?): Boolean {
-        return ActivityUtils.isActivityAlive(activity)
-    }
-
-    @JvmStatic
-    fun getLauncherActivity(pkg: String): String {
-        return ActivityUtils.getLauncherActivity(pkg)
-    }
-
-    @JvmStatic
-    fun getActivityByContext(context: Context?): Activity? {
-        return ActivityUtils.getActivityByContext(context!!)
-    }
-
-    @JvmStatic
-    fun startHomeActivity() {
-        ActivityUtils.startHomeActivity()
-    }
-
-    @JvmStatic
-    fun finishAllActivities() {
-        ActivityUtils.finishAllActivities()
-    }
 
     ///////////////////////////////////////////////////////////////////////////
     // ConvertUtils
@@ -211,18 +184,6 @@ internal object UtilsBridge {
         return DebouncingUtils.isValid(view, duration)
     }
 
-    ///////////////////////////////////////////////////////////////////////////
-    // EncodeUtils
-    ///////////////////////////////////////////////////////////////////////////
-    @JvmStatic
-    fun base64Encode(input: ByteArray?): ByteArray {
-        return EncodeUtils.base64Encode(input)
-    }
-
-    @JvmStatic
-    fun base64Decode(input: ByteArray?): ByteArray {
-        return EncodeUtils.base64Decode(input)
-    }
 
     ///////////////////////////////////////////////////////////////////////////
     // ImageUtils

@@ -13,19 +13,12 @@ import android.provider.MediaStore
 import android.provider.Settings
 import androidx.annotation.RequiresPermission
 import androidx.core.content.FileProvider
-import me.ibore.utils.UtilsBridge.getLauncherActivity
-import me.ibore.utils.UtilsBridge.isSpace
 import java.io.File
 import java.util.*
 import kotlin.collections.ArrayList
 
 /**
- * <pre>
- * author: Blankj
- * blog  : http://blankj.com
- * time  : 2016/09/23
- * desc  : utils about intent
-</pre> *
+ * intent
  */
 object IntentUtils {
     /**
@@ -116,8 +109,8 @@ object IntentUtils {
      * @return the intent of launch app
      */
     fun getLaunchAppIntent(pkgName: String): Intent? {
-        val launcherActivity = getLauncherActivity(pkgName)
-        if (isSpace(launcherActivity)) return null
+        val launcherActivity = ActivityUtils.getLauncherActivity(pkgName)
+        if (launcherActivity.isBlank()) return null
         val intent = Intent(Intent.ACTION_MAIN)
         intent.addCategory(Intent.CATEGORY_LAUNCHER)
         intent.setClassName(pkgName?:"", launcherActivity)

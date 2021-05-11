@@ -449,11 +449,8 @@ object HttpUtils {
             get() {
                 mRequestBuilder.method = GET
                 val obj = mRequestBuilder.toRequest()
-                return if (obj is Int) {
-                    obj
-                } else {
-                    -1
-                }
+                return if (obj is Int) obj
+                else -1
             }
 
         private fun getTargetFile(): Boolean {
@@ -481,11 +478,8 @@ object HttpUtils {
             }
             mRequestBuilder.method = GET
             val obj = mRequestBuilder.toRequest()
-            return if (obj is Boolean) {
-                obj
-            } else {
-                false
-            }
+            return if (obj is Boolean) obj
+            else false
         }
     }
 

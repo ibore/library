@@ -386,7 +386,7 @@ public class ClickUtils {
         if (Math.abs(nowMillis - sLastClickMillis) < duration) {
             sClickCount++;
             if (sClickCount == 2) {
-                UtilsBridge.startHomeActivity();
+                ActivityUtils.startHomeActivity();
                 listener.dismiss();
                 sLastClickMillis = 0;
             }

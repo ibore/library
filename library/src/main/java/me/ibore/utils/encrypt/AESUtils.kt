@@ -1,5 +1,6 @@
-package me.ibore.utils
+package me.ibore.utils.encrypt
 
+import me.ibore.ktx.logD
 import javax.crypto.Cipher
 import javax.crypto.KeyGenerator
 import javax.crypto.SecretKey
@@ -27,7 +28,7 @@ object AESUtils {
             val secretKey = keyGen.generateKey()
             return secretKey.encoded
         } catch (e: Exception) {
-            LogUtils.d(e)
+            logD(e)
         }
         return null
     }
@@ -46,7 +47,7 @@ object AESUtils {
             cipher.init(Cipher.ENCRYPT_MODE, secretKey)
             return cipher.doFinal(data)
         } catch (e: Exception) {
-            LogUtils.d(e)
+            logD(e)
         }
         return null
     }
@@ -65,7 +66,7 @@ object AESUtils {
             cipher.init(Cipher.DECRYPT_MODE, secretKey)
             return cipher.doFinal(data)
         } catch (e: Exception) {
-            LogUtils.d(e)
+            logD(e)
         }
         return null
     }
