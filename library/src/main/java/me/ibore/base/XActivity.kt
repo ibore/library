@@ -4,8 +4,8 @@ import android.graphics.Color
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewbinding.ViewBinding
-import me.ibore.utils.DisposablesUtils
 import me.ibore.utils.BarUtils
+import me.ibore.utils.DisposablesUtils
 import me.ibore.utils.ReflexUtils
 import me.ibore.widget.RootLayout
 
@@ -13,7 +13,11 @@ import me.ibore.widget.RootLayout
 abstract class XActivity<VB : ViewBinding> : AppCompatActivity(), XStatusView<VB> {
 
     protected open val mBinding: VB by lazy(mode = LazyThreadSafetyMode.NONE) {
-        ReflexUtils.viewBinding(javaClass, layoutInflater)
+        onBindViewBinding()
+    }
+
+    protected open fun onBindViewBinding(): VB {
+        return ReflexUtils.viewBinding(javaClass, layoutInflater)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

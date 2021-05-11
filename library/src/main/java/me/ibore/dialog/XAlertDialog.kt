@@ -10,11 +10,11 @@ import kotlinx.parcelize.RawValue
 import me.ibore.R
 import me.ibore.base.XActivity
 import me.ibore.base.XDialog
-import me.ibore.databinding.DialogAlertBinding
+import me.ibore.databinding.DialogXAlertBinding
 import me.ibore.ktx.dp2px
 import me.ibore.utils.ScreenUtils
 
-class XAlertDialog : XDialog<DialogAlertBinding>() {
+class XAlertDialog : XDialog<DialogXAlertBinding>() {
 
     companion object {
 
@@ -30,49 +30,49 @@ class XAlertDialog : XDialog<DialogAlertBinding>() {
         arguments?.getParcelable("builder") ?: Builder()
     }
 
-    override fun DialogAlertBinding.onBindView(bundle: Bundle?, savedInstanceState: Bundle?) {
+    override fun DialogXAlertBinding.onBindView(bundle: Bundle?, savedInstanceState: Bundle?) {
         val context = requireContext()
-        mBinding.tvTitle.text = builder.title
+        tvTitle.text = builder.title
         val margin = context.resources.getDimensionPixelSize(R.dimen.dialog_margin)
         if (builder.title.isNullOrEmpty()) {
-            mBinding.tvTitle.visibility = View.GONE
-            mBinding.scrollView.setPadding(margin, margin, margin, margin)
+            tvTitle.visibility = View.GONE
+            scrollView.setPadding(margin, margin, margin, margin)
         } else {
-            mBinding.tvTitle.visibility = View.VISIBLE
-            mBinding.scrollView.setPadding(margin, 0, margin, margin)
+            tvTitle.visibility = View.VISIBLE
+            scrollView.setPadding(margin, 0, margin, margin)
         }
-        mBinding.tvTitle.visibility = if (!builder.title.isNullOrEmpty()) View.VISIBLE else View.GONE
-        mBinding.tvContent.text = builder.content
-        mBinding.tvContent.movementMethod = LinkMovementMethod.getInstance()
-        mBinding.scrollView.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
+        tvTitle.visibility = if (!builder.title.isNullOrEmpty()) View.VISIBLE else View.GONE
+        tvContent.text = builder.content
+        tvContent.movementMethod = LinkMovementMethod.getInstance()
+        scrollView.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
             override fun onGlobalLayout() {
-                mBinding.scrollView.viewTreeObserver.removeOnGlobalLayoutListener(this)
-                val layoutParams = mBinding.scrollView.layoutParams
-                val maxHeight = if (mBinding.tvTitle.visibility == View.GONE) {
+                scrollView.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                val layoutParams = scrollView.layoutParams
+                val maxHeight = if (tvTitle.visibility == View.GONE) {
                     ScreenUtils.appScreenHeight / 2 + dp2px(48F)
                 } else {
                     ScreenUtils.appScreenHeight / 2
                 }
-                if (mBinding.scrollView.height > maxHeight) {
+                if (scrollView.height > maxHeight) {
                     layoutParams.height = maxHeight
                 }
-                mBinding.scrollView.layoutParams = layoutParams
+                scrollView.layoutParams = layoutParams
             }
         })
-        mBinding.tvNegative.text = builder.negative ?: getText(R.string.dialog_negative)
-        mBinding.tvNegative.setOnClickListener {
+        tvNegative.text = builder.negative ?: getText(R.string.dialog_negative)
+        tvNegative.setOnClickListener {
             dismiss()
             builder.negativeListener?.invoke(this@XAlertDialog)
         }
         if (builder.negative.isNullOrEmpty() && null == builder.negativeListener) {
-            mBinding.tvNegative.visibility = View.GONE
-            mBinding.viewLine.visibility = View.GONE
+            tvNegative.visibility = View.GONE
+            viewLine.visibility = View.GONE
         } else {
-            mBinding.tvNegative.visibility = View.VISIBLE
-            mBinding.viewLine.visibility = View.VISIBLE
+            tvNegative.visibility = View.VISIBLE
+            viewLine.visibility = View.VISIBLE
         }
-        mBinding.tvPositive.text = builder.positive ?: getText(R.string.dialog_positive)
-        mBinding.tvPositive.setOnClickListener {
+        tvPositive.text = builder.positive ?: getText(R.string.dialog_positive)
+        tvPositive.setOnClickListener {
             dismiss()
             builder.positiveListener?.invoke(this@XAlertDialog)
         }

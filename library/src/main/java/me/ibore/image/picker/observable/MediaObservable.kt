@@ -1,5 +1,6 @@
 package me.ibore.image.picker.observable
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.net.Uri
 import android.provider.MediaStore
@@ -33,6 +34,7 @@ class MediaObservable(private val context: Context) : ObservableOnSubscribe<Muta
         emitter.onComplete()
     }
 
+    @SuppressLint("InlinedApi")
     private fun getVideoMediaFiles(): ArrayList<MediaFile> {
         val scanUri: Uri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI
         val projection: Array<String> = arrayOf(
@@ -63,6 +65,7 @@ class MediaObservable(private val context: Context) : ObservableOnSubscribe<Muta
         return mediaFiles
     }
 
+    @SuppressLint("InlinedApi")
     private fun getImageMediaFiles(): ArrayList<MediaFile> {
         val scanUri: Uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
         val projection: Array<String> = arrayOf(

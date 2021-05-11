@@ -9,11 +9,11 @@ import kotlinx.parcelize.RawValue
 import me.ibore.R
 import me.ibore.base.XActivity
 import me.ibore.base.XDialog
-import me.ibore.databinding.DialogTimerBinding
+import me.ibore.databinding.DialogXTimerBinding
 import me.ibore.ktx.dp2px
 import me.ibore.utils.ScreenUtils
 
-class XTimerDialog : XDialog<DialogTimerBinding>() {
+class XTimerDialog : XDialog<DialogXTimerBinding>() {
 
     companion object {
         fun show(activity: XActivity<*>, title: CharSequence? = null, selectedTimer: String? = null,
@@ -31,31 +31,30 @@ class XTimerDialog : XDialog<DialogTimerBinding>() {
         arguments?.getParcelable("builder") ?: Builder()
     }
 
-    override fun DialogTimerBinding.onBindView(bundle: Bundle?, savedInstanceState: Bundle?) {
-        val context = requireContext()
+    override fun DialogXTimerBinding.onBindView(bundle: Bundle?, savedInstanceState: Bundle?) {
         if (builder.showBottom) {
-            mBinding.tvNegative.visibility = View.VISIBLE
-            mBinding.tvPositive.visibility = View.VISIBLE
-            mBinding.btnPositive.visibility = View.GONE
+            tvNegative.visibility = View.VISIBLE
+            tvPositive.visibility = View.VISIBLE
+            btnPositive.visibility = View.GONE
         } else {
-            mBinding.tvNegative.visibility = View.GONE
-            mBinding.tvPositive.visibility = View.GONE
-            mBinding.btnPositive.visibility = View.VISIBLE
+            tvNegative.visibility = View.GONE
+            tvPositive.visibility = View.GONE
+            btnPositive.visibility = View.VISIBLE
         }
-        mBinding.tvTitle.text = builder.title ?: getString(R.string.dialog_timer_title)
-        mBinding.tvNegative.setOnClickListener {
+        tvTitle.text = builder.title ?: getString(R.string.dialog_timer_title)
+        tvNegative.setOnClickListener {
             dismiss()
         }
-        mBinding.tvPositive.setOnClickListener {
+        tvPositive.setOnClickListener {
             dismiss()
-            builder.onSelectListener?.invoke(mBinding.timerPickerView.selectedTimer)
+            builder.onSelectListener?.invoke(timerPickerView.selectedTimer)
         }
-        mBinding.btnPositive.setOnClickListener {
+        btnPositive.setOnClickListener {
             dismiss()
-            builder.onSelectListener?.invoke(mBinding.timerPickerView.selectedTimer)
+            builder.onSelectListener?.invoke(timerPickerView.selectedTimer)
         }
-        mBinding.timerPickerView.setStartEndTimer(builder.startTimer, builder.endTimer)
-        mBinding.timerPickerView.selectedTimer = builder.selectedTimer ?: ""
+        timerPickerView.setStartEndTimer(builder.startTimer, builder.endTimer)
+        timerPickerView.selectedTimer = builder.selectedTimer ?: ""
     }
 
     override fun onBindDialogConfig(): DialogConfig {

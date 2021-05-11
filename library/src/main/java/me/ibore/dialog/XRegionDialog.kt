@@ -9,12 +9,12 @@ import kotlinx.parcelize.RawValue
 import me.ibore.R
 import me.ibore.base.XActivity
 import me.ibore.base.XDialog
-import me.ibore.databinding.DialogRegionBinding
+import me.ibore.databinding.DialogXRegionBinding
 import me.ibore.ktx.dp2px
 import me.ibore.model.RegionModel
 import me.ibore.utils.ScreenUtils
 
-class XRegionDialog : XDialog<DialogRegionBinding>() {
+class XRegionDialog : XDialog<DialogXRegionBinding>() {
 
     companion object {
         fun show(activity: XActivity<*>, title: CharSequence? = null, selectedProvinceCode: String? = null, selectedCityCode: String? = null, selectedCountyCode: String? = null,
@@ -31,33 +31,32 @@ class XRegionDialog : XDialog<DialogRegionBinding>() {
         arguments?.getParcelable("builder") ?: Builder()
     }
 
-    override fun DialogRegionBinding.onBindView(bundle: Bundle?, savedInstanceState: Bundle?) {
-        val context = requireContext()
+    override fun DialogXRegionBinding.onBindView(bundle: Bundle?, savedInstanceState: Bundle?) {
         if (builder.showBottom) {
-            mBinding.tvNegative.visibility = View.VISIBLE
-            mBinding.tvPositive.visibility = View.VISIBLE
-            mBinding.btnPositive.visibility = View.GONE
+            tvNegative.visibility = View.VISIBLE
+            tvPositive.visibility = View.VISIBLE
+            btnPositive.visibility = View.GONE
         } else {
-            mBinding.tvNegative.visibility = View.GONE
-            mBinding.tvPositive.visibility = View.GONE
-            mBinding.btnPositive.visibility = View.VISIBLE
+            tvNegative.visibility = View.GONE
+            tvPositive.visibility = View.GONE
+            btnPositive.visibility = View.VISIBLE
         }
-        mBinding.tvTitle.text = builder.title ?: getString(R.string.dialog_timer_title)
-        mBinding.tvNegative.setOnClickListener {
+        tvTitle.text = builder.title ?: getString(R.string.dialog_timer_title)
+        tvNegative.setOnClickListener {
             dismiss()
         }
-        mBinding.tvPositive.setOnClickListener {
+        tvPositive.setOnClickListener {
             dismiss()
         }
-        mBinding.btnPositive.setOnClickListener {
+        btnPositive.setOnClickListener {
             dismiss()
         }
-        mBinding.regionPickerView.setSelectedRegion(
+        regionPickerView.setSelectedRegion(
             builder.selectedProvinceCode,
             builder.selectedCityCode,
             builder.selectedCountyCode
         )
-        mBinding.regionPickerView.onRegionSelectedListener = builder.onRegionSelectedListener
+        regionPickerView.onRegionSelectedListener = builder.onRegionSelectedListener
 
     }
 

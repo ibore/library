@@ -116,7 +116,8 @@
     <me.ibore.widget.TitleBar
         android:id="@+id/title_bar"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/image_picker_action_bar_height"
+        android:layout_height="wrap_content"
+        app:tbHeight="@dimen/image_picker_action_bar_height"
         android:background="@color/image_picker_bar_color"
         app:layout_rootType="title"
         app:tbStatusBar="true">

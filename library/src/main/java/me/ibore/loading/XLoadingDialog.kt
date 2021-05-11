@@ -2,12 +2,12 @@ package me.ibore.loading
 
 import android.os.Bundle
 import me.ibore.base.XDialog
-import me.ibore.databinding.DialogLoadingBinding
+import me.ibore.databinding.DialogXLoadingBinding
 import me.ibore.ktx.dp2px
 
-class XLoadingDialog : XDialog<DialogLoadingBinding>() {
+class XLoadingDialog : XDialog<DialogXLoadingBinding>() {
 
-    override fun DialogLoadingBinding.onBindView(bundle: Bundle?, savedInstanceState: Bundle?) {
+    override fun DialogXLoadingBinding.onBindView(bundle: Bundle?, savedInstanceState: Bundle?) {
 
     }
 

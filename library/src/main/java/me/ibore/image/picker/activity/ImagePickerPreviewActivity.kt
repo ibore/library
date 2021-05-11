@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.widget.ViewPager2
 import me.ibore.R
 import me.ibore.base.XActivity
-import me.ibore.databinding.ActivityImagePickerPreviewBinding
+import me.ibore.databinding.ActivityXImagePickerPreviewBinding
 import me.ibore.image.picker.ImagePicker
 import me.ibore.image.picker.adapter.ImagePreviewAdapter
 import me.ibore.image.picker.adapter.ImageSelectAdapter
@@ -25,7 +25,7 @@ import me.ibore.utils.BarUtils
 import me.ibore.utils.ToastUtils
 
 
-class ImagePickerPreviewActivity : XActivity<ActivityImagePickerPreviewBinding>() {
+class ImagePickerPreviewActivity : XActivity<ActivityXImagePickerPreviewBinding>() {
 
     private var mPosition = 0
     private lateinit var mMediaFileList: MutableList<MediaFile>
@@ -37,7 +37,7 @@ class ImagePickerPreviewActivity : XActivity<ActivityImagePickerPreviewBinding>(
         BarUtils.setStatusBarLightMode(this, false)
     }
 
-    override fun ActivityImagePickerPreviewBinding.onBindView(
+    override fun ActivityXImagePickerPreviewBinding.onBindView(
         bundle: Bundle?,
         savedInstanceState: Bundle?
     ) {
@@ -154,7 +154,7 @@ class ImagePickerPreviewActivity : XActivity<ActivityImagePickerPreviewBinding>(
         mBinding.viewPager2.setCurrentItem(mPosition, false)
     }
 
-    private fun ActivityImagePickerPreviewBinding.updateImageSelect() {
+    private fun ActivityXImagePickerPreviewBinding.updateImageSelect() {
         updateCommitView()
         rvImageSelect.visibility =
             if (ImagePickerUtils.selectMedias.isNullOrEmpty()) View.GONE else View.VISIBLE
@@ -172,7 +172,7 @@ class ImagePickerPreviewActivity : XActivity<ActivityImagePickerPreviewBinding>(
         mSelectAdapter.notifyDataSetChanged()
     }
 
-    private fun ActivityImagePickerPreviewBinding.updateCommitView() {
+    private fun ActivityXImagePickerPreviewBinding.updateCommitView() {
         val selectCount = ImagePickerUtils.selectMedias.size
         if (selectCount == 0) {
             tvImageCommit.isEnabled = false
@@ -184,7 +184,7 @@ class ImagePickerPreviewActivity : XActivity<ActivityImagePickerPreviewBinding>(
         }
     }
 
-    private fun ActivityImagePickerPreviewBinding.updateOriginalImageView(imageQuality: Int) {
+    private fun ActivityXImagePickerPreviewBinding.updateOriginalImageView(imageQuality: Int) {
         if (imageQuality == 3) {
             ivOriginalImage.setImageDrawable(null)
             tvOriginalImage.isEnabled = false
