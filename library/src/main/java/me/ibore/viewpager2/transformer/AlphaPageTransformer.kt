@@ -1,7 +1,6 @@
 package me.ibore.viewpager2.transformer
 
 import android.view.View
-import com.youth.banner.transformer.BasePageTransformer
 
 class AlphaPageTransformer @JvmOverloads constructor(private val mMinAlpha: Float = DEFAULT_MIN_ALPHA) :
     BasePageTransformer() {

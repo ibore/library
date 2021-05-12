@@ -17,6 +17,36 @@ import java.util.*
 @SuppressLint("ApplySharedPref")
 class SPUtils private constructor(spName: String, mode: Int = Context.MODE_PRIVATE) {
 
+    companion object {
+
+        private val SP_UTILS_MAP: ArrayMap<String, SPUtils> = ArrayMap()
+        private const val SP_UTILS_NAME = "SPUtils"
+
+        /**
+         * Return the single [SPUtils] instance
+         *
+         * @param spName The name of sp.
+         * @param mode   Operating mode.
+         * @return the single [SPUtils] instance
+         */
+        @JvmStatic
+        @JvmOverloads
+        fun getInstance(spName: String = SP_UTILS_NAME, mode: Int = Context.MODE_PRIVATE): SPUtils {
+            val spNameTemp = if (spName.isBlank()) SP_UTILS_NAME else spName
+            var spUtils = SP_UTILS_MAP[spNameTemp]
+            if (spUtils == null) {
+                synchronized(SPUtils::class.java) {
+                    spUtils = SP_UTILS_MAP[spNameTemp]
+                    if (spUtils == null) {
+                        spUtils = SPUtils(spNameTemp, mode)
+                        SP_UTILS_MAP[spNameTemp] = spUtils!!
+                    }
+                }
+            }
+            return spUtils!!
+        }
+    }
+
     private var sp: SharedPreferences = Utils.app.getSharedPreferences(spName, mode)
 
     /**
@@ -256,35 +286,5 @@ class SPUtils private constructor(spName: String, mode: Int = Context.MODE_PRIVA
         }
     }
 
-    companion object {
-
-        private val SP_UTILS_MAP: ArrayMap<String, SPUtils> = ArrayMap()
-        private const val SP_UTILS_NAME = "SPUtils"
-
-        /**
-         * Return the single [SPUtils] instance
-         *
-         * @param spName The name of sp.
-         * @param mode   Operating mode.
-         * @return the single [SPUtils] instance
-         */
-        @JvmStatic
-        @JvmOverloads
-        fun getInstance(spName: String = SP_UTILS_NAME, mode: Int = Context.MODE_PRIVATE): SPUtils {
-            val spNameTemp = if (spName.isBlank()) SP_UTILS_NAME else spName
-            var spUtils = SP_UTILS_MAP[spNameTemp]
-            if (spUtils == null) {
-                synchronized(SPUtils::class.java) {
-                    spUtils = SP_UTILS_MAP[spNameTemp]
-                    if (spUtils == null) {
-                        spUtils = SPUtils(spNameTemp, mode)
-                        SP_UTILS_MAP[spNameTemp] = spUtils!!
-                    }
-                }
-            }
-            return spUtils!!
-        }
-
-    }
 
 }

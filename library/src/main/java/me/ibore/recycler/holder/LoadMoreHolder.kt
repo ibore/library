@@ -8,7 +8,6 @@ import android.widget.FrameLayout
 import android.widget.RelativeLayout
 import me.ibore.recycler.adapter.RecyclerAdapter
 import me.ibore.recycler.listener.OnLoadMoreListener
-import me.ibore.utils.SizeUtils
 
 class LoadMoreHolder : ItemHolder {
 

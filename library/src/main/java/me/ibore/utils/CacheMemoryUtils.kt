@@ -12,12 +12,113 @@ import java.util.*
  * desc  : utils about memory cache
 </pre> *
  */
-class CacheMemoryUtils private constructor(
-    private val mCacheKey: String,
-    private val mMemoryCache: LruCache<String, CacheValue>
+class CacheMemoryUtils constructor(
+    private val mCacheKey: String, private val mMemoryCache: LruCache<String, CacheValue>
 ) : CacheConstants {
-    override fun toString(): String {
-        return mCacheKey + "@" + Integer.toHexString(hashCode())
+
+    companion object {
+        private const val DEFAULT_MAX_COUNT = 256
+        private val MAP_CACHE: MutableMap<String, CacheMemoryUtils> = HashMap()
+
+        /**
+         * Return the single [CacheMemoryUtils] instance.
+         *
+         * @param cacheKey The key of cache.
+         * @param maxCount The max count of cache.
+         * @return the single [CacheMemoryUtils] instance
+         */
+        @JvmStatic
+        @JvmOverloads
+        fun getInstance(
+            maxCount: Int = DEFAULT_MAX_COUNT, cacheKey: String = maxCount.toString()
+        ): CacheMemoryUtils {
+            var cache = MAP_CACHE[cacheKey]
+            if (cache == null) {
+                synchronized(CacheMemoryUtils::class.java) {
+                    cache = MAP_CACHE[cacheKey]
+                    if (cache == null) {
+                        cache = CacheMemoryUtils(cacheKey, LruCache(maxCount))
+                        MAP_CACHE[cacheKey] = cache!!
+                    }
+                }
+            }
+            return cache!!
+        }
+
+        /**
+         * Put bytes in cache.
+         *
+         * @param key              The key of cache.
+         * @param value            The value of cache.
+         * @param saveTime         The save time of cache, in seconds.
+         * @param memoryCache The instance of [CacheMemoryUtils].
+         */
+        @JvmStatic
+        @JvmOverloads
+        fun put(key: String, value: Any?, saveTime: Int = -1, memoryCache: CacheMemoryUtils = defaultCache) {
+            memoryCache.put(key, value, saveTime)
+        }
+
+        /**
+         * Return the value in cache.
+         *
+         * @param key              The key of cache.
+         * @param defaultValue     The default value if the cache doesn't exist.
+         * @param memoryCache The instance of [CacheMemoryUtils].
+         * @param <T>              The value type.
+         * @return the value if cache exists or defaultValue otherwise
+        </T> */
+        @JvmStatic
+        @JvmOverloads
+        fun <T> get(key: String, defaultValue: T?=null, memoryCache: CacheMemoryUtils = defaultCache): T? {
+            return memoryCache[key, defaultValue]
+        }
+
+        /**
+         * Return the count of cache.
+         *
+         * @param memoryCache The instance of [CacheMemoryUtils].
+         * @return the count of cache
+         */
+        @JvmStatic
+        @JvmOverloads
+        fun getCacheCount(memoryCache: CacheMemoryUtils = defaultCache): Int {
+            return memoryCache.cacheCount
+        }
+
+        /**
+         * Remove the cache by key.
+         *
+         * @param key              The key of cache.
+         * @param memoryCache The instance of [CacheMemoryUtils].
+         * @return `true`: success<br></br>`false`: fail
+         */
+        @JvmStatic
+        @JvmOverloads
+        fun remove(key: String, memoryCache: CacheMemoryUtils = defaultCache): Any? {
+            return memoryCache.remove(key)
+        }
+
+        /**
+         * Clear all of the cache.
+         *
+         * @param memoryCache The instance of [CacheMemoryUtils].
+         */
+        @JvmStatic
+        @JvmOverloads
+        fun clear(memoryCache: CacheMemoryUtils = defaultCache) {
+            memoryCache.clear()
+        }
+
+        /**
+         * Set the default instance of [CacheMemoryUtils].
+         *
+         * @param CacheMemoryUtils The default instance of [CacheMemoryUtils].
+         */
+        @JvmStatic
+        private var defaultCache: CacheMemoryUtils = getInstance()
+            @Synchronized get
+            @Synchronized set
     }
 
     /**
@@ -63,7 +164,7 @@ class CacheMemoryUtils private constructor(
      *
      * @return the count of cache
      */
-    val cacheMemoryCount: Int
+    val cacheCount: Int
         get() = mMemoryCache.size()
 
     /**
@@ -84,36 +185,10 @@ class CacheMemoryUtils private constructor(
         mMemoryCache.evictAll()
     }
 
-    private class CacheValue(var dueTime: Long, var value: Any)
-
-    companion object {
-
-        private const val DEFAULT_MAX_COUNT = 256
-        private val CACHE_MAP: MutableMap<String, CacheMemoryUtils> = HashMap()
-
-        /**
-         * Return the single [CacheMemoryUtils] instance.
-         *
-         * @param cacheKey The key of cache.
-         * @param maxCount The max count of cache.
-         * @return the single [CacheMemoryUtils] instance
-         */
-        @JvmStatic
-        @JvmOverloads
-        fun getInstance(
-            maxCount: Int = DEFAULT_MAX_COUNT, cacheKey: String = maxCount.toString()
-        ): CacheMemoryUtils {
-            var cache = CACHE_MAP[cacheKey]
-            if (cache == null) {
-                synchronized(CacheMemoryUtils::class.java) {
-                    cache = CACHE_MAP[cacheKey]
-                    if (cache == null) {
-                        cache = CacheMemoryUtils(cacheKey, LruCache(maxCount))
-                        CACHE_MAP[cacheKey] = cache!!
-                    }
-                }
-            }
-            return cache!!
-        }
+    override fun toString(): String {
+        return mCacheKey + "@" + Integer.toHexString(hashCode())
     }
+
+    class CacheValue(var dueTime: Long, var value: Any)
+
 }
