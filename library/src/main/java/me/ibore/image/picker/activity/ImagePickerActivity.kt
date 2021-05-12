@@ -338,15 +338,12 @@ class ImagePickerActivity : XActivity<ActivityXImagePickerBinding>(),
             ImagePickerUtils.removeSelect(data)
             if (!notifyList.isNullOrEmpty()) {
                 for (mediaFile in notifyList) {
-                    mPickerAdapter.notifyItemChanged(
-                        mPickerAdapter.getDatas()
-                            .indexOf(mediaFile) + mPickerAdapter.getDifference()
-                    )
+                    mPickerAdapter.notifyItemChanged(mPickerAdapter.getDatas().indexOf(mediaFile))
                 }
             }
         } else if (!ImagePickerUtils.isSelectOutRange()) {
             ImagePickerUtils.addSelect(data)
-            mPickerAdapter.notifyItemChanged(dataPosition + mPickerAdapter.getDifference())
+            mPickerAdapter.notifyItemChanged(dataPosition)
         } else {
             ToastUtils.showShort(R.string.image_picker_select_max, ImagePicker.getConfig().maxCount)
         }
@@ -364,8 +361,10 @@ class ImagePickerActivity : XActivity<ActivityXImagePickerBinding>(),
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == RESULT_OK) {
             if (requestCode == REQUEST_CODE_CAPTURE) {
-                MediaScannerConnection.scanFile(getXActivity(), arrayOf("file://$mFilePath"),
-                    null, null)
+                MediaScannerConnection.scanFile(
+                    getXActivity(), arrayOf("file://$mFilePath"),
+                    null, null
+                )
 //                sendBroadcast(
 //                    Intent(
 //                        Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,

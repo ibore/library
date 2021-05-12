@@ -1,9 +1,6 @@
 package me.ibore.update
 
 import android.os.Bundle
-import android.view.View
-import android.view.ViewGroup
-import me.ibore.R
 import me.ibore.base.XDialog
 import me.ibore.databinding.DialogXUpdateBinding
 

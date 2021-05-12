@@ -27,7 +27,6 @@ import me.ibore.ktx.dp2px
 import me.ibore.ktx.layoutInflater
 import me.ibore.utils.UtilsBridge.activityList
 import me.ibore.utils.UtilsBridge.addActivityLifecycleCallbacks
-import me.ibore.utils.UtilsBridge.isActivityAlive
 import me.ibore.utils.UtilsBridge.isAppForeground
 import me.ibore.utils.UtilsBridge.removeActivityLifecycleCallbacks
 import me.ibore.utils.UtilsBridge.view2Bitmap
@@ -429,7 +428,7 @@ class ToastUtils {
             }
             var hasAliveActivity = false
             for (activity in activityList) {
-                if (!isActivityAlive(activity)) {
+                if (!ActivityUtils.isActivityAlive(activity)) {
                     continue
                 }
                 hasAliveActivity = true
@@ -452,7 +451,7 @@ class ToastUtils {
             if (isShowing) {
                 unregisterLifecycleCallback()
                 for (activity in activityList) {
-                    if (!isActivityAlive(activity)) {
+                    if (!ActivityUtils.isActivityAlive(activity)) {
                         continue
                     }
                     val window = activity.window
