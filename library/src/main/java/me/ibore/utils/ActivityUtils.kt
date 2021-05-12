@@ -20,12 +20,7 @@ import java.lang.ref.WeakReference
 import java.util.*
 
 /**
- * <pre>
- * author: Blankj
- * blog  : http://blankj.com
- * time  : 2016/09/23
  * desc  : utils about activity
-</pre> *
  */
 object ActivityUtils  {
     /**
@@ -45,8 +40,7 @@ object ActivityUtils  {
      * @param callbacks The callbacks.
      */
     fun addActivityLifecycleCallbacks(
-        activity: Activity,
-        callbacks: Utils.ActivityLifecycleCallbacks
+        activity: Activity, callbacks: Utils.ActivityLifecycleCallbacks
     ) {
         UtilsBridge.addActivityLifecycleCallbacks(activity, callbacks)
     }

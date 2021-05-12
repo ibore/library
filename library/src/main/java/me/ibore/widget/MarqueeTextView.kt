@@ -16,8 +16,6 @@ import me.ibore.R
  * 启动/关闭：{@link #setMarqueeEnable(boolean)}
  * xml文件中记得设置：android:focusable="true", android:singleLine="true"
  *
- * Created by dasu on 2017/3/21.
- * http://www.jianshu.com/u/bb52a2918096
  */
 
 class MarqueeTextView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0)

@@ -3,15 +3,15 @@ package me.ibore.utils
 import android.app.Activity
 import android.app.Application
 import android.os.Bundle
-import java.lang.ref.WeakReference
 
-class ActivityLifecycleUtils {
-
+object ActivityLifecycleUtils {
 
 
+    fun init(app: Application) {
 
+    }
 
-    class ActivityLifecycleImpl : Application.ActivityLifecycleCallbacks {
+    class ActivityLifecycleCallbacksImpl : Application.ActivityLifecycleCallbacks {
 
         override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
 
@@ -44,7 +44,7 @@ class ActivityLifecycleUtils {
 
     }
 
-    interface ActivityLifecycleCallbacks {
+    interface Callbacks {
 
         fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {}
 

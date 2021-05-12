@@ -9,12 +9,7 @@ import androidx.annotation.IntDef
 import java.util.*
 
 /**
- * <pre>
- * author: blankj
- * blog  : http://blankj.com
- * time  : 2020/03/31
- * desc  :
-</pre> *
+ * BatteryUtils
  */
 object BatteryUtils {
 

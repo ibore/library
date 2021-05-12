@@ -4,7 +4,10 @@ import android.R
 import android.app.Activity
 import android.content.Context
 import android.graphics.Rect
-import android.os.*
+import android.os.Bundle
+import android.os.Handler
+import android.os.ResultReceiver
+import android.os.SystemClock
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +17,7 @@ import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.FrameLayout
+import me.ibore.ktx.logD
 import kotlin.math.abs
 
 /**
@@ -55,19 +59,15 @@ object KeyboardUtils {
      */
     @JvmOverloads
     fun showSoftInput(view: View, flags: Int = 0) {
-        val imm =
-            Utils.app.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
-                ?: return
+        val imm = Utils.app.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager? ?: return
         view.isFocusable = true
         view.isFocusableInTouchMode = true
         view.requestFocus()
         imm.showSoftInput(view, flags, object : ResultReceiver(Handler()) {
             override fun onReceiveResult(resultCode: Int, resultData: Bundle) {
-                if (resultCode == InputMethodManager.RESULT_UNCHANGED_HIDDEN
-                    || resultCode == InputMethodManager.RESULT_HIDDEN
-                ) {
-                    toggleSoftInput()
-                }
+                val toggleSoftInput = resultCode == InputMethodManager.RESULT_UNCHANGED_HIDDEN
+                        || resultCode == InputMethodManager.RESULT_HIDDEN
+                if (toggleSoftInput) toggleSoftInput()
             }
         })
         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY)
@@ -110,10 +110,8 @@ object KeyboardUtils {
      * @param view The view.
      */
     fun hideSoftInput(view: View) {
-        val imm =
-            Utils.app.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
-                ?: return
-        imm.hideSoftInputFromWindow(view.windowToken, 0)
+        val imm = Utils.app.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm?.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
     private var millis: Long = 0
@@ -126,7 +124,7 @@ object KeyboardUtils {
     fun hideSoftInputByToggle(activity: Activity) {
         val nowMillis = SystemClock.elapsedRealtime()
         val delta = nowMillis - millis
-        if (Math.abs(delta) > 500 && isSoftInputVisible(activity)) {
+        if (abs(delta) > 500 && isSoftInputVisible(activity)) {
             toggleSoftInput()
         }
         millis = nowMillis
@@ -136,9 +134,7 @@ object KeyboardUtils {
      * Toggle the soft input display or not.
      */
     fun toggleSoftInput() {
-        val imm = Utils.app
-            .getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
-            ?: return
+        val imm = Utils.app.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.toggleSoftInput(0, 0)
     }
 
@@ -158,10 +154,7 @@ object KeyboardUtils {
         val decorView = window.decorView
         val outRect = Rect()
         decorView.getWindowVisibleDisplayFrame(outRect)
-        Log.d(
-            "KeyboardUtils", "getDecorViewInvisibleHeight: "
-                    + (decorView.bottom - outRect.bottom)
-        )
+        logD("getDecorViewInvisibleHeight: " + (decorView.bottom - outRect.bottom))
         val delta = abs(decorView.bottom - outRect.bottom)
         if (delta <= BarUtils.getNavBarHeight(window.context) + BarUtils.getStatusBarHeight(window.context)) {
             sDecorViewDelta = delta
@@ -176,10 +169,7 @@ object KeyboardUtils {
      * @param activity The activity.
      * @param listener The soft input changed listener.
      */
-    fun registerSoftInputChangedListener(
-        activity: Activity,
-        listener: OnSoftInputChangedListener
-    ) {
+    fun registerSoftInputChangedListener(activity: Activity, listener: OnSoftInputChangedListener) {
         registerSoftInputChangedListener(activity.window, listener)
     }
 
@@ -189,10 +179,7 @@ object KeyboardUtils {
      * @param window   The window.
      * @param listener The soft input changed listener.
      */
-    fun registerSoftInputChangedListener(
-        window: Window,
-        listener: OnSoftInputChangedListener
-    ) {
+    fun registerSoftInputChangedListener(window: Window, listener: OnSoftInputChangedListener) {
         val flags = window.attributes.flags
         if (flags and WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS != 0) {
             window.clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
@@ -219,9 +206,7 @@ object KeyboardUtils {
         val contentView = window.findViewById<View>(R.id.content) ?: return
         val tag = contentView.getTag(TAG_ON_GLOBAL_LAYOUT_LISTENER)
         if (tag is OnGlobalLayoutListener) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                contentView.viewTreeObserver.removeOnGlobalLayoutListener(tag)
-            }
+            contentView.viewTreeObserver.removeOnGlobalLayoutListener(tag)
         }
     }
 
@@ -269,14 +254,10 @@ object KeyboardUtils {
         val contentView = window.findViewById<View>(R.id.content) ?: return 0
         val outRect = Rect()
         contentView.getWindowVisibleDisplayFrame(outRect)
-        Log.d(
-            "KeyboardUtils", "getContentViewInvisibleHeight: "
-                    + (contentView.bottom - outRect.bottom)
-        )
+        logD("getContentViewInvisibleHeight: " + (contentView.bottom - outRect.bottom))
         val delta = abs(contentView.bottom - outRect.bottom)
-        return if (delta <= BarUtils.getStatusBarHeight(window.context) + BarUtils.getNavBarHeight(window.context)) {
-            0
-        } else delta
+        return if (delta <= BarUtils.getStatusNavBarHeight(window.context)) 0
+        else delta
     }
 
     /**
@@ -294,9 +275,7 @@ object KeyboardUtils {
      * @param window The window.
      */
     fun fixSoftInputLeaks(window: Window) {
-        val imm =
-            Utils.app.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
-                ?: return
+        val imm = Utils.app.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         val leakViews = arrayOf("mLastSrvView", "mCurRootView", "mServedView", "mNextServedView")
         for (leakView in leakViews) {
             try {

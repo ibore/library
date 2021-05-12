@@ -17,7 +17,9 @@ import me.ibore.widget.indicator.IndicatorView.IndicatorStyle.Companion.INDICATO
 import me.ibore.widget.indicator.IndicatorView.IndicatorStyle.Companion.INDICATOR_CIRCLE_RECT
 import me.ibore.widget.indicator.IndicatorView.IndicatorStyle.Companion.INDICATOR_DASH
 
-class IndicatorView @JvmOverloads constructor(context: Context?, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : View(context, attrs, defStyleAttr), Indicator {
+class IndicatorView @JvmOverloads constructor(
+    context: Context?, attrs: AttributeSet? = null, defStyleAttr: Int = 0
+) : View(context, attrs, defStyleAttr), Indicator {
 
     private val interpolator: Interpolator = DecelerateInterpolator()
     private var accelerateInterpolator: Interpolator? = null
@@ -25,7 +27,7 @@ class IndicatorView @JvmOverloads constructor(context: Context?, attrs: Attribut
     private var offset = 0f
     private var selectedPage = 0
     private var pagerCount = 0
-    private var unColor = Color.GRAY
+    private var normalColor = Color.GRAY
     private var selectedColor = Color.WHITE
     private val indicatorPaint: Paint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val rectF: RectF = RectF()
@@ -67,7 +69,9 @@ class IndicatorView @JvmOverloads constructor(context: Context?, attrs: Attribut
     override var params: RelativeLayout.LayoutParams? = null
         get() {
             if (field == null) {
-                field = RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                field = RelativeLayout.LayoutParams(
+                    ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT
+                )
                 field!!.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM)
                 field!!.addRule(RelativeLayout.CENTER_HORIZONTAL)
                 field!!.bottomMargin = dip2px(10f)
@@ -209,7 +213,7 @@ class IndicatorView @JvmOverloads constructor(context: Context?, attrs: Attribut
         val distanceOffset = distance * offset
         val nextPage = (selectedPage + 1) % pagerCount
         val isNextFirst = nextPage == 0
-        indicatorPaint.color = unColor
+        indicatorPaint.color = normalColor
         for (i in 0 until pagerCount) {
             var startCx = indicatorStartX(i)
             if (isNextFirst) startCx += distanceOffset
@@ -273,7 +277,7 @@ class IndicatorView @JvmOverloads constructor(context: Context?, attrs: Attribut
     }
 
     private fun drawPagerCountCircle(canvas: Canvas, midY: Float) {
-        indicatorPaint.color = unColor
+        indicatorPaint.color = normalColor
         for (i in 0 until pagerCount) {
             val startCx = indicatorStartX(i)
             val ratioIndicatorRadius = ratioRadius
@@ -369,13 +373,13 @@ class IndicatorView @JvmOverloads constructor(context: Context?, attrs: Attribut
         return this
     }
 
-    fun setIndicatorColor(@ColorInt indicatorColor: Int): IndicatorView {
-        unColor = indicatorColor
+    fun setIndicatorColor(@ColorInt normalColor: Int): IndicatorView {
+        this.normalColor = normalColor
         return this
     }
 
-    fun setIndicatorSelectorColor(@ColorInt indicatorSelectorColor: Int): IndicatorView {
-        selectedColor = indicatorSelectorColor
+    fun setIndicatorSelectorColor(@ColorInt selectedColor: Int): IndicatorView {
+        this.selectedColor = selectedColor
         return this
     }
 
