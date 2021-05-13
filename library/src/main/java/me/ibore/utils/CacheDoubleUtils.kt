@@ -19,7 +19,7 @@ import java.util.*
  */
 class CacheDoubleUtils private constructor(
     private val memoryCache: CacheMemoryUtils.MemoryCache,
-    private val cacheDiskUtils: CacheDiskUtils
+    private val diskCache: CacheDiskUtils.DiskCache
 ) : CacheConstants {
     /**
      * Put bytes in cache.
@@ -31,7 +31,7 @@ class CacheDoubleUtils private constructor(
     @JvmOverloads
     fun put(key: String, value: ByteArray?, saveTime: Int = -1) {
         memoryCache.put(key, value, saveTime)
-        cacheDiskUtils.put(key, value, saveTime)
+        diskCache.put(key, value, saveTime)
     }
 
 
@@ -45,7 +45,7 @@ class CacheDoubleUtils private constructor(
     @JvmOverloads
     fun getBytes(key: String, defaultValue: ByteArray? = null): ByteArray? {
         val obj = memoryCache.get<ByteArray>(key)
-        return obj ?: cacheDiskUtils.getBytes(key, defaultValue)
+        return obj ?: diskCache.getBytes(key, defaultValue)
     }
 
     /**
@@ -58,7 +58,7 @@ class CacheDoubleUtils private constructor(
     @JvmOverloads
     fun put(key: String, value: String?, saveTime: Int = -1) {
         memoryCache.put(key, value, saveTime)
-        cacheDiskUtils.put(key, value, saveTime)
+        diskCache.put(key, value, saveTime)
     }
 
     /**
@@ -71,7 +71,7 @@ class CacheDoubleUtils private constructor(
     @JvmOverloads
     fun getString(key: String, defaultValue: String? = null): String? {
         val obj = memoryCache.get<String>(key)
-        return obj ?: cacheDiskUtils.getString(key, defaultValue)
+        return obj ?: diskCache.getString(key, defaultValue)
     }
 
     /**
@@ -88,7 +88,7 @@ class CacheDoubleUtils private constructor(
         saveTime: Int = -1
     ) {
         memoryCache.put(key, value, saveTime)
-        cacheDiskUtils.put(key, value, saveTime)
+        diskCache.put(key, value, saveTime)
     }
 
     /**
@@ -101,7 +101,7 @@ class CacheDoubleUtils private constructor(
     @JvmOverloads
     fun getJSONObject(key: String, defaultValue: JSONObject? = null): JSONObject? {
         val obj = memoryCache.get<JSONObject>(key)
-        return obj ?: cacheDiskUtils.getJSONObject(key, defaultValue)
+        return obj ?: diskCache.getJSONObject(key, defaultValue)
     }
 
     /**
@@ -114,7 +114,7 @@ class CacheDoubleUtils private constructor(
     @JvmOverloads
     fun put(key: String, value: JSONArray?, saveTime: Int = -1) {
         memoryCache.put(key, value, saveTime)
-        cacheDiskUtils.put(key, value, saveTime)
+        diskCache.put(key, value, saveTime)
     }
 
     /**
@@ -127,7 +127,7 @@ class CacheDoubleUtils private constructor(
     @JvmOverloads
     fun getJSONArray(key: String, defaultValue: JSONArray? = null): JSONArray? {
         val obj = memoryCache.get<JSONArray>(key)
-        return obj ?: cacheDiskUtils.getJSONArray(key, defaultValue)
+        return obj ?: diskCache.getJSONArray(key, defaultValue)
     }
 
     /**
@@ -140,7 +140,7 @@ class CacheDoubleUtils private constructor(
     @JvmOverloads
     fun put(key: String, value: Bitmap?, saveTime: Int = -1) {
         memoryCache.put(key, value, saveTime)
-        cacheDiskUtils.put(key, value, saveTime)
+        diskCache.put(key, value, saveTime)
     }
 
     /**
@@ -153,7 +153,7 @@ class CacheDoubleUtils private constructor(
     @JvmOverloads
     fun getBitmap(key: String, defaultValue: Bitmap? = null): Bitmap? {
         val obj = memoryCache.get<Bitmap>(key)
-        return obj ?: cacheDiskUtils.getBitmap(key, defaultValue)
+        return obj ?: diskCache.getBitmap(key, defaultValue)
     }
 
     /**
@@ -166,7 +166,7 @@ class CacheDoubleUtils private constructor(
     @JvmOverloads
     fun put(key: String, value: Drawable?, saveTime: Int = -1) {
         memoryCache.put(key, value, saveTime)
-        cacheDiskUtils.put(key, value, saveTime)
+        diskCache.put(key, value, saveTime)
     }
 
     /**
@@ -179,7 +179,7 @@ class CacheDoubleUtils private constructor(
     @JvmOverloads
     fun getDrawable(key: String, defaultValue: Drawable? = null): Drawable? {
         val obj = memoryCache.get<Drawable>(key)
-        return obj ?: cacheDiskUtils.getDrawable(key, defaultValue)
+        return obj ?: diskCache.getDrawable(key, defaultValue)
     }
 
     /**
@@ -192,7 +192,7 @@ class CacheDoubleUtils private constructor(
     @JvmOverloads
     fun put(key: String, value: Parcelable?, saveTime: Int = -1) {
         memoryCache.put(key, value, saveTime)
-        cacheDiskUtils.put(key, value, saveTime)
+        diskCache.put(key, value, saveTime)
     }
 
     /**
@@ -211,7 +211,7 @@ class CacheDoubleUtils private constructor(
         defaultValue: T? = null
     ): T? {
         val value: T? = memoryCache[key]
-        return value ?: cacheDiskUtils.getParcelable(
+        return value ?: diskCache.getParcelable(
             key,
             creator,
             defaultValue
@@ -228,7 +228,7 @@ class CacheDoubleUtils private constructor(
     @JvmOverloads
     fun put(key: String, value: Serializable?, saveTime: Int = -1) {
         memoryCache.put(key, value, saveTime)
-        cacheDiskUtils.put(key, value, saveTime)
+        diskCache.put(key, value, saveTime)
     }
 
     /**
@@ -241,14 +241,14 @@ class CacheDoubleUtils private constructor(
     @JvmOverloads
     fun <T : Serializable> getSerializable(key: String, defaultValue: T? = null): T? {
         val obj = memoryCache.get<T>(key)
-        return obj ?: cacheDiskUtils.getSerializable(key, defaultValue)
+        return obj ?: diskCache.getSerializable(key, defaultValue)
     }
 
     val cacheDiskSize: Long
-        get() = cacheDiskUtils.cacheDiskSize
+        get() = diskCache.cacheDiskSize
 
     val cacheDiskCount: Int
-        get() = cacheDiskUtils.cacheDiskCount
+        get() = diskCache.cacheDiskCount
 
     val cacheMemoryCount: Int
         get() = memoryCache.cacheCount
@@ -260,7 +260,7 @@ class CacheDoubleUtils private constructor(
      */
     fun remove(key: String) {
         memoryCache.remove(key)
-        cacheDiskUtils.remove(key)
+        diskCache.remove(key)
     }
 
     /**
@@ -268,7 +268,7 @@ class CacheDoubleUtils private constructor(
      */
     fun clear() {
         memoryCache.clear()
-        cacheDiskUtils.clear()
+        diskCache.clear()
     }
 
     companion object {
@@ -278,22 +278,22 @@ class CacheDoubleUtils private constructor(
          * Return the single [CacheDoubleUtils] instance.
          *
          * @param memoryCache The instance of [CacheMemoryUtils].
-         * @param cacheDiskUtils   The instance of [CacheDiskUtils].
+         * @param diskCache   The instance of [CacheDiskUtils].
          * @return the single [CacheDoubleUtils] instance
          */
         @JvmStatic
         @JvmOverloads
         fun getInstance(
             memoryCache: CacheMemoryUtils.MemoryCache = CacheMemoryUtils.getInstance(),
-            cacheDiskUtils: CacheDiskUtils = CacheDiskUtils.getInstance()
+            diskCache: CacheDiskUtils.DiskCache = CacheDiskUtils.getInstance()
         ): CacheDoubleUtils {
-            val cacheKey = cacheDiskUtils.toString() + "_" + memoryCache.toString()
+            val cacheKey = diskCache.toString() + "_" + memoryCache.toString()
             var cache = CACHE_MAP[cacheKey]
             if (cache == null) {
                 synchronized(CacheDoubleUtils::class.java) {
                     cache = CACHE_MAP[cacheKey]
                     if (cache == null) {
-                        cache = CacheDoubleUtils(memoryCache, cacheDiskUtils)
+                        cache = CacheDoubleUtils(memoryCache, diskCache)
                         CACHE_MAP[cacheKey] = cache!!
                     }
                 }

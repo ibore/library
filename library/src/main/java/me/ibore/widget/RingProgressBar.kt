@@ -8,7 +8,6 @@ import android.util.AttributeSet
 import android.view.View
 import me.ibore.R
 import me.ibore.ktx.dp2px
-import me.ibore.utils.UIUtils
 
 
 class RingProgressBar @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyle: Int = 0) : View(context, attrs, defStyle) {

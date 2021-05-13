@@ -78,7 +78,10 @@ object PinyinUtils {
         if (name == null || name.isEmpty()) return null
         if (name.length >= 2) {
             val str = name.subSequence(0, 2)
-            if (str == "澹台") return "tantai" else if (str == "尉迟") return "yuchi" else if (str == "万俟") return "moqi" else if (str == "单于") return "chanyu"
+            if (str == "澹台") return "tantai"
+            else if (str == "尉迟") return "yuchi"
+            else if (str == "万俟") return "moqi"
+            else if (str == "单于") return "chanyu"
         }
         val ch = name[0]
         if (SURNAMES.containsKey(ch)) {

@@ -10,7 +10,6 @@ import androidx.annotation.IntRange
 import androidx.annotation.RequiresApi
 import androidx.collection.SimpleArrayMap
 import me.ibore.utils.UtilsBridge.FileHead
-import me.ibore.utils.UtilsBridge.isSpace
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -224,7 +223,7 @@ object LogUtils {
             if (stackIndex >= stackTrace.size) {
                 val targetElement = stackTrace[3]
                 val fileName = getFileName(targetElement)
-                if (config.mTagIsSpace && isSpace(tagTemp)) {
+                if (config.mTagIsSpace && tagTemp.isBlank()) {
                     val index = fileName.indexOf('.') // Use proguard may not find '.'.
                     tagTemp = if (index == -1) fileName else fileName.substring(0, index)
                 }
@@ -232,7 +231,7 @@ object LogUtils {
             }
             var targetElement = stackTrace[stackIndex]
             val fileName = getFileName(targetElement)
-            if (config.mTagIsSpace && isSpace(tagTemp)) {
+            if (config.mTagIsSpace && tagTemp.isBlank()) {
                 val index = fileName.indexOf('.') // Use proguard may not find '.'.
                 tagTemp = if (index == -1) fileName else fileName.substring(0, index)
             }
@@ -708,7 +707,7 @@ object LogUtils {
         }
 
         fun setGlobalTag(tag: String): Config {
-            if (isSpace(tag)) {
+            if (tag.isBlank()) {
                 mGlobalTag = ""
                 mTagIsSpace = true
             } else {
@@ -729,11 +728,8 @@ object LogUtils {
         }
 
         fun setDir(dir: String): Config {
-            mDir = if (isSpace(dir)) {
-                null
-            } else {
-                if (dir.endsWith(FILE_SEP)) dir else dir + FILE_SEP
-            }
+            mDir = if (dir.isBlank()) null
+             else if (dir.endsWith(FILE_SEP)) dir else dir + FILE_SEP
             return this
         }
 
@@ -743,23 +739,16 @@ object LogUtils {
         }
 
         fun setFilePrefix(filePrefix: String): Config {
-            if (isSpace(filePrefix)) {
-                this.filePrefix = "util"
-            } else {
-                this.filePrefix = filePrefix
-            }
+            this.filePrefix =  if (filePrefix.isBlank()) "util"
+             else filePrefix
             return this
         }
 
         fun setFileExtension(fileExtension: String): Config {
-            if (isSpace(fileExtension)) {
-                this.fileExtension = ".txt"
-            } else {
-                if (fileExtension.startsWith(".")) {
-                    this.fileExtension = fileExtension
-                } else {
-                    this.fileExtension = ".$fileExtension"
-                }
+            this.fileExtension = when {
+                fileExtension.isBlank() -> ".txt"
+                fileExtension.startsWith(".") -> fileExtension
+                else -> ".$fileExtension"
             }
             return this
         }
@@ -836,7 +825,7 @@ object LogUtils {
         val dir: String
             get() = if (mDir == null) defaultDir else mDir!!
         val globalTag: String
-            get() = if (isSpace(mGlobalTag)) "" else mGlobalTag
+            get() = if (mGlobalTag.isBlank()) "" else mGlobalTag
         val consoleFilter: Char
             get() = T[mConsoleFilter - V]
         val fileFilter: Char

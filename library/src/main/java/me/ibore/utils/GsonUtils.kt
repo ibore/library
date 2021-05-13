@@ -34,7 +34,7 @@ object GsonUtils {
      * @param gson The [Gson].
      */
     fun setGson(key: String, gson: Gson) {
-        if (TextUtils.isEmpty(key)) return
+        if (key.isBlank()) return
         GSONS[key] = gson
     }
 

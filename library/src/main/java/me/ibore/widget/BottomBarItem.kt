@@ -11,14 +11,12 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.core.content.ContextCompat
 import me.ibore.R
 import me.ibore.databinding.LayoutBottomBarBinding
 import me.ibore.ktx.color
 import me.ibore.ktx.dp2px
 import me.ibore.ktx.drawable
 import me.ibore.ktx.sp2px
-import me.ibore.utils.UIUtils
 import java.util.*
 
 class BottomBarItem @JvmOverloads constructor(

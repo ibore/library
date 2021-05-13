@@ -6,7 +6,7 @@ import android.graphics.drawable.StateListDrawable
 import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
 import me.ibore.ktx.color
-import me.ibore.utils.UIUtils.getCornerRadii
+import me.ibore.ktx.dp2px
 
 object DrawableUtils {
 
@@ -72,6 +72,18 @@ object DrawableUtils {
         stateListDrawable.addState(intArrayOf(), drawableNormal)
 
         return stateListDrawable
+    }
+
+
+    @JvmOverloads
+    fun getCornerRadii(context: Context, topStartRadius: Float, topEndRadius: Float,
+                       bottomEndRadius: Float, bottomStartRadius: Float, dp: Boolean = true): FloatArray {
+        val topStartRadiusTemp = if (dp) context.dp2px( topStartRadius).toFloat() else topStartRadius
+        val topEndRadiusTemp = if (dp) context.dp2px( topEndRadius).toFloat() else topEndRadius
+        val bottomEndRadiusTemp = if (dp) context.dp2px( bottomEndRadius).toFloat() else bottomEndRadius
+        val bottomStartRadiusTemp = if (dp) context.dp2px(bottomStartRadius).toFloat() else bottomStartRadius
+        return floatArrayOf(topStartRadiusTemp, topStartRadiusTemp, topEndRadiusTemp, topEndRadiusTemp,
+            bottomEndRadiusTemp, bottomEndRadiusTemp, bottomStartRadiusTemp, bottomStartRadiusTemp)
     }
 
 }

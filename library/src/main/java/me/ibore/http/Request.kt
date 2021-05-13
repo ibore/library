@@ -9,7 +9,6 @@ import me.ibore.exception.HttpException
 import me.ibore.http.progress.ProgressListener
 import me.ibore.http.progress.ProgressResponseBody
 import me.ibore.utils.DisposablesUtils
-import me.ibore.utils.ReflectionUtils
 import okhttp3.Call
 import okhttp3.Headers
 import okhttp3.MediaType

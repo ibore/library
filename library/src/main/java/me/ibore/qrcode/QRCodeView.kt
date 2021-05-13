@@ -14,7 +14,6 @@ import android.util.AttributeSet
 import android.widget.RelativeLayout
 import me.ibore.R
 import me.ibore.utils.BarUtils
-import me.ibore.utils.UIUtils
 import kotlin.math.abs
 import kotlin.math.sqrt
 

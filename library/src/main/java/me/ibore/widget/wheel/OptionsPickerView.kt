@@ -9,7 +9,6 @@ import android.widget.LinearLayout
 import androidx.annotation.ColorInt
 import androidx.annotation.FloatRange
 import androidx.annotation.RawRes
-import me.ibore.utils.UIUtils
 
 class OptionsPickerView<T> @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) :
         LinearLayout(context, attrs, defStyleAttr), WheelView.OnWheelChangedListener {

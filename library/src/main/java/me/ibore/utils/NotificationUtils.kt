@@ -23,6 +23,7 @@ import androidx.core.app.NotificationManagerCompat
 </pre> *
  */
 object NotificationUtils {
+
     const val IMPORTANCE_UNSPECIFIED = -1000
     const val IMPORTANCE_NONE = 0
     const val IMPORTANCE_MIN = 1
@@ -42,64 +43,29 @@ object NotificationUtils {
     /**
      * Post a notification to be shown in the status bar.
      *
-     * @param id       An identifier for this notification.
-     * @param consumer The consumer of create the builder of notification.
-     */
-    fun notify(id: Int, consumer: Utils.Consumer<NotificationCompat.Builder?>?) {
-        notify(null, id, ChannelConfig.DEFAULT_CHANNEL_CONFIG, consumer)
-    }
-
-    /**
-     * Post a notification to be shown in the status bar.
-     *
-     * @param tag      A string identifier for this notification.  May be `null`.
-     * @param id       An identifier for this notification.
-     * @param consumer The consumer of create the builder of notification.
-     */
-    fun notify(tag: String?, id: Int, consumer: Utils.Consumer<NotificationCompat.Builder?>?) {
-        notify(tag, id, ChannelConfig.DEFAULT_CHANNEL_CONFIG, consumer)
-    }
-
-    /**
-     * Post a notification to be shown in the status bar.
-     *
-     * @param id            An identifier for this notification.
-     * @param channelConfig The notification channel of config.
-     * @param consumer      The consumer of create the builder of notification.
-     */
-    fun notify(
-        id: Int,
-        channelConfig: ChannelConfig,
-        consumer: Utils.Consumer<NotificationCompat.Builder?>?
-    ) {
-        notify(null, id, channelConfig, consumer)
-    }
-
-    /**
-     * Post a notification to be shown in the status bar.
-     *
      * @param tag           A string identifier for this notification.  May be `null`.
      * @param id            An identifier for this notification.
      * @param channelConfig The notification channel of config.
      * @param consumer      The consumer of create the builder of notification.
      */
+    @JvmStatic
+    @JvmOverloads
     fun notify(
-        tag: String?,
-        id: Int,
-        channelConfig: ChannelConfig,
-        consumer: Utils.Consumer<NotificationCompat.Builder?>?
+        tag: String? = null, id: Int,
+        channelConfig: ChannelConfig = ChannelConfig.DEFAULT_CHANNEL_CONFIG,
+        consumer: Utils.Consumer<NotificationCompat.Builder>? = null
     ) {
         NotificationManagerCompat.from(Utils.app)
             .notify(tag, id, getNotification(channelConfig, consumer))
     }
 
+    @JvmStatic
     fun getNotification(
         channelConfig: ChannelConfig,
-        consumer: Utils.Consumer<NotificationCompat.Builder?>?
+        consumer: Utils.Consumer<NotificationCompat.Builder>?
     ): Notification {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val nm =
-                Utils.app.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            val nm = Utils.app.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             nm.createNotificationChannel(channelConfig.notificationChannel!!)
         }
         val builder = NotificationCompat.Builder(Utils.app)
@@ -116,17 +82,10 @@ object NotificationUtils {
      * @param tag The tag for the notification will be cancelled.
      * @param id  The identifier for the notification will be cancelled.
      */
-    fun cancel(tag: String?, id: Int) {
+    @JvmStatic
+    @JvmOverloads
+    fun cancel(tag: String? = null, id: Int) {
         NotificationManagerCompat.from(Utils.app).cancel(tag, id)
-    }
-
-    /**
-     * Cancel The notification.
-     *
-     * @param id The identifier for the notification will be cancelled.
-     */
-    fun cancel(id: Int) {
-        NotificationManagerCompat.from(Utils.app).cancel(id)
     }
 
     /**
@@ -145,11 +104,8 @@ object NotificationUtils {
      */
     @RequiresPermission(permission.EXPAND_STATUS_BAR)
     fun setNotificationBarVisibility(isVisible: Boolean) {
-        val methodName: String = if (isVisible) {
-            if (Build.VERSION.SDK_INT <= 16) "expand" else "expandNotificationsPanel"
-        } else {
-            if (Build.VERSION.SDK_INT <= 16) "collapse" else "collapsePanels"
-        }
+        val methodName: String = if (isVisible) "expandNotificationsPanel"
+        else "collapsePanels"
         invokePanels(methodName)
     }
 
@@ -166,18 +122,19 @@ object NotificationUtils {
         }
     }
 
-    @IntDef(
-        IMPORTANCE_UNSPECIFIED,
-        IMPORTANCE_NONE,
-        IMPORTANCE_MIN,
-        IMPORTANCE_LOW,
-        IMPORTANCE_DEFAULT,
-        IMPORTANCE_HIGH
-    )
+    @IntDef(IMPORTANCE_UNSPECIFIED, IMPORTANCE_NONE, IMPORTANCE_MIN,
+        IMPORTANCE_LOW, IMPORTANCE_DEFAULT, IMPORTANCE_HIGH)
     @Retention(AnnotationRetention.SOURCE)
     annotation class Importance
     class ChannelConfig(id: String?, name: CharSequence?, @Importance importance: Int) {
+
         var notificationChannel: NotificationChannel? = null
+
+        init {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                notificationChannel = NotificationChannel(id, name, importance)
+            }
+        }
 
         /**
          * Sets whether or not notifications posted to this channel can interrupt the user in
@@ -188,7 +145,7 @@ object NotificationUtils {
          */
         fun setBypassDnd(bypassDnd: Boolean): ChannelConfig {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                notificationChannel!!.setBypassDnd(bypassDnd)
+                notificationChannel?.setBypassDnd(bypassDnd)
             }
             return this
         }
@@ -202,7 +159,7 @@ object NotificationUtils {
          */
         fun setDescription(description: String?): ChannelConfig {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                notificationChannel!!.description = description
+                notificationChannel?.description = description
             }
             return this
         }
@@ -223,7 +180,7 @@ object NotificationUtils {
          */
         fun setGroup(groupId: String?): ChannelConfig {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                notificationChannel!!.group = groupId
+                notificationChannel?.group = groupId
             }
             return this
         }
@@ -240,7 +197,7 @@ object NotificationUtils {
          */
         fun setImportance(@Importance importance: Int): ChannelConfig {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                notificationChannel!!.importance = importance
+                notificationChannel?.importance = importance
             }
             return this
         }
@@ -255,7 +212,7 @@ object NotificationUtils {
          */
         fun setLightColor(argb: Int): ChannelConfig {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                notificationChannel!!.lightColor = argb
+                notificationChannel?.lightColor = argb
             }
             return this
         }
@@ -269,7 +226,7 @@ object NotificationUtils {
          */
         fun setLockscreenVisibility(lockscreenVisibility: Int): ChannelConfig {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                notificationChannel!!.lockscreenVisibility = lockscreenVisibility
+                notificationChannel?.lockscreenVisibility = lockscreenVisibility
             }
             return this
         }
@@ -283,7 +240,7 @@ object NotificationUtils {
          */
         fun setName(name: CharSequence?): ChannelConfig {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                notificationChannel!!.name = name
+                notificationChannel?.name = name
             }
             return this
         }
@@ -300,7 +257,7 @@ object NotificationUtils {
          */
         fun setShowBadge(showBadge: Boolean): ChannelConfig {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                notificationChannel!!.setShowBadge(showBadge)
+                notificationChannel?.setShowBadge(showBadge)
             }
             return this
         }
@@ -316,7 +273,7 @@ object NotificationUtils {
          */
         fun setSound(sound: Uri?, audioAttributes: AudioAttributes?): ChannelConfig {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                notificationChannel!!.setSound(sound, audioAttributes)
+                notificationChannel?.setSound(sound, audioAttributes)
             }
             return this
         }
@@ -332,22 +289,16 @@ object NotificationUtils {
          */
         fun setVibrationPattern(vibrationPattern: LongArray?): ChannelConfig {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                notificationChannel!!.vibrationPattern = vibrationPattern
+                notificationChannel?.vibrationPattern = vibrationPattern
             }
             return this
         }
 
         companion object {
             @JvmField
-            val DEFAULT_CHANNEL_CONFIG = ChannelConfig(
-                Utils.packageName, Utils.packageName, IMPORTANCE_DEFAULT
-            )
+            val DEFAULT_CHANNEL_CONFIG =
+                ChannelConfig(Utils.packageName, Utils.packageName, IMPORTANCE_DEFAULT)
         }
 
-        init {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                notificationChannel = NotificationChannel(id, name, importance)
-            }
-        }
     }
 }

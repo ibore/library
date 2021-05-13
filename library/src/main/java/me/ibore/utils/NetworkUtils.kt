@@ -16,9 +16,7 @@ import android.telephony.TelephonyManager
 import android.text.TextUtils
 import android.text.format.Formatter
 import androidx.annotation.RequiresPermission
-import me.ibore.utils.NetworkUtils.NetworkChangedReceiver
 import me.ibore.utils.ShellUtils.execCmd
-import me.ibore.utils.Utils.app
 import me.ibore.utils.UtilsBridge.doAsync
 import me.ibore.utils.UtilsBridge.equals
 import java.net.InetAddress
@@ -41,7 +39,7 @@ object NetworkUtils {
      * Open the settings of wireless.
      */
     fun openWirelessSettings() {
-        app.startActivity(
+        Utils.app.startActivity(
             Intent(Settings.ACTION_WIRELESS_SETTINGS)
                 .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         )
@@ -177,8 +175,7 @@ object NetworkUtils {
      */
     @RequiresPermission(permission.INTERNET)
     fun isAvailableByDnsAsync(
-        domain: String?,
-        consumer: Utils.Consumer<Boolean>
+        domain: String?, consumer: Utils.Consumer<Boolean>
     ): Utils.Task<Boolean> {
         return doAsync(object : Utils.Task<Boolean>(consumer) {
             @RequiresPermission(permission.INTERNET)
@@ -226,9 +223,10 @@ object NetworkUtils {
      * @return `true`: enabled<br></br>`false`: disabled
      */
     val mobileDataEnabled: Boolean
+        @SuppressLint("MissingPermission")
         get() {
             try {
-                val tm = app.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager?
+                val tm = Utils.app.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager?
                     ?: return false
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     return tm.isDataEnabled
@@ -305,13 +303,13 @@ object NetworkUtils {
     var wifiEnabled: Boolean
         get() {
             @SuppressLint("WifiManagerLeak") val manager =
-                app.getSystemService(Context.WIFI_SERVICE) as WifiManager
+                Utils.app.getSystemService(Context.WIFI_SERVICE) as WifiManager
                     ?: return false
             return manager.isWifiEnabled
         }
         set(enabled) {
             @SuppressLint("WifiManagerLeak") val manager =
-                app.getSystemService(Context.WIFI_SERVICE) as WifiManager
+                Utils.app.getSystemService(Context.WIFI_SERVICE) as WifiManager
                     ?: return
             if (enabled == manager.isWifiEnabled) return
             manager.isWifiEnabled = enabled
@@ -327,7 +325,7 @@ object NetworkUtils {
     @get:RequiresPermission(permission.ACCESS_NETWORK_STATE)
     val isWifiConnected: Boolean
         get() {
-            val cm = app.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            val cm = Utils.app.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
                 ?: return false
             val ni = cm.activeNetworkInfo
             return ni != null && ni.type == ConnectivityManager.TYPE_WIFI
@@ -371,7 +369,7 @@ object NetworkUtils {
      */
     val networkOperatorName: String
         get() {
-            val tm = app.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+            val tm = Utils.app.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
                 ?: return ""
             return tm.networkOperatorName
         }
@@ -437,7 +435,7 @@ object NetworkUtils {
     @get:RequiresPermission(permission.ACCESS_NETWORK_STATE)
     private val isEthernet: Boolean
         get() {
-            val cm = app.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager?
+            val cm = Utils.app.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager?
                 ?: return false
             val info = cm.getNetworkInfo(ConnectivityManager.TYPE_ETHERNET) ?: return false
             val state = info.state ?: return false
@@ -447,7 +445,7 @@ object NetworkUtils {
     @get:RequiresPermission(permission.ACCESS_NETWORK_STATE)
     private val activeNetworkInfo: NetworkInfo?
         get() {
-            val cm = app.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager?
+            val cm = Utils.app.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager?
                 ?: return null
             return cm.activeNetworkInfo
         }
@@ -600,7 +598,7 @@ object NetworkUtils {
     val ipAddressByWifi: String
         get() {
             @SuppressLint("WifiManagerLeak") val wm =
-                app.getSystemService(Context.WIFI_SERVICE) as WifiManager
+                Utils.app.getSystemService(Context.WIFI_SERVICE) as WifiManager
                     ?: return ""
             return Formatter.formatIpAddress(wm.dhcpInfo.ipAddress)
         }
@@ -614,7 +612,7 @@ object NetworkUtils {
     val gatewayByWifi: String
         get() {
             @SuppressLint("WifiManagerLeak") val wm =
-                app.getSystemService(Context.WIFI_SERVICE) as WifiManager
+                Utils.app.getSystemService(Context.WIFI_SERVICE) as WifiManager
                     ?: return ""
             return Formatter.formatIpAddress(wm.dhcpInfo.gateway)
         }
@@ -628,7 +626,7 @@ object NetworkUtils {
     val netMaskByWifi: String
         get() {
             @SuppressLint("WifiManagerLeak") val wm =
-                app.getSystemService(Context.WIFI_SERVICE) as WifiManager
+                Utils.app.getSystemService(Context.WIFI_SERVICE) as WifiManager
                     ?: return ""
             return Formatter.formatIpAddress(wm.dhcpInfo.netmask)
         }
@@ -642,7 +640,7 @@ object NetworkUtils {
     val serverAddressByWifi: String
         get() {
             @SuppressLint("WifiManagerLeak") val wm =
-                app.getSystemService(Context.WIFI_SERVICE) as WifiManager
+                Utils.app.getSystemService(Context.WIFI_SERVICE) as WifiManager
                     ?: return ""
             return Formatter.formatIpAddress(wm.dhcpInfo.serverAddress)
         }
@@ -655,7 +653,7 @@ object NetworkUtils {
     @get:RequiresPermission(permission.ACCESS_WIFI_STATE)
     val sSID: String
         get() {
-            val wm = app.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
+            val wm = Utils.app.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
                 ?: return ""
             val wi = wm.connectionInfo ?: return ""
             val ssid = wi.ssid
@@ -702,7 +700,7 @@ object NetworkUtils {
             val result = WifiScanResults()
             if (!wifiEnabled) return result
             @SuppressLint("WifiManagerLeak") val wm =
-                app.getSystemService(Context.WIFI_SERVICE) as WifiManager
+                Utils.app.getSystemService(Context.WIFI_SERVICE) as WifiManager
             val results = wm.scanResults
             if (results != null) {
                 result.allResults = results
@@ -754,7 +752,7 @@ object NetworkUtils {
     private fun startScanWifiIfEnabled() {
         if (!wifiEnabled) return
         @SuppressLint("WifiManagerLeak") val wm =
-            app.getSystemService(Context.WIFI_SERVICE) as WifiManager
+            Utils.app.getSystemService(Context.WIFI_SERVICE) as WifiManager
         wm.startScan()
     }
 
@@ -819,7 +817,7 @@ object NetworkUtils {
                 if (preSize == 0 && mListeners.size == 1) {
                     mType = networkType
                     val intentFilter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
-                    app.registerReceiver(getInstance(), intentFilter)
+                    Utils.app.registerReceiver(getInstance(), intentFilter)
                 }
             }
         }
@@ -834,7 +832,7 @@ object NetworkUtils {
                 val preSize = mListeners.size
                 mListeners.remove(listener)
                 if (preSize == 1 && mListeners.size == 0) {
-                    app.unregisterReceiver(getInstance())
+                    Utils.app.unregisterReceiver(getInstance())
                 }
             }
         }

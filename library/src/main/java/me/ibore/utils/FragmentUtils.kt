@@ -102,12 +102,8 @@ object FragmentUtils {
     @JvmStatic
     @JvmOverloads
     fun add(
-        fm: FragmentManager,
-        add: Fragment,
-        @IdRes containerId: Int,
-        tag: String? = null,
-        isAddStack: Boolean = false,
-        vararg sharedElements: View
+        fm: FragmentManager, add: Fragment, @IdRes containerId: Int, tag: String? = null,
+        isAddStack: Boolean = false, vararg sharedElements: View
     ) {
         val ft = fm.beginTransaction()
         putArgs(add, Args(containerId, tag, false, isAddStack))

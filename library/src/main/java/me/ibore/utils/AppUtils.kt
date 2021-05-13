@@ -18,12 +18,7 @@ import java.util.*
 import kotlin.system.exitProcess
 
 /**
- * <pre>
- * author: Blankj
- * blog  : http://blankj.com
- * time  : 2016/08/02
- * desc  : utils about app
-</pre> *
+ * utils about app
  */
 object AppUtils  {
     /**
@@ -56,7 +51,7 @@ object AppUtils  {
      */
     @JvmStatic
     fun installApp(filePath: String) {
-        val file = FileUtils.getFileByPath(filePath)?:return
+        val file = FileUtils.getFileByPath(filePath) ?: return
         installApp(file)
     }
 
@@ -84,7 +79,7 @@ object AppUtils  {
      */
     @JvmStatic
     fun installApp(uri: Uri) {
-        val installAppIntent = IntentUtils.getInstallAppIntent(uri) ?: return
+        val installAppIntent = IntentUtils.getInstallAppIntent(uri)
         Utils.app.startActivity(installAppIntent)
     }
 
@@ -126,7 +121,7 @@ object AppUtils  {
      */
     val isAppRoot: Boolean
         get() {
-            val result = UtilsBridge.execCmd("echo root", true)
+            val result = ShellUtils.execCmd("echo root", true)
             return result.result == 0
         }
 
@@ -175,7 +170,7 @@ object AppUtils  {
     @JvmStatic
     @JvmOverloads
     fun isAppForeground(pkgName: String= Utils.packageName): Boolean {
-        return !UtilsBridge.isSpace(pkgName) && pkgName == UtilsBridge.foregroundProcessName
+        return pkgName.isNotBlank() && pkgName == ProcessUtils.foregroundProcessName
     }
 
     /**
@@ -187,7 +182,7 @@ object AppUtils  {
     @JvmStatic
     @JvmOverloads
     fun isAppRunning(pkgName: String = Utils.packageName): Boolean {
-        if (UtilsBridge.isSpace(pkgName)) return false
+        if (pkgName.isBlank()) return false
         val ai = Utils.applicationInfo
         val uid = ai.uid
         val am = Utils.app.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager?

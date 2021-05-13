@@ -14,6 +14,7 @@ import java.text.NumberFormat
 </pre> *
  */
 object NumberUtils {
+
     private val DF_THREAD_LOCAL: ThreadLocal<DecimalFormat> =
         object : ThreadLocal<DecimalFormat>() {
             override fun initialValue(): DecimalFormat {

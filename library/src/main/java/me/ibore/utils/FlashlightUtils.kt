@@ -15,6 +15,7 @@ import java.io.IOException
 </pre> *
  */
 object FlashlightUtils {
+
     private var mCamera: Camera? = null
     private var mSurfaceTexture: SurfaceTexture? = null
 
@@ -24,9 +25,7 @@ object FlashlightUtils {
      * @return `true`: yes<br></br>`false`: no
      */
     val isFlashlightEnable: Boolean
-        get() = Utils.app
-            .packageManager
-            .hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH)
+        get() = Utils.packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH)
 
     /**
      * Return whether the flashlight is working.

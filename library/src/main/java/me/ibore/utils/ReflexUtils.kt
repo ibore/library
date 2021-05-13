@@ -11,6 +11,7 @@ import me.ibore.base.mvp.XMvpPresenter
 import me.ibore.exception.ClientException
 import java.lang.reflect.InvocationTargetException
 import java.lang.reflect.ParameterizedType
+import java.lang.reflect.Type
 import java.util.*
 
 /**
@@ -27,6 +28,7 @@ object ReflexUtils {
      * @param from   layouinflater
      * @return viewBinding实例
     </V> */
+    @JvmStatic
     @Suppress("UNCHECKED_CAST")
     fun <V : ViewBinding> viewBinding(aClass: Class<*>, from: LayoutInflater): V {
         try {
@@ -58,6 +60,7 @@ object ReflexUtils {
     /**
      * 反射获取ViewBinding\
      */
+    @JvmStatic
     @Suppress("UNCHECKED_CAST")
     fun <V : ViewBinding> viewBinding(
         aClass: Class<*>, from: LayoutInflater?, viewGroup: ViewGroup?, b: Boolean
@@ -101,6 +104,7 @@ object ReflexUtils {
      * @param owner  生命周期管理
      * @return ViewModel实例
     </VM> */
+    @JvmStatic
     @Suppress("UNCHECKED_CAST")
     fun <VM : ViewModel> viewModel(aClass: Class<*>, owner: ViewModelStoreOwner): VM {
         try {
@@ -131,6 +135,7 @@ object ReflexUtils {
      * @param aClass 当前class
      * @return Presenter实例
     </VM> */
+    @JvmStatic
     @Suppress("UNCHECKED_CAST")
     fun <P : XMvpPresenter<*>> presenter(aClass: Class<*>): P {
         try {
@@ -164,6 +169,7 @@ object ReflexUtils {
      * @param fragment fragment  调用 [Fragment.requireActivity] 方法
      * @return ViewModel实例
     </VM> */
+    @JvmStatic
     @Suppress("UNCHECKED_CAST")
     fun <VM : ViewModel> viewModelShared(aClass: Class<*>, fragment: Fragment): VM {
         try {
@@ -185,5 +191,28 @@ object ReflexUtils {
             e.printStackTrace()
         }
         throw ClientException("ViewModel初始化失败")
+    }
+
+    @JvmStatic
+    fun getTypeByAbstract(any: Any, position: Int): Type? {
+        try {
+            val type = any.javaClass.genericSuperclass as ParameterizedType
+            return type.actualTypeArguments[position]
+        } catch (e: Exception) {
+        }
+        return null
+    }
+
+    @JvmStatic
+    fun getTypeByInterface(any: Any, position: Int, clazz: Class<*>): Type? {
+        try {
+            for (type in any.javaClass.genericInterfaces) {
+                if ((type as ParameterizedType).rawType == clazz) {
+                    return type.actualTypeArguments[position]
+                }
+            }
+        } catch (e: Exception) {
+        }
+        return null
     }
 }

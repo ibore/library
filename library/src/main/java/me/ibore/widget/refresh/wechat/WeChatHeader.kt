@@ -13,7 +13,6 @@ import androidx.annotation.NonNull
 import androidx.annotation.Nullable
 import me.ibore.R
 import me.ibore.ktx.dp2px
-import me.ibore.utils.UIUtils
 import me.ibore.widget.refresh.RefreshHeader
 import me.ibore.widget.refresh.RefreshLayout
 

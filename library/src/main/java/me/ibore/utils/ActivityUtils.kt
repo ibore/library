@@ -1632,15 +1632,14 @@ object ActivityUtils  {
      * @return the name of launcher activity
      */
     fun getLauncherActivity(pkg: String): String {
-        if (UtilsBridge.isSpace(pkg)) return ""
+        if (pkg.isBlank()) return ""
         val intent = Intent(Intent.ACTION_MAIN, null)
         intent.addCategory(Intent.CATEGORY_LAUNCHER)
         intent.setPackage(pkg)
         val pm = Utils.packageManager
         val info = pm.queryIntentActivities(intent, 0)
-        return if (info == null || info.size == 0) {
-            ""
-        } else info[0].activityInfo.name
+        return if (info.isEmpty()) ""
+        else info[0].activityInfo.name
     }
 
     /**

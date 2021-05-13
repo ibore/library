@@ -115,24 +115,14 @@ object BatteryUtils {
     class Status internal constructor(var level: Int, @BatteryStatus var status: Int) {
 
         override fun toString(): String {
-            return batteryStatus2String(status) + ": " + level + "%"
-        }
-
-        companion object {
-            fun batteryStatus2String(@BatteryStatus status: Int): String {
-                if (status == DISCHARGING) {
-                    return "discharging"
-                }
-                if (status == CHARGING) {
-                    return "charging"
-                }
-                if (status == NOT_CHARGING) {
-                    return "not_charging"
-                }
-                return if (status == FULL) {
-                    "full"
-                } else "unknown"
+            val status2String =  when (status) {
+                DISCHARGING -> "discharging"
+                CHARGING -> "charging"
+                NOT_CHARGING -> "not_charging"
+                FULL -> "full"
+                else -> "unknown"
             }
+            return "$status2String: $level%"
         }
     }
 }

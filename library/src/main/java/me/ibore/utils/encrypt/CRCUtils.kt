@@ -1,4 +1,4 @@
-package me.ibore.utils
+package me.ibore.utils.encrypt
 
 import java.io.FileInputStream
 import java.io.InputStream
@@ -26,7 +26,7 @@ object CRCUtils {
             crc32.update(data.toByteArray())
             return crc32.value
         } catch (e: Exception) {
-            LogUtils.d(e)
+            logD(e)
         }
         return -1L
     }
@@ -43,7 +43,7 @@ object CRCUtils {
             crc32.update(data.toByteArray())
             return java.lang.Long.toHexString(crc32.value)
         } catch (e: Exception) {
-            LogUtils.d(e)
+            logD(e)
         }
         return null
     }
@@ -66,7 +66,7 @@ object CRCUtils {
             }
             return java.lang.Long.toHexString(crc32.value)
         } catch (e: Exception) {
-            LogUtils.d(e)
+            logD(e)
         } finally {
             CloseUtils.closeIOQuietly(inputStream)
         }

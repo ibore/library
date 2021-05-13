@@ -29,6 +29,7 @@ import kotlin.math.abs
 </pre> *
  */
 object KeyboardUtils {
+
     private const val TAG_ON_GLOBAL_LAYOUT_LISTENER = -8
 
     /**

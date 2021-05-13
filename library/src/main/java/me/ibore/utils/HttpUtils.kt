@@ -324,9 +324,8 @@ object HttpUtils {
         }
 
         fun toRequest(): Any? {
-            return if (url.isEmpty()) {
-                null
-            } else {
+            return if (url.isEmpty()) null
+            else {
                 if (args.isNullOrEmpty()) {
                     args = prepareParams(params)
                     params = null
@@ -338,21 +337,15 @@ object HttpUtils {
         fun get(): String? {
             method = GET
             val obj = toRequest()
-            return if (obj is String) {
-                obj
-            } else {
-                null
-            }
+            return if (obj is String) obj
+            else null
         }
 
         fun post(): String? {
             method = POST
             val obj = toRequest()
-            return if (obj is String) {
-                obj
-            } else {
-                null
-            }
+            return if (obj is String) obj
+            else null
         }
 
         fun json(json: String?): String? {

@@ -40,17 +40,11 @@ object LanguageUtils {
      * @param isRelaunchApp True to relaunch app, false to recreate all activities.
      */
     @JvmOverloads
-    fun applyLanguage(
-        locale: Locale,
-        isRelaunchApp: Boolean = false
-    ) {
+    fun applyLanguage(locale: Locale, isRelaunchApp: Boolean = false) {
         applyLanguageReal(locale, isRelaunchApp)
     }
 
-    private fun applyLanguageReal(
-        locale: Locale?,
-        isRelaunchApp: Boolean
-    ) {
+    private fun applyLanguageReal(locale: Locale?, isRelaunchApp: Boolean) {
         if (locale == null) {
             Utils.SP.put(KEY_LOCALE, VALUE_FOLLOW_SYSTEM, true)
         } else {
@@ -105,9 +99,8 @@ object LanguageUtils {
      */
     fun getAppliedLanguage(): Locale? {
         val spLocaleStr = Utils.SP.getString(KEY_LOCALE)
-        return if (spLocaleStr.isNullOrEmpty() || VALUE_FOLLOW_SYSTEM == spLocaleStr) {
-            null
-        } else string2Locale(spLocaleStr)
+        return if (spLocaleStr.isEmpty() || VALUE_FOLLOW_SYSTEM == spLocaleStr) null
+        else string2Locale(spLocaleStr)
     }
 
     /**
@@ -146,9 +139,7 @@ object LanguageUtils {
     }
 
     fun pollCheckAppContextLocal(
-        destLocale: Locale,
-        index: Int,
-        consumer: Utils.Consumer<Boolean>?
+        destLocale: Locale, index: Int, consumer: Utils.Consumer<Boolean>?
     ) {
         val appResources = Utils.app.resources
         val appConfig = appResources.configuration
@@ -182,31 +173,22 @@ object LanguageUtils {
      */
     fun attachBaseContext(context: Context): Context {
         val spLocaleStr = Utils.SP.getString(KEY_LOCALE)
-        if (spLocaleStr.isNullOrEmpty() || VALUE_FOLLOW_SYSTEM == spLocaleStr) {
+        if (spLocaleStr.isEmpty() || VALUE_FOLLOW_SYSTEM == spLocaleStr) {
             return context
         }
         val settingsLocale = string2Locale(spLocaleStr) ?: return context
         val resources = context.resources
         val config = resources.configuration
         setLocal(config, settingsLocale)
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            context.createConfigurationContext(config)
-        } else {
-            resources.updateConfiguration(config, resources.displayMetrics)
-            context
-        }
+        return context.createConfigurationContext(config)
     }
 
     fun applyLanguage(activity: Activity) {
         val spLocale = Utils.SP.getString(KEY_LOCALE)
-        if (spLocale.isNullOrEmpty()) {
-            return
-        }
+        if (spLocale.isEmpty()) return
         val destLocal: Locale? = if (VALUE_FOLLOW_SYSTEM == spLocale) {
             getLocal(Resources.getSystem().configuration)
-        } else {
-            string2Locale(spLocale)
-        }
+        } else string2Locale(spLocale)
         if (destLocal == null) return
         updateConfiguration(activity, destLocal)
         updateConfiguration(Utils.app, destLocal)
@@ -250,9 +232,7 @@ object LanguageUtils {
         var count = 0
         for (c in chars) {
             if (c == '$') {
-                if (count >= 1) {
-                    return false
-                }
+                if (count >= 1) return false
                 ++count
             }
         }
@@ -273,10 +253,6 @@ object LanguageUtils {
     }
 
     private fun setLocal(configuration: Configuration, locale: Locale) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            configuration.setLocale(locale)
-        } else {
-            configuration.locale = locale
-        }
+        configuration.setLocale(locale)
     }
 }

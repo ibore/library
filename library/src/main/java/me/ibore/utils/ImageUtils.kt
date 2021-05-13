@@ -409,10 +409,7 @@ object ImageUtils {
     @JvmStatic
     @JvmOverloads
     fun scale(
-        src: Bitmap,
-        scaleWidth: Float,
-        scaleHeight: Float,
-        recycle: Boolean = false
+        src: Bitmap, scaleWidth: Float, scaleHeight: Float, recycle: Boolean = false
     ): Bitmap? {
         if (isEmptyBitmap(src)) return null
         val matrix = Matrix()
@@ -436,12 +433,7 @@ object ImageUtils {
     @JvmStatic
     @JvmOverloads
     fun clip(
-        src: Bitmap,
-        x: Int,
-        y: Int,
-        width: Int,
-        height: Int,
-        recycle: Boolean = false
+        src: Bitmap, x: Int, y: Int, width: Int, height: Int, recycle: Boolean = false
     ): Bitmap? {
         if (isEmptyBitmap(src)) return null
         val ret = Bitmap.createBitmap(src, x, y, width, height)
@@ -731,11 +723,8 @@ object ImageUtils {
      * @return the round corner bitmap with border
      */
     fun addCornerBorder(
-        src: Bitmap,
-        @FloatRange(from = 1.0) borderSize: Float,
-        @ColorInt color: Int,
-        @FloatRange(from = 0.0) cornerRadius: Float,
-        recycle: Boolean
+        src: Bitmap, @FloatRange(from = 1.0) borderSize: Float, @ColorInt color: Int,
+        @FloatRange(from = 0.0) cornerRadius: Float, recycle: Boolean
     ): Bitmap? {
         return addBorder(src, borderSize, color, false, cornerRadius, recycle)
     }
@@ -749,9 +738,7 @@ object ImageUtils {
      * @return the round bitmap with border
      */
     fun addCircleBorder(
-        src: Bitmap,
-        @FloatRange(from = 1.0) borderSize: Float,
-        @ColorInt color: Int
+        src: Bitmap, @FloatRange(from = 1.0) borderSize: Float, @ColorInt color: Int
     ): Bitmap? {
         return addBorder(src, borderSize, color, true, 0f, false)
     }
@@ -766,10 +753,8 @@ object ImageUtils {
      * @return the round bitmap with border
      */
     fun addCircleBorder(
-        src: Bitmap,
-        @FloatRange(from = 1.0) borderSize: Float,
-        @ColorInt color: Int,
-        recycle: Boolean
+        src: Bitmap, @FloatRange(from = 1.0) borderSize: Float,
+        @ColorInt color: Int, recycle: Boolean
     ): Bitmap? {
         return addBorder(src, borderSize, color, true, 0f, recycle)
     }
@@ -1614,12 +1599,7 @@ object ImageUtils {
      * @param recycle   True to recycle the source of bitmap, false otherwise.
      * @return the compressed bitmap
      */
-    fun compressByScale(
-        src: Bitmap,
-        newWidth: Int,
-        newHeight: Int,
-        recycle: Boolean
-    ): Bitmap? {
+    fun compressByScale(src: Bitmap, newWidth: Int, newHeight: Int, recycle: Boolean): Bitmap? {
         return scale(src, newWidth, newHeight, recycle)
     }
 
@@ -1631,11 +1611,8 @@ object ImageUtils {
      * @param scaleHeight The scale of height.
      * @return the compressed bitmap
      */
-    fun compressByScale(
-        src: Bitmap,
-        scaleWidth: Float,
-        scaleHeight: Float
-    ): Bitmap? {
+    @JvmStatic
+    fun compressByScale(src: Bitmap, scaleWidth: Float, scaleHeight: Float): Bitmap? {
         return scale(src, scaleWidth, scaleHeight, false)
     }
 
@@ -1648,12 +1625,9 @@ object ImageUtils {
      * @param recycle     True to recycle the source of bitmap, false otherwise.
      * @return he compressed bitmap
      */
+    @JvmStatic
     fun compressByScale(
-        src: Bitmap,
-        scaleWidth: Float,
-        scaleHeight: Float,
-        recycle: Boolean
-    ): Bitmap? {
+        src: Bitmap, scaleWidth: Float, scaleHeight: Float, recycle: Boolean): Bitmap? {
         return scale(src, scaleWidth, scaleHeight, recycle)
     }
     /**
@@ -1673,8 +1647,7 @@ object ImageUtils {
      */
     @JvmOverloads
     fun compressByQuality(
-        src: Bitmap,
-        @androidx.annotation.IntRange(from = 0, to = 100) quality: Int,
+        src: Bitmap, @androidx.annotation.IntRange(from = 0, to = 100) quality: Int,
         recycle: Boolean = false
     ): ByteArray? {
         if (isEmptyBitmap(src)) return null
@@ -1700,11 +1673,7 @@ object ImageUtils {
      * @return the compressed data using quality
      */
     @JvmOverloads
-    fun compressByQuality(
-        src: Bitmap,
-        maxByteSize: Long,
-        recycle: Boolean = false
-    ): ByteArray {
+    fun compressByQuality(src: Bitmap, maxByteSize: Long, recycle: Boolean = false): ByteArray {
         if (isEmptyBitmap(src) || maxByteSize <= 0) return ByteArray(0)
         val baos = ByteArrayOutputStream()
         src.compress(CompressFormat.JPEG, 100, baos)
@@ -1755,9 +1724,7 @@ object ImageUtils {
      */
     @JvmOverloads
     fun compressBySampleSize(
-        src: Bitmap,
-        sampleSize: Int,
-        recycle: Boolean = false
+        src: Bitmap, sampleSize: Int, recycle: Boolean = false
     ): Bitmap? {
         if (isEmptyBitmap(src)) return null
         val options = BitmapFactory.Options()
@@ -1780,10 +1747,7 @@ object ImageUtils {
      */
     @JvmOverloads
     fun compressBySampleSize(
-        src: Bitmap,
-        maxWidth: Int,
-        maxHeight: Int,
-        recycle: Boolean = false
+        src: Bitmap, maxWidth: Int, maxHeight: Int, recycle: Boolean = false
     ): Bitmap? {
         if (isEmptyBitmap(src)) return null
         val options = BitmapFactory.Options()
@@ -1804,6 +1768,7 @@ object ImageUtils {
      * @param filePath The path of file.
      * @return the size of bitmap
      */
+    @JvmStatic
     fun getSize(filePath: String): IntArray {
         return getSize(FileUtils.getFileByPath(filePath) ?: return intArrayOf(0, 0))
     }
@@ -1814,6 +1779,7 @@ object ImageUtils {
      * @param file The file.
      * @return the size of bitmap
      */
+    @JvmStatic
     fun getSize(file: File): IntArray {
         val opts = BitmapFactory.Options()
         opts.inJustDecodeBounds = true
@@ -1829,11 +1795,8 @@ object ImageUtils {
      * @param maxHeight The maximum height.
      * @return the sample size
      */
-    fun calculateInSampleSize(
-        options: BitmapFactory.Options,
-        maxWidth: Int,
-        maxHeight: Int
-    ): Int {
+    @JvmStatic
+    fun calculateInSampleSize(options: BitmapFactory.Options, maxWidth: Int, maxHeight: Int): Int {
         var height = options.outHeight
         var width = options.outWidth
         var inSampleSize = 1
@@ -1846,10 +1809,7 @@ object ImageUtils {
     }
 
     enum class ImageType(var value: String) {
-        TYPE_JPG("jpg"), TYPE_PNG("png"), TYPE_GIF("gif"), TYPE_TIFF("tiff"), TYPE_BMP("bmp"), TYPE_WEBP(
-            "webp"
-        ),
-        TYPE_ICO("ico"), TYPE_UNKNOWN("unknown");
-
+        TYPE_JPG("jpg"), TYPE_PNG("png"), TYPE_GIF("gif"), TYPE_TIFF("tiff"),
+        TYPE_BMP("bmp"), TYPE_WEBP("webp"), TYPE_ICO("ico"), TYPE_UNKNOWN("unknown");
     }
 }

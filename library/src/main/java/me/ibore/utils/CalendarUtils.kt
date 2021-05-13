@@ -1334,12 +1334,7 @@
 //         * @param day      天数
 //         * @return 如果特殊判断成功则返回节日
 //         */
-//        fun hook(
-//            festival: Festival?,
-//            year: Int,
-//            month: Int,
-//            day: Int
-//        ): Festival?
+//        fun hook(festival: Festival, year: Int, month: Int, day: Int): Festival
 //    }
 //
 //    init {

@@ -10,7 +10,6 @@ import android.os.*
 import android.util.Log
 import me.ibore.utils.Utils.app
 import me.ibore.utils.UtilsBridge.getNotification
-import me.ibore.utils.UtilsBridge.isMainProcess
 import me.ibore.utils.UtilsBridge.isServiceRunning
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
@@ -32,7 +31,7 @@ object MessengerUtils {
     private const val WHAT_SEND = 0x02
     private const val KEY_STRING = "MESSENGER_UTILS"
     fun register() {
-        if (isMainProcess) {
+        if (ProcessUtils.isMainProcess) {
             if (isServiceRunning(ServerService::class.java.name)) {
                 Log.i("MessengerUtils", "Server service is running.")
                 return
@@ -53,7 +52,7 @@ object MessengerUtils {
     }
 
     fun unregister() {
-        if (isMainProcess) {
+        if (ProcessUtils.isMainProcess) {
             if (!isServiceRunning(ServerService::class.java.name)) {
                 Log.i("MessengerUtils", "Server service isn't running.")
                 return

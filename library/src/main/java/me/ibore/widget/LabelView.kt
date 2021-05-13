@@ -12,7 +12,6 @@ import android.view.View
 import me.ibore.R
 import me.ibore.ktx.dp2px
 import me.ibore.ktx.sp2px
-import me.ibore.utils.UIUtils
 import java.util.*
 import kotlin.math.sqrt
 
