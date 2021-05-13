@@ -178,9 +178,7 @@ internal class UtilsActivityLifecycleImpl : Application.ActivityLifecycleCallbac
             return null
         }
 
-    ///////////////////////////////////////////////////////////////////////////
-    // lifecycle start
-    ///////////////////////////////////////////////////////////////////////////
+
     override fun onActivityPreCreated(activity: Activity, savedInstanceState: Bundle?) { /**/
     }
 

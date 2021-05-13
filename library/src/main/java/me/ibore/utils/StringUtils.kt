@@ -66,11 +66,10 @@ object StringUtils {
     @JvmStatic
     fun equals(s1: CharSequence?, s2: CharSequence?): Boolean {
         if (s1 === s2) return true
-        var length: Int = 0
+        var length = 0
         return if (s1 != null && s2 != null && s1.length.also { length = it } == s2.length) {
-            if (s1 is String && s2 is String) {
-                s1 == s2
-            } else {
+            if (s1 is String && s2 is String) s1 == s2
+            else {
                 for (i in 0 until length) {
                     if (s1[i] != s2[i]) return false
                 }

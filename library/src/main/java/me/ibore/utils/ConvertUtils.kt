@@ -7,7 +7,6 @@ import android.graphics.drawable.Drawable
 import android.os.Parcel
 import android.os.Parcelable
 import android.view.View
-import me.ibore.utils.UtilsBridge.isSpace
 import me.ibore.utils.constant.MemoryConstants
 import me.ibore.utils.constant.TimeConstants
 import org.json.JSONArray
@@ -168,8 +167,8 @@ object ConvertUtils {
      */
     fun hexString2Bytes(hexString: String?): ByteArray {
         var hexStringTemp = hexString
-        if (isSpace(hexStringTemp)) return ByteArray(0)
-        var len = hexStringTemp!!.length
+        if (hexStringTemp.isNullOrBlank()) return ByteArray(0)
+        var len = hexStringTemp.length
         if (len % 2 != 0) {
             hexStringTemp = "0$hexStringTemp"
             len += 1
@@ -687,11 +686,8 @@ object ConvertUtils {
         return UtilsBridge.view2Bitmap(view)
     }
 
-    private fun getSafeCharset(charsetName: String?): String {
-        var cn = charsetName ?: "UTF-8"
-        if (isSpace(charsetName) || !Charset.isSupported(charsetName)) {
-            cn = "UTF-8"
-        }
-        return cn
+    private fun getSafeCharset(charsetName: String? = "UTF-8"): String {
+        return if (charsetName.isNullOrBlank() || !Charset.isSupported(charsetName)) "UTF-8"
+        else charsetName
     }
 }

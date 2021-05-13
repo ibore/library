@@ -7,7 +7,6 @@ import android.content.res.Resources
 import android.os.Build
 import android.util.Log
 import me.ibore.utils.UtilsBridge.activityList
-import me.ibore.utils.UtilsBridge.equals
 import java.util.*
 
 /**
@@ -240,8 +239,8 @@ object LanguageUtils {
     }
 
     private fun isSameLocale(l0: Locale, l1: Locale): Boolean {
-        return (equals(l1.language, l0.language)
-                && equals(l1.country, l0.country))
+        return (StringUtils.equals(l1.language, l0.language)
+                && StringUtils.equals(l1.country, l0.country))
     }
 
     private fun getLocal(configuration: Configuration): Locale {

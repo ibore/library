@@ -6,7 +6,6 @@ import androidx.annotation.RawRes
 import androidx.core.content.ContextCompat
 import me.ibore.utils.UtilsBridge.inputStream2Bytes
 import me.ibore.utils.UtilsBridge.inputStream2Lines
-import me.ibore.utils.UtilsBridge.isSpace
 import java.io.IOException
 import java.io.UnsupportedEncodingException
 import java.nio.charset.Charset
@@ -191,7 +190,7 @@ object ResourceUtils {
         return try {
             val `is` = Utils.app.assets.open(assetsFilePath!!)
             val bytes = inputStream2Bytes(`is`) ?: return ""
-            if (isSpace(charsetName)) {
+            if (charsetName.isNullOrBlank()) {
                 String(bytes)
             } else {
                 try {
@@ -253,7 +252,7 @@ object ResourceUtils {
     fun readRaw2String(@RawRes resId: Int, charsetName: String? = null): String? {
         val `is` = Utils.app.resources.openRawResource(resId)
         val bytes = inputStream2Bytes(`is`) ?: return null
-        return if (isSpace(charsetName)) {
+        return if (charsetName.isNullOrBlank()) {
             String(bytes)
         } else {
             try {

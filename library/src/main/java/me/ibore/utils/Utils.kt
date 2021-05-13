@@ -6,7 +6,6 @@ import android.app.Application
 import android.content.ContentResolver
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
-import android.util.Log
 import androidx.lifecycle.Lifecycle
 import me.ibore.ktx.logD
 import me.ibore.utils.ThreadUtils.SimpleTask
@@ -85,9 +84,12 @@ object Utils {
     val contentResolver: ContentResolver
         get() = app.contentResolver
 
-    ///////////////////////////////////////////////////////////////////////////
-    // interface
-    ///////////////////////////////////////////////////////////////////////////
+    @JvmStatic
+    fun <T> doAsync(task: Task<T>): Task<T> {
+        ThreadUtils.getCachedPool().execute(task)
+        return task
+    }
+
     abstract class Task<Result>(private val mConsumer: Consumer<Result>?) : SimpleTask<Result>() {
         override fun onSuccess(result: Result) {
             mConsumer?.accept(result)
@@ -103,22 +105,22 @@ object Utils {
         open fun onActivityCreated(activity: Activity) {
         }
 
-        fun onActivityStarted(activity: Activity) {
+        open fun onActivityStarted(activity: Activity) {
         }
 
-        fun onActivityResumed(activity: Activity) {
+        open fun onActivityResumed(activity: Activity) {
         }
 
-        fun onActivityPaused(activity: Activity) {
+        open fun onActivityPaused(activity: Activity) {
         }
 
-        fun onActivityStopped(activity: Activity) {
+        open fun onActivityStopped(activity: Activity) {
         }
 
-        fun onActivityDestroyed(activity: Activity) {
+        open fun onActivityDestroyed(activity: Activity) {
         }
 
-        fun onLifecycleChanged(activity: Activity, event: Lifecycle.Event?) {
+        open fun onLifecycleChanged(activity: Activity, event: Lifecycle.Event?) {
         }
     }
 

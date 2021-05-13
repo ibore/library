@@ -1,6 +1,5 @@
 package me.ibore.utils
 
-import me.ibore.utils.UtilsBridge.doAsync
 import java.io.BufferedReader
 import java.io.DataOutputStream
 import java.io.IOException
@@ -127,7 +126,7 @@ object ShellUtils {
         isNeedResultMsg: Boolean,
         consumer: Utils.Consumer<CommandResult>?
     ): Utils.Task<CommandResult> {
-        return doAsync(object : Utils.Task<CommandResult>(consumer) {
+        return Utils.doAsync(object : Utils.Task<CommandResult>(consumer) {
             override fun doInBackground(): CommandResult {
                 return execCmd(commands, isRooted, isNeedResultMsg)
             }

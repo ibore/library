@@ -9,6 +9,8 @@ import me.ibore.exception.HttpException
 import me.ibore.http.progress.ProgressListener
 import me.ibore.http.progress.ProgressResponseBody
 import me.ibore.utils.DisposablesUtils
+import me.ibore.utils.ReflectUtils
+import me.ibore.utils.ReflexUtils
 import okhttp3.Call
 import okhttp3.Headers
 import okhttp3.MediaType
@@ -173,7 +175,7 @@ abstract class Request<R : Request<R>>(protected val xHttp: XHttp) {
     fun <T> observable(observer: XObserver<T>): Disposable {
         return DisposablesUtils.add(tag ?: observer.tag!!, Observable.create {
             try {
-                val body: T = execute(ReflectionUtils.getTypeByAbstract(observer, 0)!!)!!
+                val body: T = execute(ReflexUtils.getTypeByAbstract(observer, 0)!!)!!
                 it.onNext(body)
                 it.onComplete()
             } catch (e: Exception) {
@@ -186,7 +188,7 @@ abstract class Request<R : Request<R>>(protected val xHttp: XHttp) {
     fun <T> subscriber(subscriber: XSubscriber<T>): Disposable {
         return DisposablesUtils.add(tag ?: subscriber.tag!!, Flowable.create({
             try {
-                val body: T = execute(ReflectionUtils.getTypeByAbstract(subscriber, 0)!!)
+                val body: T = execute(ReflexUtils.getTypeByAbstract(subscriber, 0)!!)
                 it.onNext(body)
                 it.onComplete()
             } catch (e: Exception) {

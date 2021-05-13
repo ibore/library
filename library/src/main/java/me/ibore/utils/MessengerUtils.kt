@@ -9,8 +9,6 @@ import android.content.ServiceConnection
 import android.os.*
 import android.util.Log
 import me.ibore.utils.Utils.app
-import me.ibore.utils.UtilsBridge.getNotification
-import me.ibore.utils.UtilsBridge.isServiceRunning
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 
@@ -32,7 +30,7 @@ object MessengerUtils {
     private const val KEY_STRING = "MESSENGER_UTILS"
     fun register() {
         if (ProcessUtils.isMainProcess) {
-            if (isServiceRunning(ServerService::class.java.name)) {
+            if (ServiceUtils.isServiceRunning(ServerService::class.java.name)) {
                 Log.i("MessengerUtils", "Server service is running.")
                 return
             }
@@ -53,7 +51,7 @@ object MessengerUtils {
 
     fun unregister() {
         if (ProcessUtils.isMainProcess) {
-            if (!isServiceRunning(ServerService::class.java.name)) {
+            if (!ServiceUtils.isServiceRunning(ServerService::class.java.name)) {
                 Log.i("MessengerUtils", "Server service isn't running.")
                 return
             }
@@ -264,9 +262,7 @@ object MessengerUtils {
 
         override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                val notification = getNotification(
-                    NotificationUtils.ChannelConfig.DEFAULT_CHANNEL_CONFIG, null
-                )
+                val notification = NotificationUtils.getNotification()
                 startForeground(1, notification)
             }
             if (intent != null) {

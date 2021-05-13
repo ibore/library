@@ -233,34 +233,6 @@ internal object UtilsBridge {
         return ImageUtils.bitmap2Drawable(bitmap)
     }
 
-
-    ///////////////////////////////////////////////////////////////////////////
-    // KeyboardUtils
-    ///////////////////////////////////////////////////////////////////////////
-    @JvmStatic
-    fun fixSoftInputLeaks(activity: Activity?) {
-        KeyboardUtils.fixSoftInputLeaks(activity!!)
-    }
-
-    ///////////////////////////////////////////////////////////////////////////
-    // NotificationUtils
-    ///////////////////////////////////////////////////////////////////////////
-    @JvmStatic
-    fun getNotification(
-        channelConfig: ChannelConfig,
-        consumer: Utils.Consumer<NotificationCompat.Builder?>?
-    ): Notification {
-        return NotificationUtils.getNotification(channelConfig, consumer)
-    }
-
-    ///////////////////////////////////////////////////////////////////////////
-    // ServiceUtils
-    ///////////////////////////////////////////////////////////////////////////
-    @JvmStatic
-    fun isServiceRunning(className: String?): Boolean {
-        return ServiceUtils.isServiceRunning(className!!)
-    }
-
     ///////////////////////////////////////////////////////////////////////////
     // ShellUtils
     ///////////////////////////////////////////////////////////////////////////
@@ -277,26 +249,7 @@ internal object UtilsBridge {
         return StringUtils.isSpace(s)
     }
 
-    @JvmStatic
-    fun equals(s1: CharSequence?, s2: CharSequence?): Boolean {
-        return StringUtils.equals(s1, s2)
-    }
 
-    ///////////////////////////////////////////////////////////////////////////
-    // ThreadUtils
-    ///////////////////////////////////////////////////////////////////////////
-    @JvmStatic
-    fun <T> doAsync(task: Utils.Task<T>): Utils.Task<T> {
-        ThreadUtils.getCachedPool().execute(task)
-        return task
-    }
-
-    @JvmStatic
-    private fun preLoad(vararg runs: Runnable) {
-        for (r in runs) {
-            ThreadUtils.getCachedPool().execute(r)
-        }
-    }
 
     ///////////////////////////////////////////////////////////////////////////
     // Common

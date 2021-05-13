@@ -1,5 +1,7 @@
 package me.ibore.utils.encrypt
 
+import me.ibore.ktx.logD
+import me.ibore.utils.CloseUtils
 import java.io.FileInputStream
 import java.io.InputStream
 import java.util.zip.CRC32

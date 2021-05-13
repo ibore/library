@@ -61,8 +61,8 @@ object NotificationUtils {
 
     @JvmStatic
     fun getNotification(
-        channelConfig: ChannelConfig,
-        consumer: Utils.Consumer<NotificationCompat.Builder>?
+        channelConfig: ChannelConfig = ChannelConfig.DEFAULT_CHANNEL_CONFIG,
+        consumer: Utils.Consumer<NotificationCompat.Builder>? = null
     ): Notification {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val nm = Utils.app.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager

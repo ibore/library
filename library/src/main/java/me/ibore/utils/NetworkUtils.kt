@@ -17,8 +17,6 @@ import android.text.TextUtils
 import android.text.format.Formatter
 import androidx.annotation.RequiresPermission
 import me.ibore.utils.ShellUtils.execCmd
-import me.ibore.utils.UtilsBridge.doAsync
-import me.ibore.utils.UtilsBridge.equals
 import java.net.InetAddress
 import java.net.NetworkInterface
 import java.net.SocketException
@@ -69,7 +67,7 @@ object NetworkUtils {
      */
     @RequiresPermission(permission.INTERNET)
     fun isAvailableAsync(consumer: Utils.Consumer<Boolean>): Utils.Task<Boolean> {
-        return doAsync(object : Utils.Task<Boolean>(consumer) {
+        return Utils.doAsync(object : Utils.Task<Boolean>(consumer) {
             @RequiresPermission(permission.INTERNET)
             override fun doInBackground(): Boolean {
                 return isAvailable
@@ -116,7 +114,7 @@ object NetworkUtils {
         ip: String?,
         consumer: Utils.Consumer<Boolean>
     ): Utils.Task<Boolean> {
-        return doAsync(object : Utils.Task<Boolean>(consumer) {
+        return Utils.doAsync(object : Utils.Task<Boolean>(consumer) {
             @RequiresPermission(permission.INTERNET)
             override fun doInBackground(): Boolean {
                 return isAvailableByPing(ip)
@@ -177,7 +175,7 @@ object NetworkUtils {
     fun isAvailableByDnsAsync(
         domain: String?, consumer: Utils.Consumer<Boolean>
     ): Utils.Task<Boolean> {
-        return doAsync(object : Utils.Task<Boolean>(consumer) {
+        return Utils.doAsync(object : Utils.Task<Boolean>(consumer) {
             @RequiresPermission(permission.INTERNET)
             override fun doInBackground(): Boolean {
                 return isAvailableByDns(domain)
@@ -354,7 +352,7 @@ object NetworkUtils {
      */
     @RequiresPermission(allOf = [permission.ACCESS_WIFI_STATE, permission.INTERNET])
     fun isWifiAvailableAsync(consumer: Utils.Consumer<Boolean>): Utils.Task<Boolean> {
-        return doAsync(object : Utils.Task<Boolean>(consumer) {
+        return Utils.doAsync(object : Utils.Task<Boolean>(consumer) {
             @RequiresPermission(allOf = [permission.ACCESS_WIFI_STATE, permission.INTERNET])
             override fun doInBackground(): Boolean {
                 return isWifiAvailable
@@ -463,7 +461,7 @@ object NetworkUtils {
         useIPv4: Boolean,
         consumer: Utils.Consumer<String>
     ): Utils.Task<String> {
-        return doAsync(object : Utils.Task<String>(consumer) {
+        return Utils.doAsync(object : Utils.Task<String>(consumer) {
             @RequiresPermission(permission.INTERNET)
             override fun doInBackground(): String {
                 return getIPAddress(useIPv4)
@@ -557,11 +555,8 @@ object NetworkUtils {
      * @return the task
      */
     @RequiresPermission(permission.INTERNET)
-    fun getDomainAddressAsync(
-        domain: String?,
-        consumer: Utils.Consumer<String>
-    ): Utils.Task<String> {
-        return doAsync(object : Utils.Task<String>(consumer) {
+    fun getDomainAddressAsync(domain: String?, consumer: Utils.Consumer<String>): Utils.Task<String> {
+        return Utils.doAsync(object : Utils.Task<String>(consumer) {
             @RequiresPermission(permission.INTERNET)
             override fun doInBackground(): String {
                 return getDomainAddress(domain)
@@ -598,8 +593,7 @@ object NetworkUtils {
     val ipAddressByWifi: String
         get() {
             @SuppressLint("WifiManagerLeak") val wm =
-                Utils.app.getSystemService(Context.WIFI_SERVICE) as WifiManager
-                    ?: return ""
+                Utils.app.getSystemService(Context.WIFI_SERVICE) as WifiManager? ?: return ""
             return Formatter.formatIpAddress(wm.dhcpInfo.ipAddress)
         }
 
@@ -794,9 +788,9 @@ object NetworkUtils {
     }
 
     private fun isSameScanResultContent(r1: ScanResult?, r2: ScanResult?): Boolean {
-        return (r1 != null && r2 != null && equals(r1.BSSID, r2.BSSID)
-                && equals(r1.SSID, r2.SSID)
-                && equals(r1.capabilities, r2.capabilities)
+        return (r1 != null && r2 != null && StringUtils.equals(r1.BSSID, r2.BSSID)
+                && StringUtils.equals(r1.SSID, r2.SSID)
+                && StringUtils.equals(r1.capabilities, r2.capabilities)
                 && r1.level == r2.level)
     }
 
