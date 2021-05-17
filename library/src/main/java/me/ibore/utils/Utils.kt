@@ -6,29 +6,13 @@ import android.app.Application
 import android.content.ContentResolver
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
-import androidx.lifecycle.Lifecycle
+import android.os.Bundle
 import me.ibore.ktx.logD
 import me.ibore.utils.ThreadUtils.SimpleTask
 import me.ibore.utils.UtilsBridge.applicationByReflect
 
 /**
- * <pre>
- * author:
- * ___           ___           ___         ___
- * _____                       /  /\         /__/\         /__/|       /  /\
- * /  /::\                     /  /::\        \  \:\       |  |:|      /  /:/
- * /  /:/\:\    ___     ___    /  /:/\:\        \  \:\      |  |:|     /__/::\
- * /  /:/~/::\  /__/\   /  /\  /  /:/~/::\   _____\__\:\   __|  |:|     \__\/\:\
- * /__/:/ /:/\:| \  \:\ /  /:/ /__/:/ /:/\:\ /__/::::::::\ /__/\_|:|____    \  \:\
- * \  \:\/:/~/:/  \  \:\  /:/  \  \:\/:/__\/ \  \:\~~\~~\/ \  \:\/:::::/     \__\:\
- * \  \::/ /:/    \  \:\/:/    \  \::/       \  \:\  ~~~   \  \::/~~~~      /  /:/
- * \  \:\/:/      \  \::/      \  \:\        \  \:\        \  \:\         /__/:/
- * \  \::/        \__\/        \  \:\        \  \:\        \  \:\        \__\/
- * \__\/                       \__\/         \__\/         \__\/
- * blog  : http://blankj.com
- * time  : 16/12/08
- * desc  : utils about initialization
-</pre> *
+ * utils about initialization
  */
 object Utils {
 
@@ -52,6 +36,11 @@ object Utils {
         UtilsActivityLifecycleImpl.INSTANCE.unInit(sApp!!)
         sApp = app
         UtilsActivityLifecycleImpl.INSTANCE.init(sApp!!)
+        CrashUtils.init("", object : CrashUtils.OnCrashListener {
+            override fun onCrash(crashInfo: CrashUtils.CrashInfo) {
+                logD(crashInfo.toString())
+            }
+        })
     }
 
     /**
@@ -72,61 +61,40 @@ object Utils {
             return sApp!!
         }
 
+    @JvmStatic
     val packageName: String
         get() = app.packageName
 
+    @JvmStatic
     val applicationInfo: ApplicationInfo
         get() = app.applicationInfo
 
+    @JvmStatic
     val packageManager: PackageManager
         get() = app.packageManager
 
+    @JvmStatic
     val contentResolver: ContentResolver
         get() = app.contentResolver
 
     @JvmStatic
-    fun <T> doAsync(task: Task<T>): Task<T> {
-        ThreadUtils.getCachedPool().execute(task)
-        return task
-    }
-
-    abstract class Task<Result>(private val mConsumer: Consumer<Result>?) : SimpleTask<Result>() {
-        override fun onSuccess(result: Result) {
-            mConsumer?.accept(result)
-        }
-    }
+    val sp: SPUtils
+        get() = SPUtils.getInstance("Utils")
 
     interface OnAppStatusChangedListener {
-        fun onForeground(activity: Activity?)
-        fun onBackground(activity: Activity?)
+        fun onForeground(activity: Activity)
+        fun onBackground(activity: Activity)
     }
 
-    open class ActivityLifecycleCallbacks {
-        open fun onActivityCreated(activity: Activity) {
-        }
-
-        open fun onActivityStarted(activity: Activity) {
-        }
-
-        open fun onActivityResumed(activity: Activity) {
-        }
-
-        open fun onActivityPaused(activity: Activity) {
-        }
-
-        open fun onActivityStopped(activity: Activity) {
-        }
-
-        open fun onActivityDestroyed(activity: Activity) {
-        }
-
-        open fun onLifecycleChanged(activity: Activity, event: Lifecycle.Event?) {
-        }
+    interface ActivityLifecycleCallbacks {
+        fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {}
+        fun onActivityStarted(activity: Activity) {}
+        fun onActivityResumed(activity: Activity) {}
+        fun onActivityPaused(activity: Activity) {}
+        fun onActivityStopped(activity: Activity) {}
+        fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {}
+        fun onActivityDestroyed(activity: Activity) {}
     }
-
-    @JvmStatic
-    val SP: SPUtils
-        get() = SPUtils.getInstance("Utils")
 
     interface Consumer<T> {
         fun accept(t: T)

@@ -29,7 +29,7 @@ object ShellUtils {
         command: String,
         isRooted: Boolean,
         consumer: Utils.Consumer<CommandResult>?
-    ): Utils.Task<CommandResult> {
+    ): ThreadUtils.ConsumerTask<CommandResult> {
         return execCmdAsync(arrayOf(command), isRooted, true, consumer)
     }
 
@@ -45,7 +45,7 @@ object ShellUtils {
         commands: List<String?>?,
         isRooted: Boolean,
         consumer: Utils.Consumer<CommandResult>?
-    ): Utils.Task<CommandResult> {
+    ): ThreadUtils.ConsumerTask<CommandResult> {
         return execCmdAsync(
             commands?.toTypedArray(),
             isRooted,
@@ -66,7 +66,7 @@ object ShellUtils {
         commands: Array<String?>?,
         isRooted: Boolean,
         consumer: Utils.Consumer<CommandResult>?
-    ): Utils.Task<CommandResult> {
+    ): ThreadUtils.ConsumerTask<CommandResult> {
         return execCmdAsync(commands, isRooted, true, consumer)
     }
 
@@ -84,7 +84,7 @@ object ShellUtils {
         isRooted: Boolean,
         isNeedResultMsg: Boolean,
         consumer: Utils.Consumer<CommandResult>?
-    ): Utils.Task<CommandResult> {
+    ): ThreadUtils.ConsumerTask<CommandResult> {
         return execCmdAsync(arrayOf(command), isRooted, isNeedResultMsg, consumer)
     }
 
@@ -102,7 +102,7 @@ object ShellUtils {
         isRooted: Boolean,
         isNeedResultMsg: Boolean,
         consumer: Utils.Consumer<CommandResult>?
-    ): Utils.Task<CommandResult> {
+    ): ThreadUtils.ConsumerTask<CommandResult> {
         return execCmdAsync(
             commands?.toTypedArray(),
             isRooted,
@@ -125,8 +125,8 @@ object ShellUtils {
         isRooted: Boolean,
         isNeedResultMsg: Boolean,
         consumer: Utils.Consumer<CommandResult>?
-    ): Utils.Task<CommandResult> {
-        return Utils.doAsync(object : Utils.Task<CommandResult>(consumer) {
+    ): ThreadUtils.ConsumerTask<CommandResult> {
+        return ThreadUtils.doAsync(object : ThreadUtils.ConsumerTask<CommandResult>(consumer) {
             override fun doInBackground(): CommandResult {
                 return execCmd(commands, isRooted, isNeedResultMsg)
             }

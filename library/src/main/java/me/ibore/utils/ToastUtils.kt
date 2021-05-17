@@ -422,7 +422,6 @@ class ToastUtils {
         override fun show(duration: Int) {
             if (mToast == null) return
             if (!isAppForeground) {
-                // try to use system toast
                 showSystemToast(duration)
                 return
             }
@@ -442,7 +441,6 @@ class ToastUtils {
                 )
                 ++sShowingIndex
             } else {
-                // try to use system toast
                 showSystemToast(duration)
             }
         }

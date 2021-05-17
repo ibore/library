@@ -404,7 +404,7 @@ object DeviceUtils {
         if (udid == null) {
             synchronized(DeviceUtils::class.java) {
                 if (udid == null) {
-                    val id = Utils.SP.getString(KEY_UDID, "")
+                    val id = Utils.sp.getString(KEY_UDID, "")
                     if (id.isEmpty()) {
                         udid = id
                         return udid!!
@@ -432,7 +432,7 @@ object DeviceUtils {
         // {prefix}{type}{32id}
         if (TextUtils.isEmpty(uniqueDeviceId) && uniqueDeviceId.length < 33) return false
         if (uniqueDeviceId == udid) return true
-        val cachedId = Utils.SP.getString(KEY_UDID, "")
+        val cachedId = Utils.sp.getString(KEY_UDID, "")
         if (uniqueDeviceId == cachedId) return true
         val st = uniqueDeviceId.length - 33
         val type = uniqueDeviceId.substring(st, st + 1)
@@ -455,7 +455,7 @@ object DeviceUtils {
 
     private fun saveUUID(prefix: String, id: String): String {
         udid = getUUID(prefix, id)
-        Utils.SP.put(KEY_UDID, udid)
+        Utils.sp.put(KEY_UDID, udid)
         return udid!!
     }
 

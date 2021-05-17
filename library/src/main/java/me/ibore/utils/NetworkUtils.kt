@@ -66,8 +66,8 @@ object NetworkUtils {
      * @return the task
      */
     @RequiresPermission(permission.INTERNET)
-    fun isAvailableAsync(consumer: Utils.Consumer<Boolean>): Utils.Task<Boolean> {
-        return Utils.doAsync(object : Utils.Task<Boolean>(consumer) {
+    fun isAvailableAsync(consumer: Utils.Consumer<Boolean>): ThreadUtils.ConsumerTask<Boolean> {
+        return ThreadUtils.doAsync(object : ThreadUtils.ConsumerTask<Boolean>(consumer) {
             @RequiresPermission(permission.INTERNET)
             override fun doInBackground(): Boolean {
                 return isAvailable
@@ -113,8 +113,8 @@ object NetworkUtils {
     fun isAvailableByPingAsync(
         ip: String?,
         consumer: Utils.Consumer<Boolean>
-    ): Utils.Task<Boolean> {
-        return Utils.doAsync(object : Utils.Task<Boolean>(consumer) {
+    ): ThreadUtils.ConsumerTask<Boolean> {
+        return ThreadUtils.doAsync(object : ThreadUtils.ConsumerTask<Boolean>(consumer) {
             @RequiresPermission(permission.INTERNET)
             override fun doInBackground(): Boolean {
                 return isAvailableByPing(ip)
@@ -174,8 +174,8 @@ object NetworkUtils {
     @RequiresPermission(permission.INTERNET)
     fun isAvailableByDnsAsync(
         domain: String?, consumer: Utils.Consumer<Boolean>
-    ): Utils.Task<Boolean> {
-        return Utils.doAsync(object : Utils.Task<Boolean>(consumer) {
+    ): ThreadUtils.ConsumerTask<Boolean> {
+        return ThreadUtils.doAsync(object : ThreadUtils.ConsumerTask<Boolean>(consumer) {
             @RequiresPermission(permission.INTERNET)
             override fun doInBackground(): Boolean {
                 return isAvailableByDns(domain)
@@ -351,8 +351,8 @@ object NetworkUtils {
      * @return the task
      */
     @RequiresPermission(allOf = [permission.ACCESS_WIFI_STATE, permission.INTERNET])
-    fun isWifiAvailableAsync(consumer: Utils.Consumer<Boolean>): Utils.Task<Boolean> {
-        return Utils.doAsync(object : Utils.Task<Boolean>(consumer) {
+    fun isWifiAvailableAsync(consumer: Utils.Consumer<Boolean>): ThreadUtils.ConsumerTask<Boolean> {
+        return ThreadUtils.doAsync(object : ThreadUtils.ConsumerTask<Boolean>(consumer) {
             @RequiresPermission(allOf = [permission.ACCESS_WIFI_STATE, permission.INTERNET])
             override fun doInBackground(): Boolean {
                 return isWifiAvailable
@@ -460,8 +460,8 @@ object NetworkUtils {
     fun getIPAddressAsync(
         useIPv4: Boolean,
         consumer: Utils.Consumer<String>
-    ): Utils.Task<String> {
-        return Utils.doAsync(object : Utils.Task<String>(consumer) {
+    ): ThreadUtils.ConsumerTask<String> {
+        return ThreadUtils.doAsync(object : ThreadUtils.ConsumerTask<String>(consumer) {
             @RequiresPermission(permission.INTERNET)
             override fun doInBackground(): String {
                 return getIPAddress(useIPv4)
@@ -555,8 +555,8 @@ object NetworkUtils {
      * @return the task
      */
     @RequiresPermission(permission.INTERNET)
-    fun getDomainAddressAsync(domain: String?, consumer: Utils.Consumer<String>): Utils.Task<String> {
-        return Utils.doAsync(object : Utils.Task<String>(consumer) {
+    fun getDomainAddressAsync(domain: String?, consumer: Utils.Consumer<String>): ThreadUtils.ConsumerTask<String> {
+        return ThreadUtils.doAsync(object : ThreadUtils.ConsumerTask<String>(consumer) {
             @RequiresPermission(permission.INTERNET)
             override fun doInBackground(): String {
                 return getDomainAddress(domain)

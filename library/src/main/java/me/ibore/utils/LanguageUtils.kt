@@ -45,9 +45,9 @@ object LanguageUtils {
 
     private fun applyLanguageReal(locale: Locale?, isRelaunchApp: Boolean) {
         if (locale == null) {
-            Utils.SP.put(KEY_LOCALE, VALUE_FOLLOW_SYSTEM, true)
+            Utils.sp.put(KEY_LOCALE, VALUE_FOLLOW_SYSTEM, true)
         } else {
-            Utils.SP.put(KEY_LOCALE, locale2String(locale), true)
+            Utils.sp.put(KEY_LOCALE, locale2String(locale), true)
         }
         val destLocal = locale
             ?: getLocal(Resources.getSystem().configuration)
@@ -97,7 +97,7 @@ object LanguageUtils {
      * @return the applied locale
      */
     fun getAppliedLanguage(): Locale? {
-        val spLocaleStr = Utils.SP.getString(KEY_LOCALE)
+        val spLocaleStr = Utils.sp.getString(KEY_LOCALE)
         return if (spLocaleStr.isEmpty() || VALUE_FOLLOW_SYSTEM == spLocaleStr) null
         else string2Locale(spLocaleStr)
     }
@@ -171,7 +171,7 @@ object LanguageUtils {
      * @return the context with language
      */
     fun attachBaseContext(context: Context): Context {
-        val spLocaleStr = Utils.SP.getString(KEY_LOCALE)
+        val spLocaleStr = Utils.sp.getString(KEY_LOCALE)
         if (spLocaleStr.isEmpty() || VALUE_FOLLOW_SYSTEM == spLocaleStr) {
             return context
         }
@@ -183,7 +183,7 @@ object LanguageUtils {
     }
 
     fun applyLanguage(activity: Activity) {
-        val spLocale = Utils.SP.getString(KEY_LOCALE)
+        val spLocale = Utils.sp.getString(KEY_LOCALE)
         if (spLocale.isEmpty()) return
         val destLocal: Locale? = if (VALUE_FOLLOW_SYSTEM == spLocale) {
             getLocal(Resources.getSystem().configuration)
@@ -210,7 +210,7 @@ object LanguageUtils {
         val locale = string2LocaleReal(str)
         if (locale == null) {
             Log.e("LanguageUtils", "The string of $str is not in the correct format.")
-            Utils.SP.remove(KEY_LOCALE)
+            Utils.sp.remove(KEY_LOCALE)
         }
         return locale
     }

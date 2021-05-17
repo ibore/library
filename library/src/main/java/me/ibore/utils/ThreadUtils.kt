@@ -5,6 +5,7 @@ import android.os.Looper
 import android.util.Log
 import androidx.annotation.CallSuper
 import androidx.annotation.IntRange
+import me.ibore.ktx.logD
 import java.util.*
 import java.util.concurrent.*
 import java.util.concurrent.atomic.AtomicBoolean
@@ -698,39 +699,30 @@ object ThreadUtils {
         }
     }
 
-    /**
-     * Set the deliver.
-     *
-     * @param deliver The deliver.
-     */
     fun setDeliver(deliver: Executor?) {
         sDeliver = deliver
     }
 
+    @JvmStatic
+    fun <T> doAsync(task: ConsumerTask<T>): ConsumerTask<T> {
+        getCachedPool().execute(task)
+        return task
+    }
+
     private fun <T> executeWithDelay(
-        pool: ExecutorService?,
-        task: Task<T>,
-        delay: Long,
-        unit: TimeUnit
-    ) {
+        pool: ExecutorService?, task: Task<T>, delay: Long, unit: TimeUnit) {
         execute(pool, task, delay, 0, unit)
     }
 
     private fun <T> executeAtFixedRate(
-        pool: ExecutorService?,
-        task: Task<T>,
-        delay: Long,
-        period: Long,
-        unit: TimeUnit
+        pool: ExecutorService?, task: Task<T>, delay: Long, period: Long, unit: TimeUnit
     ) {
         execute(pool, task, delay, period, unit)
     }
 
     @JvmStatic
     private fun getPoolByTypeAndPriority(
-        type: Int,
-        priority: Int = Thread.NORM_PRIORITY
-    ): ExecutorService {
+        type: Int, priority: Int = Thread.NORM_PRIORITY): ExecutorService {
         synchronized(TYPE_PRIORITY_POOLS) {
             var pool: ExecutorService?
             var priorityPools = TYPE_PRIORITY_POOLS[type]
@@ -940,11 +932,17 @@ object ThreadUtils {
 
     abstract class SimpleTask<T> : Task<T>() {
         override fun onCancel() {
-            Log.e("ThreadUtils", "onCancel: " + Thread.currentThread())
+            logD( "onCancel: " + Thread.currentThread())
         }
 
         override fun onFail(t: Throwable?) {
             Log.e("ThreadUtils", "onFail: ", t)
+        }
+    }
+
+    abstract class ConsumerTask<Result>(private val consumer: Utils.Consumer<Result>?) : SimpleTask<Result>() {
+        override fun onSuccess(result: Result) {
+            consumer?.accept(result)
         }
     }
 

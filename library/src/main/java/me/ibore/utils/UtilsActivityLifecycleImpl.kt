@@ -184,7 +184,6 @@ internal class UtilsActivityLifecycleImpl : Application.ActivityLifecycleCallbac
 
     override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
         LanguageUtils.applyLanguage(activity)
-        setAnimatorsEnabled()
         setTopActivity(activity)
         consumeActivityLifecycleCallbacks(activity, Lifecycle.Event.ON_CREATE)
     }
@@ -332,7 +331,7 @@ internal class UtilsActivityLifecycleImpl : Application.ActivityLifecycleCallbac
      * @return the activities which topActivity is first position
      */
     private val activitiesByReflect: List<Activity>
-        private get() {
+        get() {
             val list = LinkedList<Activity>()
             var topActivity: Activity? = null
             try {
@@ -367,12 +366,12 @@ internal class UtilsActivityLifecycleImpl : Application.ActivityLifecycleCallbac
             return list
         }
     private val activityThread: Any?
-        private get() {
+        get() {
             val activityThread = activityThreadInActivityThreadStaticField
             return activityThread ?: activityThreadInActivityThreadStaticMethod
         }
     private val activityThreadInActivityThreadStaticField: Any?
-        private get() = try {
+        get() = try {
             val activityThreadClass = Class.forName("android.app.ActivityThread")
             val sCurrentActivityThreadField =
                 activityThreadClass.getDeclaredField("sCurrentActivityThread")
@@ -405,30 +404,5 @@ internal class UtilsActivityLifecycleImpl : Application.ActivityLifecycleCallbac
         @SuppressLint("StaticFieldLeak")
         private val STUB = Activity()
 
-        /**
-         * Set animators enabled.
-         */
-        private fun setAnimatorsEnabled() {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && ValueAnimator.areAnimatorsEnabled()) {
-                return
-            }
-            try {
-                val sDurationScaleField =
-                    ValueAnimator::class.java.getDeclaredField("sDurationScale")
-                sDurationScaleField.isAccessible = true
-                val sDurationScale = sDurationScaleField[null] as Float
-                if (sDurationScale == 0f) {
-                    sDurationScaleField[null] = 1f
-                    Log.i(
-                        "UtilsActivityLifecycle",
-                        "setAnimatorsEnabled: Animators are enabled now!"
-                    )
-                }
-            } catch (e: NoSuchFieldException) {
-                e.printStackTrace()
-            } catch (e: IllegalAccessException) {
-                e.printStackTrace()
-            }
-        }
     }
 }

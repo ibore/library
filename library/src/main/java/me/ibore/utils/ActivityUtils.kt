@@ -130,20 +130,13 @@ object ActivityUtils  {
      * @param cls The name of the class.
      * @return `true`: yes<br></br>`false`: no
      */
-    fun isActivityExists(
-        pkg: String,
-        cls: String
-    ): Boolean {
+    fun isActivityExists(pkg: String, cls: String): Boolean {
         val intent = Intent()
         intent.setClassName(pkg, cls)
         val pm = Utils.packageManager
-        return !(pm.resolveActivity(
-            intent,
-            0
-        ) == null || intent.resolveActivity(pm) == null || pm.queryIntentActivities(
-            intent,
-            0
-        ).size == 0)
+        return !(pm.resolveActivity(intent, 0) == null
+                || intent.resolveActivity(pm) == null
+                || pm.queryIntentActivities(intent, 0).size == 0)
     }
 
     /**
@@ -162,10 +155,7 @@ object ActivityUtils  {
      * @param clz     The activity class.
      * @param options Additional options for how the Activity should be started.
      */
-    fun startActivity(
-        clz: Class<*>,
-        options: Bundle?
-    ) {
+    fun startActivity(clz: Class<*>, options: Bundle?) {
         val context = topActivityOrApp
         startActivity(context, null, context.packageName, clz.name, options)
     }
@@ -179,19 +169,12 @@ object ActivityUtils  {
      * @param exitAnim  A resource ID of the animation resource to use for the
      * outgoing activity.
      */
-    fun startActivity(
-        clz: Class<*>,
-        @AnimRes enterAnim: Int,
-        @AnimRes exitAnim: Int
-    ) {
+    fun startActivity(clz: Class<*>, @AnimRes enterAnim: Int, @AnimRes exitAnim: Int) {
         val context = topActivityOrApp
         startActivity(
             context, null, context.packageName, clz.name,
             getOptionsBundle(context, enterAnim, exitAnim)
         )
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN && context is Activity) {
-            context.overridePendingTransition(enterAnim, exitAnim)
-        }
     }
 
     /**
@@ -200,10 +183,7 @@ object ActivityUtils  {
      * @param activity The activity.
      * @param clz      The activity class.
      */
-    fun startActivity(
-        activity: Activity,
-        clz: Class<*>
-    ) {
+    fun startActivity(activity: Activity, clz: Class<*>) {
         startActivity(activity, null, activity.packageName, clz.name, null)
     }
 
@@ -2129,11 +2109,7 @@ object ActivityUtils  {
     }
 
     private fun startActivity(
-        context: Context,
-        extras: Bundle?,
-        pkg: String,
-        cls: String,
-        options: Bundle?
+        context: Context, extras: Bundle?, pkg: String, cls: String, options: Bundle?
     ) {
         val intent = Intent()
         if (extras != null) intent.putExtras(extras)
@@ -2141,11 +2117,7 @@ object ActivityUtils  {
         startActivity(intent, context, options)
     }
 
-    private fun startActivity(
-        intent: Intent,
-        context: Context,
-        options: Bundle?
-    ): Boolean {
+    private fun startActivity(intent: Intent, context: Context, options: Bundle?): Boolean {
         if (!isIntentAvailable(intent)) {
             Log.e("ActivityUtils", "intent is unavailable")
             return false
@@ -2153,11 +2125,7 @@ object ActivityUtils  {
         if (context !is Activity) {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         }
-        if (options != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            context.startActivity(intent, options)
-        } else {
-            context.startActivity(intent)
-        }
+        context.startActivity(intent, options)
         return true
     }
 
