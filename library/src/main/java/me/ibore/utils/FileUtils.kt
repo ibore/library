@@ -879,7 +879,7 @@ object FileUtils {
      */
     private fun getDirSize(dir: File): String {
         val len = getDirLength(dir)
-        return if (len == -1L) "" else UtilsBridge.byte2FitMemorySize(len)
+        return if (len == -1L) "" else ConvertUtils.byte2FitMemorySize(len)
     }
 
     /**
@@ -890,7 +890,7 @@ object FileUtils {
      */
     private fun getFileSize(file: File): String {
         val len = getFileLength(file)
-        return if (len == -1L) "" else UtilsBridge.byte2FitMemorySize(len)
+        return if (len == -1L) "" else ConvertUtils.byte2FitMemorySize(len)
     }
 
     /**

@@ -3,6 +3,7 @@ package me.ibore.utils
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.ActivityManager
+import android.app.Application
 import android.content.Context
 import android.content.Intent
 import android.content.pm.*
@@ -15,31 +16,14 @@ import me.ibore.utils.Utils.OnAppStatusChangedListener
 import me.ibore.utils.encrypt.EncryptUtils
 import java.io.File
 import java.util.*
+import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.CopyOnWriteArrayList
 import kotlin.system.exitProcess
 
 /**
  * utils about app
  */
 object AppUtils  {
-    /**
-     * Register the status of application changed listener.
-     *
-     * @param listener The status of application changed listener
-     */
-    @JvmStatic
-    fun registerAppStatusChangedListener(listener: OnAppStatusChangedListener) {
-        UtilsActivityLifecycleImpl.INSTANCE.addOnAppStatusChangedListener(listener)
-    }
-
-    /**
-     * Unregister the status of application changed listener.
-     *
-     * @param listener The status of application changed listener
-     */
-    @JvmStatic
-    fun unregisterAppStatusChangedListener(listener: OnAppStatusChangedListener) {
-        UtilsActivityLifecycleImpl.INSTANCE.removeOnAppStatusChangedListener(listener)
-    }
 
     /**
      * Install the app.
@@ -532,7 +516,7 @@ object AppUtils  {
         val signatures = getAppSignatures(packageName)
         if (signatures == null || signatures.isEmpty()) return result
         for (signature in signatures) {
-            val hash = UtilsBridge.bytes2HexString(
+            val hash = ConvertUtils.bytes2HexString(
                 EncryptUtils.hashTemplate(signature.toByteArray(), algorithm)
             ).replace("(?<=[0-9A-F]{2})[0-9A-F]{2}".toRegex(), ":$0")
             result.add(hash)

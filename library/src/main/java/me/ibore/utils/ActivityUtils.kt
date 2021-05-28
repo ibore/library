@@ -1,5 +1,6 @@
 package me.ibore.utils
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.ComponentName
 import android.content.Context
@@ -30,7 +31,7 @@ object ActivityUtils  {
      */
     @JvmStatic
     fun addActivityLifecycleCallbacks(callbacks: Utils.ActivityLifecycleCallbacks) {
-        UtilsBridge.addActivityLifecycleCallbacks(callbacks)
+        LifecycleUtils.INSTANCE.addActivityLifecycleCallbacks(callbacks)
     }
 
     /**
@@ -42,7 +43,7 @@ object ActivityUtils  {
     fun addActivityLifecycleCallbacks(
         activity: Activity, callbacks: Utils.ActivityLifecycleCallbacks
     ) {
-        UtilsBridge.addActivityLifecycleCallbacks(activity, callbacks)
+        LifecycleUtils.INSTANCE.addActivityLifecycleCallbacks(activity, callbacks)
     }
 
     /**
@@ -51,7 +52,7 @@ object ActivityUtils  {
      * @param callbacks The callbacks.
      */
     fun removeActivityLifecycleCallbacks(callbacks: Utils.ActivityLifecycleCallbacks) {
-        UtilsBridge.removeActivityLifecycleCallbacks(callbacks)
+        LifecycleUtils.INSTANCE.removeActivityLifecycleCallbacks(callbacks)
     }
 
     /**
@@ -60,7 +61,7 @@ object ActivityUtils  {
      * @param activity The activity.
      */
     fun removeActivityLifecycleCallbacks(activity: Activity) {
-        UtilsBridge.removeActivityLifecycleCallbacks(activity)
+        LifecycleUtils.INSTANCE.removeActivityLifecycleCallbacks(activity)
     }
 
     /**
@@ -73,7 +74,7 @@ object ActivityUtils  {
         activity: Activity,
         callbacks: Utils.ActivityLifecycleCallbacks
     ) {
-        UtilsBridge.removeActivityLifecycleCallbacks(activity, callbacks)
+        LifecycleUtils.INSTANCE.removeActivityLifecycleCallbacks(activity, callbacks)
     }
 
     /**
@@ -130,6 +131,7 @@ object ActivityUtils  {
      * @param cls The name of the class.
      * @return `true`: yes<br></br>`false`: no
      */
+    @SuppressLint("QueryPermissionsNeeded")
     fun isActivityExists(pkg: String, cls: String): Boolean {
         val intent = Intent()
         intent.setClassName(pkg, cls)
@@ -1594,7 +1596,7 @@ object ActivityUtils  {
      * @return the list of activity
      */
     val activityList: List<Activity>
-        get() = UtilsBridge.activityList
+        get() = LifecycleUtils.INSTANCE.activityList
 
     /**
      * Return the name of launcher activity.
@@ -1659,7 +1661,7 @@ object ActivityUtils  {
      * @return the top activity in activity's stack
      */
     val topActivity: Activity?
-        get() = UtilsActivityLifecycleImpl.INSTANCE.topActivity
+        get() = LifecycleUtils.INSTANCE.topActivity
 
     /**
      * Return whether the activity is alive.
@@ -1689,7 +1691,7 @@ object ActivityUtils  {
      * @return `true`: yes<br></br>`false`: no
      */
     fun isActivityExistsInStack(activity: Activity): Boolean {
-        val activities = UtilsBridge.activityList
+        val activities = LifecycleUtils.INSTANCE.activityList
         for (aActivity in activities) {
             if (aActivity == activity) {
                 return true
@@ -1705,7 +1707,7 @@ object ActivityUtils  {
      * @return `true`: yes<br></br>`false`: no
      */
     fun isActivityExistsInStack(clz: Class<*>): Boolean {
-        val activities = UtilsBridge.activityList
+        val activities = LifecycleUtils.INSTANCE.activityList
         for (aActivity in activities) {
             if (aActivity.javaClass == clz) {
                 return true
@@ -1765,7 +1767,7 @@ object ActivityUtils  {
         clz: Class<*>,
         isLoadAnim: Boolean = false
     ) {
-        val activities = UtilsBridge.activityList
+        val activities = LifecycleUtils.INSTANCE.activityList
         for (activity in activities) {
             if (activity.javaClass == clz) {
                 activity.finish()
@@ -1790,7 +1792,7 @@ object ActivityUtils  {
         @AnimRes enterAnim: Int,
         @AnimRes exitAnim: Int
     ) {
-        val activities = UtilsBridge.activityList
+        val activities = LifecycleUtils.INSTANCE.activityList
         for (activity in activities) {
             if (activity.javaClass == clz) {
                 activity.finish()
@@ -1817,7 +1819,7 @@ object ActivityUtils  {
         isIncludeSelf: Boolean,
         isLoadAnim: Boolean = false
     ): Boolean {
-        val activities = UtilsBridge.activityList
+        val activities = LifecycleUtils.INSTANCE.activityList
         for (act in activities) {
             if (act == activity) {
                 if (isIncludeSelf) {
@@ -1846,7 +1848,7 @@ object ActivityUtils  {
         @AnimRes enterAnim: Int,
         @AnimRes exitAnim: Int
     ): Boolean {
-        val activities = UtilsBridge.activityList
+        val activities = LifecycleUtils.INSTANCE.activityList
         for (act in activities) {
             if (act == activity) {
                 if (isIncludeSelf) {
@@ -1877,7 +1879,7 @@ object ActivityUtils  {
         isIncludeSelf: Boolean,
         isLoadAnim: Boolean = false
     ): Boolean {
-        val activities = UtilsBridge.activityList
+        val activities = LifecycleUtils.INSTANCE.activityList
         for (act in activities) {
             if (act.javaClass == clz) {
                 if (isIncludeSelf) {
@@ -1906,7 +1908,7 @@ object ActivityUtils  {
         @AnimRes enterAnim: Int,
         @AnimRes exitAnim: Int
     ): Boolean {
-        val activities = UtilsBridge.activityList
+        val activities = LifecycleUtils.INSTANCE.activityList
         for (act in activities) {
             if (act.javaClass == clz) {
                 if (isIncludeSelf) {
@@ -1934,7 +1936,7 @@ object ActivityUtils  {
         clz: Class<*>,
         isLoadAnim: Boolean = false
     ) {
-        val activities = UtilsBridge.activityList
+        val activities = LifecycleUtils.INSTANCE.activityList
         for (act in activities) {
             if (act.javaClass != clz) {
                 finishActivity(act, isLoadAnim)
@@ -1956,7 +1958,7 @@ object ActivityUtils  {
         @AnimRes enterAnim: Int,
         @AnimRes exitAnim: Int
     ) {
-        val activities = UtilsBridge.activityList
+        val activities = LifecycleUtils.INSTANCE.activityList
         for (act in activities) {
             if (act.javaClass != clz) {
                 finishActivity(act, enterAnim, exitAnim)
@@ -1973,7 +1975,7 @@ object ActivityUtils  {
      */
     @JvmOverloads
     fun finishAllActivities(isLoadAnim: Boolean = false) {
-        val activityList = UtilsBridge.activityList
+        val activityList = LifecycleUtils.INSTANCE.activityList
         for (act in activityList) {
             // sActivityList remove the index activity at onActivityDestroyed
             act.finish()
@@ -1995,7 +1997,7 @@ object ActivityUtils  {
         @AnimRes enterAnim: Int,
         @AnimRes exitAnim: Int
     ) {
-        val activityList = UtilsBridge.activityList
+        val activityList = LifecycleUtils.INSTANCE.activityList
         for (act in activityList) {
             // sActivityList remove the index activity at onActivityDestroyed
             act.finish()
@@ -2012,7 +2014,7 @@ object ActivityUtils  {
      */
     @JvmOverloads
     fun finishAllActivitiesExceptNewest(isLoadAnim: Boolean = false) {
-        val activities = UtilsBridge.activityList
+        val activities = LifecycleUtils.INSTANCE.activityList
         for (i in 1 until activities.size) {
             finishActivity(activities[i], isLoadAnim)
         }
@@ -2030,7 +2032,7 @@ object ActivityUtils  {
         @AnimRes enterAnim: Int,
         @AnimRes exitAnim: Int
     ) {
-        val activities = UtilsBridge.activityList
+        val activities = LifecycleUtils.INSTANCE.activityList
         for (i in 1 until activities.size) {
             finishActivity(activities[i], enterAnim, exitAnim)
         }
@@ -2168,11 +2170,7 @@ object ActivityUtils  {
         return true
     }
 
-    private fun startActivities(
-        intents: Array<Intent>,
-        context: Context,
-        options: Bundle?
-    ) {
+    private fun startActivities(intents: Array<Intent>, context: Context, options: Bundle?) {
         if (context !is Activity) {
             for (intent in intents) {
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -2186,12 +2184,8 @@ object ActivityUtils  {
     }
 
     private fun startActivityForResult(
-        fragment: Fragment,
-        extras: Bundle?,
-        pkg: String,
-        cls: String,
-        requestCode: Int,
-        options: Bundle?
+        fragment: Fragment, extras: Bundle?, pkg: String,
+        cls: String, requestCode: Int, options: Bundle?
     ): Boolean {
         val intent = Intent()
         if (extras != null) intent.putExtras(extras)
@@ -2200,10 +2194,7 @@ object ActivityUtils  {
     }
 
     private fun startActivityForResult(
-        intent: Intent,
-        fragment: Fragment,
-        requestCode: Int,
-        options: Bundle?
+        intent: Intent, fragment: Fragment, requestCode: Int, options: Bundle?
     ): Boolean {
         if (!isIntentAvailable(intent)) {
             Log.e("ActivityUtils", "intent is unavailable")
@@ -2221,38 +2212,23 @@ object ActivityUtils  {
         return true
     }
 
-    private fun getOptionsBundle(
-        fragment: Fragment,
-        enterAnim: Int,
-        exitAnim: Int
-    ): Bundle? {
+    private fun getOptionsBundle(fragment: Fragment, enterAnim: Int, exitAnim: Int): Bundle? {
         val activity = fragment.activity ?: return null
         return ActivityOptionsCompat.makeCustomAnimation(activity, enterAnim, exitAnim)
             .toBundle()
     }
 
-    private fun getOptionsBundle(
-        context: Context,
-        enterAnim: Int,
-        exitAnim: Int
-    ): Bundle? {
+    private fun getOptionsBundle(context: Context, enterAnim: Int, exitAnim: Int): Bundle? {
         return ActivityOptionsCompat.makeCustomAnimation(context, enterAnim, exitAnim)
             .toBundle()
     }
 
-    private fun getOptionsBundle(
-        fragment: Fragment,
-        vararg sharedElements: View
-    ): Bundle? {
+    private fun getOptionsBundle(fragment: Fragment, vararg sharedElements: View): Bundle? {
         val activity = fragment.activity ?: return null
         return getOptionsBundle(activity, *sharedElements)
     }
 
-    private fun getOptionsBundle(
-        activity: Activity,
-        vararg sharedElements: View
-    ): Bundle? {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) return null
+    private fun getOptionsBundle(activity: Activity, vararg sharedElements: View): Bundle? {
         val len = sharedElements.size
         if (len <= 0) return null
         val pairs: Array<Pair<View, String>?> = arrayOfNulls(len)
@@ -2265,7 +2241,7 @@ object ActivityUtils  {
     }
 
     private val topActivityOrApp: Context
-        get() = if (UtilsBridge.isAppForeground) {
+        get() = if (LifecycleUtils.INSTANCE.isAppForeground) {
             val topActivity = topActivity
             topActivity ?: Utils.app
         } else {

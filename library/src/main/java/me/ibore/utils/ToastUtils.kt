@@ -9,6 +9,7 @@ import android.graphics.PorterDuffColorFilter
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
 import android.os.Build
+import android.os.Bundle
 import android.os.Handler
 import android.os.Message
 import android.provider.Settings
@@ -25,11 +26,6 @@ import androidx.core.view.ViewCompat
 import me.ibore.R
 import me.ibore.ktx.dp2px
 import me.ibore.ktx.layoutInflater
-import me.ibore.utils.UtilsBridge.activityList
-import me.ibore.utils.UtilsBridge.addActivityLifecycleCallbacks
-import me.ibore.utils.UtilsBridge.isAppForeground
-import me.ibore.utils.UtilsBridge.removeActivityLifecycleCallbacks
-import me.ibore.utils.UtilsBridge.view2Bitmap
 
 /**
  * <pre>
@@ -421,12 +417,12 @@ class ToastUtils {
         private var mActivityLifecycleCallbacks: Utils.ActivityLifecycleCallbacks? = null
         override fun show(duration: Int) {
             if (mToast == null) return
-            if (!isAppForeground) {
+            if (!LifecycleUtils.INSTANCE.isAppForeground) {
                 showSystemToast(duration)
                 return
             }
             var hasAliveActivity = false
-            for (activity in activityList) {
+            for (activity in LifecycleUtils.INSTANCE.activityList) {
                 if (!ActivityUtils.isActivityAlive(activity)) {
                     continue
                 }
@@ -448,7 +444,7 @@ class ToastUtils {
         override fun cancel() {
             if (isShowing) {
                 unregisterLifecycleCallback()
-                for (activity in activityList) {
+                for (activity in LifecycleUtils.INSTANCE.activityList) {
                     if (!ActivityUtils.isActivityAlive(activity)) {
                         continue
                     }
@@ -495,7 +491,7 @@ class ToastUtils {
         }
 
         private fun getToastViewSnapshot(index: Int): View {
-            val bitmap = view2Bitmap(mToastView!!)
+            val bitmap = ImageUtils.view2Bitmap(mToastView!!)
             val toastIv = ImageView(Utils.app)
             toastIv.tag = TAG_TOAST + index
             toastIv.setImageBitmap(bitmap)
@@ -511,12 +507,12 @@ class ToastUtils {
                     }
                 }
             }
-            addActivityLifecycleCallbacks(mActivityLifecycleCallbacks!!)
+            LifecycleUtils.INSTANCE.addActivityLifecycleCallbacks(mActivityLifecycleCallbacks!!)
         }
 
         private fun unregisterLifecycleCallback() {
             if (null != mActivityLifecycleCallbacks) {
-                removeActivityLifecycleCallbacks(mActivityLifecycleCallbacks!!)
+                LifecycleUtils.INSTANCE.removeActivityLifecycleCallbacks(mActivityLifecycleCallbacks!!)
             }
             mActivityLifecycleCallbacks = null
         }

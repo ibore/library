@@ -12,7 +12,6 @@ import android.provider.MediaStore
 import android.text.TextUtils
 import androidx.core.content.FileProvider
 import me.ibore.ktx.logD
-import me.ibore.utils.UtilsBridge.inputStream2Bytes
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.IOException
@@ -358,7 +357,7 @@ object UriUtils {
         var `is`: InputStream? = null
         return try {
             `is` = Utils.contentResolver.openInputStream(uri)
-            inputStream2Bytes(`is`)
+            ConvertUtils.inputStream2Bytes(`is`)
         } catch (e: FileNotFoundException) {
             e.printStackTrace()
             logD("uri to bytes failed.")

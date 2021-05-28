@@ -6,10 +6,9 @@ import android.app.Application
 import android.content.ContentResolver
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
-import android.os.Bundle
+import androidx.annotation.NonNull
+import androidx.lifecycle.Lifecycle
 import me.ibore.ktx.logD
-import me.ibore.utils.ThreadUtils.SimpleTask
-import me.ibore.utils.UtilsBridge.applicationByReflect
 
 /**
  * utils about initialization
@@ -29,13 +28,13 @@ object Utils {
     fun init(app: Application) {
         if (sApp == null) {
             sApp = app
-            UtilsActivityLifecycleImpl.INSTANCE.init(sApp!!)
+            LifecycleUtils.INSTANCE.init(sApp!!)
             return
         }
         if (sApp == app) return
-        UtilsActivityLifecycleImpl.INSTANCE.unInit(sApp!!)
+        LifecycleUtils.INSTANCE.unInit(sApp!!)
         sApp = app
-        UtilsActivityLifecycleImpl.INSTANCE.init(sApp!!)
+        LifecycleUtils.INSTANCE.init(sApp!!)
         CrashUtils.init("", object : CrashUtils.OnCrashListener {
             override fun onCrash(crashInfo: CrashUtils.CrashInfo) {
                 logD(crashInfo.toString())
@@ -55,7 +54,7 @@ object Utils {
     val app: Application
         get() {
             if (sApp != null) return sApp!!
-            init(applicationByReflect!!)
+            init(LifecycleUtils.INSTANCE.applicationByReflect!!)
             if (sApp == null) throw NullPointerException("reflect failed.")
             logD("${ProcessUtils.currentProcessName} reflect app success.")
             return sApp!!
@@ -86,14 +85,27 @@ object Utils {
         fun onBackground(activity: Activity)
     }
 
-    interface ActivityLifecycleCallbacks {
-        fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {}
-        fun onActivityStarted(activity: Activity) {}
-        fun onActivityResumed(activity: Activity) {}
-        fun onActivityPaused(activity: Activity) {}
-        fun onActivityStopped(activity: Activity) {}
-        fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {}
-        fun onActivityDestroyed(activity: Activity) {}
+    open class ActivityLifecycleCallbacks {
+        open fun onActivityCreated(@NonNull activity: Activity) {
+        }
+
+        open fun onActivityStarted(@NonNull activity: Activity) {
+        }
+
+        open fun onActivityResumed(@NonNull activity: Activity) {
+        }
+
+        open fun onActivityPaused(@NonNull activity: Activity) {
+        }
+
+        open fun onActivityStopped(@NonNull activity: Activity) {
+        }
+
+        open fun onActivityDestroyed(@NonNull activity: Activity) {
+        }
+
+        open fun onLifecycleChanged(@NonNull activity: Activity, event: Lifecycle.Event) {
+        }
     }
 
     interface Consumer<T> {

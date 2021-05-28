@@ -267,11 +267,11 @@ object DeviceUtils {
         }
     private val macAddressByFile: String
         get() {
-            var result = UtilsBridge.execCmd("getprop wifi.interface", false)
+            var result = ShellUtils.execCmd("getprop wifi.interface", false)
             if (result.result == 0) {
                 val name = result.successMsg
                 if (name.isNotEmpty()) {
-                    result = UtilsBridge.execCmd("cat /sys/class/net/$name/address", false)
+                    result = ShellUtils.execCmd("cat /sys/class/net/$name/address", false)
                     if (result.result == 0) {
                         val address = result.successMsg
                         if (address.isNotEmpty()) {

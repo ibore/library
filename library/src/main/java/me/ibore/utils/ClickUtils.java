@@ -427,7 +427,7 @@ public class ClickUtils {
         };
 
         private static boolean isValid(@NonNull final View view, final long duration) {
-            return UtilsBridge.isValid(view, duration);
+            return DebouncingUtils.isValid(view, duration);
         }
 
         private long    mDuration;

@@ -6,7 +6,6 @@ import android.content.res.Configuration
 import android.content.res.Resources
 import android.os.Build
 import android.util.Log
-import me.ibore.utils.UtilsBridge.activityList
 import java.util.*
 
 /**
@@ -66,7 +65,7 @@ object LanguageUtils {
         if (isRelaunchApp) {
             AppUtils.relaunchApp()
         } else {
-            for (activity in activityList) {
+            for (activity in LifecycleUtils.INSTANCE.activityList) {
                 activity.recreate()
             }
         }

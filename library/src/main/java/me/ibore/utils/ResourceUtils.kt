@@ -4,8 +4,6 @@ import android.graphics.drawable.Drawable
 import androidx.annotation.DrawableRes
 import androidx.annotation.RawRes
 import androidx.core.content.ContextCompat
-import me.ibore.utils.UtilsBridge.inputStream2Bytes
-import me.ibore.utils.UtilsBridge.inputStream2Lines
 import java.io.IOException
 import java.io.UnsupportedEncodingException
 import java.nio.charset.Charset
@@ -189,7 +187,7 @@ object ResourceUtils {
     fun readAssets2String(assetsFilePath: String?, charsetName: String? = null): String {
         return try {
             val `is` = Utils.app.assets.open(assetsFilePath!!)
-            val bytes = inputStream2Bytes(`is`) ?: return ""
+            val bytes = ConvertUtils.inputStream2Bytes(`is`) ?: return ""
             if (charsetName.isNullOrBlank()) {
                 String(bytes)
             } else {
@@ -213,16 +211,9 @@ object ResourceUtils {
      * @return the content of file in assets
      */
     @JvmOverloads
-    fun readAssets2List(
-        assetsPath: String,
-        charsetName: String? = null
-    ): List<String>? {
+    fun readAssets2List(assetsPath: String, charsetName: String? = null): List<String>? {
         return try {
-            inputStream2Lines(
-                Utils.app.resources.assets.open(
-                    assetsPath
-                ), charsetName
-            )
+            ConvertUtils.inputStream2Lines(Utils.app.resources.assets.open(assetsPath), charsetName)
         } catch (e: IOException) {
             e.printStackTrace()
             emptyList()
@@ -251,7 +242,7 @@ object ResourceUtils {
     @JvmOverloads
     fun readRaw2String(@RawRes resId: Int, charsetName: String? = null): String? {
         val `is` = Utils.app.resources.openRawResource(resId)
-        val bytes = inputStream2Bytes(`is`) ?: return null
+        val bytes = ConvertUtils.inputStream2Bytes(`is`) ?: return null
         return if (charsetName.isNullOrBlank()) {
             String(bytes)
         } else {
@@ -271,10 +262,7 @@ object ResourceUtils {
      * @return the content of file in assets
      */
     @JvmOverloads
-    fun readRaw2List(
-        @RawRes resId: Int,
-        charsetName: String? = null
-    ): List<String>? {
-        return inputStream2Lines(Utils.app.resources.openRawResource(resId), charsetName)
+    fun readRaw2List(@RawRes resId: Int, charsetName: String? = null): List<String>? {
+        return ConvertUtils.inputStream2Lines(Utils.app.resources.openRawResource(resId), charsetName)
     }
 }

@@ -18,7 +18,6 @@ import android.util.DisplayMetrics
 import android.view.Surface
 import android.view.WindowManager
 import androidx.annotation.RequiresPermission
-import me.ibore.utils.UtilsBridge.view2Bitmap
 
 /**
  * <pre>
@@ -209,7 +208,7 @@ object ScreenUtils {
     @JvmOverloads
     fun screenShot(activity: Activity, isDeleteStatusBar: Boolean = false): Bitmap {
         val decorView = activity.window.decorView
-        val bmp = view2Bitmap(decorView)
+        val bmp = ImageUtils.view2Bitmap(decorView)
         val dm = DisplayMetrics()
         activity.windowManager.defaultDisplay.getMetrics(dm)
         return if (isDeleteStatusBar) {

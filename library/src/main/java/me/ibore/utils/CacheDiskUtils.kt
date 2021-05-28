@@ -501,7 +501,7 @@ object CacheDiskUtils {
          */
         @JvmOverloads
         fun put(key: String, value: String?, saveTime: Int = -1) {
-            realPutBytes(TYPE_STRING + key, UtilsBridge.string2Bytes(value), saveTime)
+            realPutBytes(TYPE_STRING + key, ConvertUtils.string2Bytes(value), saveTime)
         }
 
         /**
@@ -514,7 +514,7 @@ object CacheDiskUtils {
         @JvmOverloads
         fun getString(key: String, defaultValue: String? = null): String? {
             val bytes = realGetBytes(TYPE_STRING + key) ?: return defaultValue
-            return UtilsBridge.bytes2String(bytes)
+            return ConvertUtils.bytes2String(bytes)
         }
 
         /**
@@ -530,7 +530,7 @@ object CacheDiskUtils {
             value: JSONObject?,
             saveTime: Int = -1
         ) {
-            realPutBytes(TYPE_JSON_OBJECT + key, UtilsBridge.jsonObject2Bytes(value), saveTime)
+            realPutBytes(TYPE_JSON_OBJECT + key, ConvertUtils.jsonObject2Bytes(value), saveTime)
         }
 
         /**
@@ -543,7 +543,7 @@ object CacheDiskUtils {
         @JvmOverloads
         fun getJSONObject(key: String, defaultValue: JSONObject? = null): JSONObject? {
             val bytes = realGetBytes(TYPE_JSON_OBJECT + key) ?: return defaultValue
-            return UtilsBridge.bytes2JSONObject(bytes)
+            return ConvertUtils.bytes2JSONObject(bytes)
         }
 
         /**
@@ -555,7 +555,7 @@ object CacheDiskUtils {
          */
         @JvmOverloads
         fun put(key: String, value: JSONArray?, saveTime: Int = -1) {
-            realPutBytes(TYPE_JSON_ARRAY + key, UtilsBridge.jsonArray2Bytes(value), saveTime)
+            realPutBytes(TYPE_JSON_ARRAY + key, ConvertUtils.jsonArray2Bytes(value), saveTime)
         }
 
         /**
@@ -568,7 +568,7 @@ object CacheDiskUtils {
         @JvmOverloads
         fun getJSONArray(key: String, defaultValue: JSONArray? = null): JSONArray? {
             val bytes = realGetBytes(TYPE_JSON_ARRAY + key) ?: return defaultValue
-            return UtilsBridge.bytes2JSONArray(bytes)
+            return ConvertUtils.bytes2JSONArray(bytes)
         }
 
         /**
@@ -582,7 +582,7 @@ object CacheDiskUtils {
         fun put(key: String, value: Bitmap?, saveTime: Int = -1) {
             realPutBytes(
                 TYPE_BITMAP + key,
-                if (value == null) null else UtilsBridge.bitmap2Bytes(value),
+                if (value == null) null else ConvertUtils.bitmap2Bytes(value),
                 saveTime
             )
         }
@@ -597,7 +597,7 @@ object CacheDiskUtils {
         @JvmOverloads
         fun getBitmap(key: String, defaultValue: Bitmap? = null): Bitmap? {
             val bytes = realGetBytes(TYPE_BITMAP + key) ?: return defaultValue
-            return UtilsBridge.bytes2Bitmap(bytes)
+            return ConvertUtils.bytes2Bitmap(bytes)
         }
 
         /**
@@ -611,7 +611,7 @@ object CacheDiskUtils {
         fun put(key: String, value: Drawable?, saveTime: Int = -1) {
             realPutBytes(
                 TYPE_DRAWABLE + key,
-                if (value == null) null else UtilsBridge.drawable2Bytes(value),
+                if (value == null) null else ConvertUtils.drawable2Bytes(value),
                 saveTime
             )
         }
@@ -626,7 +626,7 @@ object CacheDiskUtils {
         @JvmOverloads
         fun getDrawable(key: String, defaultValue: Drawable? = null): Drawable? {
             val bytes = realGetBytes(TYPE_DRAWABLE + key) ?: return defaultValue
-            return UtilsBridge.bytes2Drawable(bytes)
+            return ConvertUtils.bytes2Drawable(bytes)
         }
 
         /**
@@ -638,7 +638,7 @@ object CacheDiskUtils {
          */
         @JvmOverloads
         fun put(key: String, value: Parcelable?, saveTime: Int = -1) {
-            realPutBytes(TYPE_PARCELABLE + key, UtilsBridge.parcelable2Bytes(value), saveTime)
+            realPutBytes(TYPE_PARCELABLE + key, ConvertUtils.parcelable2Bytes(value), saveTime)
         }
 
         /**
@@ -657,7 +657,7 @@ object CacheDiskUtils {
             defaultValue: T? = null
         ): T? {
             val bytes = realGetBytes(TYPE_PARCELABLE + key) ?: return defaultValue
-            return UtilsBridge.bytes2Parcelable(bytes, creator)
+            return ConvertUtils.bytes2Parcelable(bytes, creator)
         }
 
         /**
@@ -669,7 +669,7 @@ object CacheDiskUtils {
          */
         @JvmOverloads
         fun put(key: String, value: Serializable?, saveTime: Int = -1) {
-            realPutBytes(TYPE_SERIALIZABLE + key, UtilsBridge.serializable2Bytes(value), saveTime)
+            realPutBytes(TYPE_SERIALIZABLE + key, ConvertUtils.serializable2Bytes(value), saveTime)
         }
 
         /**
@@ -682,7 +682,7 @@ object CacheDiskUtils {
         @JvmOverloads
         fun <T : Serializable> getSerializable(key: String, defaultValue: T? = null): T? {
             val bytes = realGetBytes(TYPE_SERIALIZABLE + key) ?: return defaultValue
-            return UtilsBridge.bytes2Object(bytes) as T?
+            return ConvertUtils.bytes2Object(bytes) as T?
         }
 
         /**

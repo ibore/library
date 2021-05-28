@@ -270,10 +270,7 @@ object ConvertUtils {
     /**
      * Bytes to Parcelable
      */
-    fun <T> bytes2Parcelable(
-        bytes: ByteArray,
-        creator: Parcelable.Creator<T>
-    ): T? {
+    fun <T> bytes2Parcelable(bytes: ByteArray, creator: Parcelable.Creator<T>): T? {
         val parcel = Parcel.obtain()
         parcel.unmarshall(bytes, 0, bytes.size)
         parcel.setDataPosition(0)
@@ -342,42 +339,42 @@ object ConvertUtils {
      * Bytes to bitmap.
      */
     fun bytes2Bitmap(bytes: ByteArray): Bitmap {
-        return UtilsBridge.bytes2Bitmap(bytes)
+        return ImageUtils.bytes2Bitmap(bytes)
     }
 
     /**
      * Bitmap to bytes.
      */
     fun bitmap2Bytes(bitmap: Bitmap): ByteArray {
-        return UtilsBridge.bitmap2Bytes(bitmap)
+        return ImageUtils.bitmap2Bytes(bitmap)
     }
 
     /**
      * Bitmap to bytes.
      */
     fun bitmap2Bytes(bitmap: Bitmap, format: CompressFormat, quality: Int): ByteArray {
-        return UtilsBridge.bitmap2Bytes(bitmap, format, quality)
+        return ImageUtils.bitmap2Bytes(bitmap, format, quality)
     }
 
     /**
      * Bytes to drawable.
      */
     fun bytes2Drawable(bytes: ByteArray): Drawable {
-        return UtilsBridge.bytes2Drawable(bytes)
+        return ImageUtils.bytes2Drawable(bytes)
     }
 
     /**
      * Drawable to bytes.
      */
     fun drawable2Bytes(drawable: Drawable): ByteArray {
-        return UtilsBridge.drawable2Bytes(drawable)
+        return ImageUtils.drawable2Bytes(drawable)
     }
 
     /**
      * Drawable to bytes.
      */
     fun drawable2Bytes(drawable: Drawable, format: CompressFormat, quality: Int): ByteArray {
-        return UtilsBridge.drawable2Bytes(drawable, format, quality)
+        return ImageUtils.drawable2Bytes(drawable, format, quality)
     }
 
     /**
@@ -669,21 +666,21 @@ object ConvertUtils {
      * Drawable to bitmap.
      */
     fun drawable2Bitmap(drawable: Drawable): Bitmap {
-        return UtilsBridge.drawable2Bitmap(drawable)
+        return ImageUtils.drawable2Bitmap(drawable)
     }
 
     /**
      * Bitmap to drawable.
      */
     fun bitmap2Drawable(bitmap: Bitmap): Drawable {
-        return UtilsBridge.bitmap2Drawable(bitmap)
+        return ImageUtils.bitmap2Drawable(bitmap)
     }
 
     /**
      * View to bitmap.
      */
     fun view2Bitmap(view: View): Bitmap {
-        return UtilsBridge.view2Bitmap(view)
+        return ImageUtils.view2Bitmap(view)
     }
 
     private fun getSafeCharset(charsetName: String? = "UTF-8"): String {

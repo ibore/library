@@ -20,7 +20,6 @@ import android.util.Log
 import android.view.View
 import androidx.annotation.*
 import me.ibore.permissions.XPermissions
-import me.ibore.utils.UtilsBridge.bytes2HexString
 import java.io.*
 import kotlin.math.abs
 
@@ -1530,7 +1529,7 @@ object ImageUtils {
     }
 
     private fun getImageType(bytes: ByteArray): ImageType {
-        val type = bytes2HexString(bytes).toUpperCase()
+        val type = ConvertUtils.bytes2HexString(bytes).toUpperCase()
         return if (type.contains("FFD8FF")) {
             ImageType.TYPE_JPG
         } else if (type.contains("89504E47")) {
