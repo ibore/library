@@ -4,16 +4,16 @@ import android.content.Intent
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
-import me.ibore.databinding.ItemImagePickerPreviewBinding
+import me.ibore.databinding.XItemImagePickerPreviewBinding
 import me.ibore.image.picker.model.MediaFile
 import me.ibore.recycler.adapter.BindingAdapter
 import me.ibore.recycler.holder.RecyclerHolder
 import me.ibore.utils.UriUtils
 import java.io.File
 
-class ImagePreviewAdapter : BindingAdapter<ItemImagePickerPreviewBinding, MediaFile>() {
+class ImagePreviewAdapter : BindingAdapter<XItemImagePickerPreviewBinding, MediaFile>() {
 
-    override fun ItemImagePickerPreviewBinding.onBindHolder(
+    override fun XItemImagePickerPreviewBinding.onBindHolder(
         holder: RecyclerHolder, data: MediaFile, dataPosition: Int
     ) {
         ivPickerImage.reset()

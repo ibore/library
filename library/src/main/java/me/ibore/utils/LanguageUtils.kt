@@ -65,7 +65,7 @@ object LanguageUtils {
         if (isRelaunchApp) {
             AppUtils.relaunchApp()
         } else {
-            for (activity in LifecycleUtils.INSTANCE.activityList) {
+            for (activity in LifecycleUtils.getInstance().activityList) {
                 activity.recreate()
             }
         }

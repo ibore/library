@@ -10,8 +10,8 @@ import kotlinx.parcelize.RawValue
 import me.ibore.R
 import me.ibore.base.XActivity
 import me.ibore.base.XDialog
-import me.ibore.databinding.DialogXListBinding
-import me.ibore.databinding.ItemDialogListBinding
+import me.ibore.databinding.XDialogListBinding
+import me.ibore.databinding.XItemDialogListBinding
 import me.ibore.ktx.dp2px
 import me.ibore.recycler.adapter.BindingAdapter
 import me.ibore.recycler.holder.RecyclerHolder
@@ -19,7 +19,7 @@ import me.ibore.recycler.layoutmanager.CenterLayoutManager
 import me.ibore.utils.ScreenUtils
 import me.ibore.utils.ToastUtils
 
-class XListDialog : XDialog<DialogXListBinding>() {
+class XListDialog : XDialog<XDialogListBinding>() {
 
     companion object {
 
@@ -35,7 +35,7 @@ class XListDialog : XDialog<DialogXListBinding>() {
         arguments?.getParcelable("builder") ?: Builder()
     }
 
-    override fun DialogXListBinding.onBindView(bundle: Bundle?, savedInstanceState: Bundle?) {
+    override fun XDialogListBinding.onBindView(bundle: Bundle?, savedInstanceState: Bundle?) {
         val context = requireContext()
         if (builder.showBottom) {
             mBinding.titleBar.tvNegative.visibility = View.VISIBLE
@@ -127,7 +127,7 @@ class XListDialog : XDialog<DialogXListBinding>() {
     }
 
     class Adapter(private val dialog: XListDialog, private val builder: Builder) :
-        BindingAdapter<ItemDialogListBinding, CharSequence>() {
+        BindingAdapter<XItemDialogListBinding, CharSequence>() {
 
         private fun removeSelected(data: CharSequence): Boolean {
             if (builder.selectedDatas.remove(data)) {
@@ -154,7 +154,7 @@ class XListDialog : XDialog<DialogXListBinding>() {
             return false
         }
 
-        override fun ItemDialogListBinding.onBindHolder(
+        override fun XItemDialogListBinding.onBindHolder(
             holder: RecyclerHolder,
             data: CharSequence,
             dataPosition: Int
@@ -189,7 +189,7 @@ class XListDialog : XDialog<DialogXListBinding>() {
                 notifyDataSetChanged()
             }
             tvContent.setCompoundDrawablesWithIntrinsicBounds(
-                0, 0, if (isSelected(data)) R.drawable.ic_selector else 0, 0
+                0, 0, if (isSelected(data)) R.drawable.x_selector else 0, 0
             )
             llItem.isSelected = isSelected(data)
         }

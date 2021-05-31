@@ -2,11 +2,11 @@ package me.ibore.dialog
 
 import android.os.Bundle
 import me.ibore.base.XDialog
-import me.ibore.databinding.DialogXUpdateBinding
+import me.ibore.databinding.XDialogUpdateBinding
 
-class UpdateDialog : XDialog<DialogXUpdateBinding>() {
+class UpdateDialog : XDialog<XDialogUpdateBinding>() {
 
-    override fun DialogXUpdateBinding.onBindView(bundle: Bundle?, savedInstanceState: Bundle?) {
+    override fun XDialogUpdateBinding.onBindView(bundle: Bundle?, savedInstanceState: Bundle?) {
 
     }
 

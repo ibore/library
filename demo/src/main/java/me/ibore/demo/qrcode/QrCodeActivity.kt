@@ -27,7 +27,7 @@ class QrCodeActivity : BaseActivity<ActivityQrcodeBinding>() {
         mBinding.btnGenerateQrCode.setOnClickListener {
             DisposablesUtils.add(this, Observable.create {
                 val bitmap = QRCodeEncoder.syncEncodeQRCode("https://www.baidu.com",
-                        dp2px(160F), foregroundColor = Color.RED, logo = ImageUtils.getBitmap(R.drawable.refresh_wechat))!!
+                        dp2px(160F), foregroundColor = Color.RED, logo = ImageUtils.getBitmap(R.drawable.x_refresh_wechat))!!
                 it.onNext(bitmap)
                 it.onComplete()
             }, object : XObserver<Bitmap>(XLoading.DIALOG_DIALOG) {

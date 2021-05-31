@@ -12,7 +12,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import me.ibore.R
-import me.ibore.databinding.LayoutBottomBarBinding
+import me.ibore.databinding.XLayoutBottomBarBinding
 import me.ibore.ktx.color
 import me.ibore.ktx.dp2px
 import me.ibore.ktx.drawable
@@ -41,7 +41,7 @@ class BottomBarItem @JvmOverloads constructor(
     private var msgTextColor: Int = 0//消息文字颜色
     private var msgTextBg: Drawable? //消息文字背景
     private var notifyPointBg: Drawable?//小红点背景
-    private val binding: LayoutBottomBarBinding
+    private val binding: XLayoutBottomBarBinding
     init {
         val osa = context.obtainStyledAttributes(attrs, R.styleable.BottomBarItem)
         normalIcon = osa.getDrawable(R.styleable.BottomBarItem_bblIconNormal)
@@ -79,7 +79,7 @@ class BottomBarItem @JvmOverloads constructor(
 
         unreadNumThreshold = osa.getInteger(R.styleable.BottomBarItem_bblUnreadThreshold, unreadNumThreshold)
         osa.recycle()
-        binding = LayoutBottomBarBinding.inflate(LayoutInflater.from(context))
+        binding = XLayoutBottomBarBinding.inflate(LayoutInflater.from(context))
         initView()
     }
 

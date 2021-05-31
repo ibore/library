@@ -9,7 +9,6 @@ import android.graphics.PorterDuffColorFilter
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
 import android.os.Build
-import android.os.Bundle
 import android.os.Handler
 import android.os.Message
 import android.provider.Settings
@@ -17,7 +16,9 @@ import android.util.AttributeSet
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.view.WindowManager
+import android.view.WindowManager.LayoutParams.*
 import android.widget.*
 import androidx.annotation.*
 import androidx.core.app.NotificationManagerCompat
@@ -35,7 +36,7 @@ import me.ibore.ktx.layoutInflater
  * desc  : utils about toast
 </pre> *
  */
-class ToastUtils {
+class ToastUtils private constructor() {
 
     @StringDef(MODE.LIGHT, MODE.DARK)
     @kotlin.annotation.Retention(AnnotationRetention.SOURCE)
@@ -281,10 +282,8 @@ class ToastUtils {
     private fun tryApplyUtilsToastView(text: CharSequence?): View? {
         if (MODE.DARK != mMode && MODE.LIGHT != mMode
             && mIcons[0] == null && mIcons[1] == null && mIcons[2] == null && mIcons[3] == null
-        ) {
-            return null
-        }
-        val toastView = Utils.app.applicationContext.layoutInflater.inflate(R.layout.utils_toast_view, null)
+        ) return null
+        val toastView = View.inflate(Utils.app, R.layout.x_toast_view, null)
         val messageTv = toastView.findViewById<TextView>(android.R.id.message)
         if (MODE.DARK == mMode) {
             val bg = toastView.background.mutate() as GradientDrawable
@@ -359,7 +358,7 @@ class ToastUtils {
 
         private val mParams: WindowManager.LayoutParams = WindowManager.LayoutParams()
 
-        private val mActivityLifecycleCallbacks: Utils.ActivityLifecycleCallbacks? = null
+        private val mOnActivityCallbacks: Utils.OnActivityCallbacks? = null
 
         init {
             mParams.type = type
@@ -367,14 +366,14 @@ class ToastUtils {
 
         override fun show(duration: Int) {
             if (mToast == null) return
-            mParams.height = WindowManager.LayoutParams.WRAP_CONTENT
-            mParams.width = WindowManager.LayoutParams.WRAP_CONTENT
+            mParams.height = WRAP_CONTENT
+            mParams.width = WRAP_CONTENT
             mParams.format = PixelFormat.TRANSLUCENT
             mParams.windowAnimations = android.R.style.Animation_Toast
             mParams.title = "ToastWithoutNotification"
-            mParams.flags = (WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
-                    or WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
-                    or WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+            mParams.flags = (FLAG_KEEP_SCREEN_ON
+                    or FLAG_NOT_FOCUSABLE
+                    or FLAG_NOT_TOUCHABLE)
             mParams.packageName = AppUtils.appPackageName
             mParams.gravity = mToast!!.gravity
             if (mParams.gravity and Gravity.HORIZONTAL_GRAVITY_MASK == Gravity.FILL_HORIZONTAL) {
@@ -414,15 +413,17 @@ class ToastUtils {
     }
 
     internal class ActivityToast(toastUtils: ToastUtils) : AbsToast(toastUtils) {
-        private var mActivityLifecycleCallbacks: Utils.ActivityLifecycleCallbacks? = null
+
+        private var mOnActivityCallbacks: Utils.OnActivityCallbacks? = null
+
         override fun show(duration: Int) {
             if (mToast == null) return
-            if (!LifecycleUtils.INSTANCE.isAppForeground) {
+            if (!LifecycleUtils.getInstance().isAppForeground) {
                 showSystemToast(duration)
                 return
             }
             var hasAliveActivity = false
-            for (activity in LifecycleUtils.INSTANCE.activityList) {
+            for (activity in LifecycleUtils.getInstance().activityList) {
                 if (!ActivityUtils.isActivityAlive(activity)) {
                     continue
                 }
@@ -444,7 +445,7 @@ class ToastUtils {
         override fun cancel() {
             if (isShowing) {
                 unregisterLifecycleCallback()
-                for (activity in LifecycleUtils.INSTANCE.activityList) {
+                for (activity in LifecycleUtils.getInstance().activityList) {
                     if (!ActivityUtils.isActivityAlive(activity)) {
                         continue
                     }
@@ -475,9 +476,7 @@ class ToastUtils {
             val window = activity.window
             if (window != null) {
                 val decorView = window.decorView as ViewGroup
-                val lp = FrameLayout.LayoutParams(
-                    ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT
-                )
+                val lp = FrameLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT)
                 lp.gravity = mToast!!.gravity
                 lp.bottomMargin = mToast!!.yOffset + BarUtils.getNavBarHeight(activity)
                 lp.leftMargin = mToast!!.xOffset
@@ -500,25 +499,26 @@ class ToastUtils {
 
         private fun registerLifecycleCallback() {
             val index = sShowingIndex
-            mActivityLifecycleCallbacks = object : Utils.ActivityLifecycleCallbacks() {
+            mOnActivityCallbacks = object : Utils.OnActivityCallbacks() {
                 override fun onActivityCreated(activity: Activity) {
                     if (isShowing) {
                         showWithActivity(activity, index, false)
                     }
                 }
             }
-            LifecycleUtils.INSTANCE.addActivityLifecycleCallbacks(mActivityLifecycleCallbacks!!)
+            LifecycleUtils.getInstance().addActivityLifecycleCallbacks(mOnActivityCallbacks!!)
         }
 
         private fun unregisterLifecycleCallback() {
-            if (null != mActivityLifecycleCallbacks) {
-                LifecycleUtils.INSTANCE.removeActivityLifecycleCallbacks(mActivityLifecycleCallbacks!!)
+            if (null != mOnActivityCallbacks) {
+                LifecycleUtils.getInstance()
+                    .removeActivityLifecycleCallbacks(mOnActivityCallbacks!!)
             }
-            mActivityLifecycleCallbacks = null
+            mOnActivityCallbacks = null
         }
 
         private val isShowing: Boolean
-            get() = mActivityLifecycleCallbacks != null
+            get() = mOnActivityCallbacks != null
 
         companion object {
             private var sShowingIndex = 0
@@ -542,7 +542,7 @@ class ToastUtils {
             }
             mToastView = mToast!!.view
             if (mToastView == null || mToastView!!.findViewById<View?>(android.R.id.message) == null) {
-                setToastView(Utils.app.applicationContext.layoutInflater.inflate(R.layout.utils_toast_view, null))
+                setToastView(View.inflate(Utils.app, R.layout.x_toast_view, null))
             }
             val messageTv = mToastView!!.findViewById<TextView>(android.R.id.message)
             messageTv.text = text
@@ -607,18 +607,16 @@ class ToastUtils {
         fun cancel()
     }
 
-    class UtilsMaxWidthRelativeLayout : RelativeLayout {
-        constructor(context: Context?) : super(context)
-        constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs)
-        constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) : super(
-            context,
-            attrs,
-            defStyleAttr
-        )
+    class UtilsMaxWidthRelativeLayout @JvmOverloads constructor(
+        context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
+    ) : RelativeLayout(context, attrs, defStyleAttr) {
 
         override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
             val widthMaxSpec =
-                MeasureSpec.makeMeasureSpec(ScreenUtils.screenWidth - SPACING, MeasureSpec.AT_MOST)
+                MeasureSpec.makeMeasureSpec(
+                    ScreenUtils.screenWidth - dp2px(80F),
+                    MeasureSpec.AT_MOST
+                )
             super.onMeasure(widthMaxSpec, heightMeasureSpec)
         }
 
@@ -638,8 +636,13 @@ class ToastUtils {
          *
          * @return the default [ToastUtils] instance
          */
-        val defaultMaker = make()
+        private var defaultMaker = make()
+
         private var iToast: IToast? = null
+
+        fun setDefault(utils: ToastUtils) {
+            defaultMaker = utils
+        }
 
         /**
          * Make a toast.
@@ -746,14 +749,17 @@ class ToastUtils {
             }
         }
 
+        @JvmStatic
         private fun show(text: CharSequence?, duration: Int, utils: ToastUtils) {
             show(null, getToastFriendlyText(text), duration, utils)
         }
 
+        @JvmStatic
         private fun show(view: View, duration: Int, utils: ToastUtils) {
             show(view, null, duration, utils)
         }
 
+        @JvmStatic
         private fun show(view: View?, text: CharSequence?, duration: Int, utils: ToastUtils) {
             ThreadUtils.runOnUiThread {
                 cancel()
@@ -767,6 +773,7 @@ class ToastUtils {
             }
         }
 
+        @JvmStatic
         private fun getToastFriendlyText(src: CharSequence?): CharSequence {
             var text = src
             if (text == null) {
@@ -777,6 +784,7 @@ class ToastUtils {
             return text
         }
 
+        @JvmStatic
         private fun newToast(toastUtils: ToastUtils): IToast {
             if (!toastUtils.isNotUseSystemToast) {
                 if (NotificationManagerCompat.from(Utils.app).areNotificationsEnabled()) {
@@ -788,18 +796,13 @@ class ToastUtils {
                     }
                 }
             }
-
-            // not use system or notification disable
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N_MR1) {
-                return WindowManagerToast(toastUtils, WindowManager.LayoutParams.TYPE_TOAST)
+                return WindowManagerToast(toastUtils, TYPE_TOAST)
             } else if (Settings.canDrawOverlays(Utils.app)) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    WindowManagerToast(
-                        toastUtils,
-                        WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
-                    )
+                    WindowManagerToast(toastUtils, TYPE_APPLICATION_OVERLAY)
                 } else {
-                    WindowManagerToast(toastUtils, WindowManager.LayoutParams.TYPE_PHONE)
+                    WindowManagerToast(toastUtils, TYPE_PHONE)
                 }
             }
             return ActivityToast(toastUtils)

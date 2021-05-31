@@ -10,11 +10,11 @@ import kotlinx.parcelize.RawValue
 import me.ibore.R
 import me.ibore.base.XActivity
 import me.ibore.base.XDialog
-import me.ibore.databinding.DialogXAlertBinding
+import me.ibore.databinding.XDialogAlertBinding
 import me.ibore.ktx.dp2px
 import me.ibore.utils.ScreenUtils
 
-class XAlertDialog : XDialog<DialogXAlertBinding>() {
+class XAlertDialog : XDialog<XDialogAlertBinding>() {
 
     companion object {
 
@@ -30,7 +30,7 @@ class XAlertDialog : XDialog<DialogXAlertBinding>() {
         arguments?.getParcelable("builder") ?: Builder()
     }
 
-    override fun DialogXAlertBinding.onBindView(bundle: Bundle?, savedInstanceState: Bundle?) {
+    override fun XDialogAlertBinding.onBindView(bundle: Bundle?, savedInstanceState: Bundle?) {
         val context = requireContext()
         tvTitle.text = builder.title
         val margin = context.resources.getDimensionPixelSize(R.dimen.dialog_margin)

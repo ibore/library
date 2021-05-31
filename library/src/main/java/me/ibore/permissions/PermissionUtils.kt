@@ -442,13 +442,12 @@ internal object PermissionUtils {
         }
 
         // 在已经适配 Android 11 的情况下，不能用旧版的存储权限，而是应该用新版的存储权限
-        if (targetSdkVersion >= Build.VERSION_CODES.R && (requestPermissions.contains(Permission.READ_EXTERNAL_STORAGE) || requestPermissions.contains(
-                Permission.WRITE_EXTERNAL_STORAGE
-            ))
-        ) {
-            // 请直接使用 Permission.MANAGE_EXTERNAL_STORAGE 来申请权限
-            throw IllegalArgumentException("Please use Permission.MANAGE_EXTERNAL_STORAGE to request storage permission")
-        }
+//        if (targetSdkVersion >= Build.VERSION_CODES.R && (requestPermissions.contains(Permission.READ_EXTERNAL_STORAGE)
+//                    || requestPermissions.contains(Permission.WRITE_EXTERNAL_STORAGE))
+//        ) {
+//            // 请直接使用 Permission.MANAGE_EXTERNAL_STORAGE 来申请权限
+//            throw IllegalArgumentException("Please use Permission.MANAGE_EXTERNAL_STORAGE to request storage permission")
+//        }
     }
 
     /**

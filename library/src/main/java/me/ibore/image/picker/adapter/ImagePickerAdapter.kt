@@ -10,7 +10,7 @@ import androidx.core.view.updateLayoutParams
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import me.ibore.R
-import me.ibore.databinding.ItemImagePickerBinding
+import me.ibore.databinding.XItemImagePickerBinding
 import me.ibore.image.picker.ImagePicker
 import me.ibore.image.picker.model.MediaFile
 import me.ibore.image.picker.utils.ImagePickerUtils
@@ -21,7 +21,7 @@ import me.ibore.utils.ScreenUtils
 import java.text.SimpleDateFormat
 import java.util.*
 
-class ImagePickerAdapter : BindingAdapter<ItemImagePickerBinding, MediaFile>() {
+class ImagePickerAdapter : BindingAdapter<XItemImagePickerBinding, MediaFile>() {
 
     override fun onCreateHolder(parent: ViewGroup, dataType: Int): RecyclerHolder {
         val holder = super.onCreateHolder(parent, dataType)
@@ -31,7 +31,7 @@ class ImagePickerAdapter : BindingAdapter<ItemImagePickerBinding, MediaFile>() {
         return holder
     }
 
-    override fun ItemImagePickerBinding.onBindHolder(
+    override fun XItemImagePickerBinding.onBindHolder(
         holder: RecyclerHolder, data: MediaFile, dataPosition: Int
     ) {
         if (ImagePicker.getConfig().showCamera && dataPosition == 0) {

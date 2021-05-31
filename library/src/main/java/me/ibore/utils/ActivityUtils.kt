@@ -27,32 +27,32 @@ object ActivityUtils  {
     /**
      * Add callbacks of activity lifecycle.
      *
-     * @param callbacks The callbacks.
+     * @param callbacksOn The callbacks.
      */
     @JvmStatic
-    fun addActivityLifecycleCallbacks(callbacks: Utils.ActivityLifecycleCallbacks) {
-        LifecycleUtils.INSTANCE.addActivityLifecycleCallbacks(callbacks)
+    fun addActivityLifecycleCallbacks(callbacksOn: Utils.OnActivityCallbacks) {
+        LifecycleUtils.getInstance().addActivityLifecycleCallbacks(callbacksOn)
     }
 
     /**
      * Add callbacks of activity lifecycle.
      *
      * @param activity  The activity.
-     * @param callbacks The callbacks.
+     * @param callbacksOn The callbacks.
      */
     fun addActivityLifecycleCallbacks(
-        activity: Activity, callbacks: Utils.ActivityLifecycleCallbacks
+        activity: Activity, callbacksOn: Utils.OnActivityCallbacks
     ) {
-        LifecycleUtils.INSTANCE.addActivityLifecycleCallbacks(activity, callbacks)
+        LifecycleUtils.getInstance().addActivityLifecycleCallbacks(activity, callbacksOn)
     }
 
     /**
      * Remove callbacks of activity lifecycle.
      *
-     * @param callbacks The callbacks.
+     * @param callbacksOn The callbacks.
      */
-    fun removeActivityLifecycleCallbacks(callbacks: Utils.ActivityLifecycleCallbacks) {
-        LifecycleUtils.INSTANCE.removeActivityLifecycleCallbacks(callbacks)
+    fun removeActivityLifecycleCallbacks(callbacksOn: Utils.OnActivityCallbacks) {
+        LifecycleUtils.getInstance().removeActivityLifecycleCallbacks(callbacksOn)
     }
 
     /**
@@ -61,20 +61,20 @@ object ActivityUtils  {
      * @param activity The activity.
      */
     fun removeActivityLifecycleCallbacks(activity: Activity) {
-        LifecycleUtils.INSTANCE.removeActivityLifecycleCallbacks(activity)
+        LifecycleUtils.getInstance().removeActivityLifecycleCallbacks(activity)
     }
 
     /**
      * Remove callbacks of activity lifecycle.
      *
      * @param activity  The activity.
-     * @param callbacks The callbacks.
+     * @param callbacksOn The callbacks.
      */
     fun removeActivityLifecycleCallbacks(
         activity: Activity,
-        callbacks: Utils.ActivityLifecycleCallbacks
+        callbacksOn: Utils.OnActivityCallbacks
     ) {
-        LifecycleUtils.INSTANCE.removeActivityLifecycleCallbacks(activity, callbacks)
+        LifecycleUtils.getInstance().removeActivityLifecycleCallbacks(activity, callbacksOn)
     }
 
     /**
@@ -1596,7 +1596,7 @@ object ActivityUtils  {
      * @return the list of activity
      */
     val activityList: List<Activity>
-        get() = LifecycleUtils.INSTANCE.activityList
+        get() = LifecycleUtils.getInstance().activityList
 
     /**
      * Return the name of launcher activity.
@@ -1661,7 +1661,7 @@ object ActivityUtils  {
      * @return the top activity in activity's stack
      */
     val topActivity: Activity?
-        get() = LifecycleUtils.INSTANCE.topActivity
+        get() = LifecycleUtils.getInstance().topActivity
 
     /**
      * Return whether the activity is alive.
@@ -1691,7 +1691,7 @@ object ActivityUtils  {
      * @return `true`: yes<br></br>`false`: no
      */
     fun isActivityExistsInStack(activity: Activity): Boolean {
-        val activities = LifecycleUtils.INSTANCE.activityList
+        val activities = LifecycleUtils.getInstance().activityList
         for (aActivity in activities) {
             if (aActivity == activity) {
                 return true
@@ -1707,7 +1707,7 @@ object ActivityUtils  {
      * @return `true`: yes<br></br>`false`: no
      */
     fun isActivityExistsInStack(clz: Class<*>): Boolean {
-        val activities = LifecycleUtils.INSTANCE.activityList
+        val activities = LifecycleUtils.getInstance().activityList
         for (aActivity in activities) {
             if (aActivity.javaClass == clz) {
                 return true
@@ -1767,7 +1767,7 @@ object ActivityUtils  {
         clz: Class<*>,
         isLoadAnim: Boolean = false
     ) {
-        val activities = LifecycleUtils.INSTANCE.activityList
+        val activities = LifecycleUtils.getInstance().activityList
         for (activity in activities) {
             if (activity.javaClass == clz) {
                 activity.finish()
@@ -1792,7 +1792,7 @@ object ActivityUtils  {
         @AnimRes enterAnim: Int,
         @AnimRes exitAnim: Int
     ) {
-        val activities = LifecycleUtils.INSTANCE.activityList
+        val activities = LifecycleUtils.getInstance().activityList
         for (activity in activities) {
             if (activity.javaClass == clz) {
                 activity.finish()
@@ -1819,7 +1819,7 @@ object ActivityUtils  {
         isIncludeSelf: Boolean,
         isLoadAnim: Boolean = false
     ): Boolean {
-        val activities = LifecycleUtils.INSTANCE.activityList
+        val activities = LifecycleUtils.getInstance().activityList
         for (act in activities) {
             if (act == activity) {
                 if (isIncludeSelf) {
@@ -1848,7 +1848,7 @@ object ActivityUtils  {
         @AnimRes enterAnim: Int,
         @AnimRes exitAnim: Int
     ): Boolean {
-        val activities = LifecycleUtils.INSTANCE.activityList
+        val activities = LifecycleUtils.getInstance().activityList
         for (act in activities) {
             if (act == activity) {
                 if (isIncludeSelf) {
@@ -1879,7 +1879,7 @@ object ActivityUtils  {
         isIncludeSelf: Boolean,
         isLoadAnim: Boolean = false
     ): Boolean {
-        val activities = LifecycleUtils.INSTANCE.activityList
+        val activities = LifecycleUtils.getInstance().activityList
         for (act in activities) {
             if (act.javaClass == clz) {
                 if (isIncludeSelf) {
@@ -1908,7 +1908,7 @@ object ActivityUtils  {
         @AnimRes enterAnim: Int,
         @AnimRes exitAnim: Int
     ): Boolean {
-        val activities = LifecycleUtils.INSTANCE.activityList
+        val activities = LifecycleUtils.getInstance().activityList
         for (act in activities) {
             if (act.javaClass == clz) {
                 if (isIncludeSelf) {
@@ -1936,7 +1936,7 @@ object ActivityUtils  {
         clz: Class<*>,
         isLoadAnim: Boolean = false
     ) {
-        val activities = LifecycleUtils.INSTANCE.activityList
+        val activities = LifecycleUtils.getInstance().activityList
         for (act in activities) {
             if (act.javaClass != clz) {
                 finishActivity(act, isLoadAnim)
@@ -1958,7 +1958,7 @@ object ActivityUtils  {
         @AnimRes enterAnim: Int,
         @AnimRes exitAnim: Int
     ) {
-        val activities = LifecycleUtils.INSTANCE.activityList
+        val activities = LifecycleUtils.getInstance().activityList
         for (act in activities) {
             if (act.javaClass != clz) {
                 finishActivity(act, enterAnim, exitAnim)
@@ -1975,7 +1975,7 @@ object ActivityUtils  {
      */
     @JvmOverloads
     fun finishAllActivities(isLoadAnim: Boolean = false) {
-        val activityList = LifecycleUtils.INSTANCE.activityList
+        val activityList = LifecycleUtils.getInstance().activityList
         for (act in activityList) {
             // sActivityList remove the index activity at onActivityDestroyed
             act.finish()
@@ -1997,7 +1997,7 @@ object ActivityUtils  {
         @AnimRes enterAnim: Int,
         @AnimRes exitAnim: Int
     ) {
-        val activityList = LifecycleUtils.INSTANCE.activityList
+        val activityList = LifecycleUtils.getInstance().activityList
         for (act in activityList) {
             // sActivityList remove the index activity at onActivityDestroyed
             act.finish()
@@ -2014,7 +2014,7 @@ object ActivityUtils  {
      */
     @JvmOverloads
     fun finishAllActivitiesExceptNewest(isLoadAnim: Boolean = false) {
-        val activities = LifecycleUtils.INSTANCE.activityList
+        val activities = LifecycleUtils.getInstance().activityList
         for (i in 1 until activities.size) {
             finishActivity(activities[i], isLoadAnim)
         }
@@ -2032,7 +2032,7 @@ object ActivityUtils  {
         @AnimRes enterAnim: Int,
         @AnimRes exitAnim: Int
     ) {
-        val activities = LifecycleUtils.INSTANCE.activityList
+        val activities = LifecycleUtils.getInstance().activityList
         for (i in 1 until activities.size) {
             finishActivity(activities[i], enterAnim, exitAnim)
         }
@@ -2241,7 +2241,7 @@ object ActivityUtils  {
     }
 
     private val topActivityOrApp: Context
-        get() = if (LifecycleUtils.INSTANCE.isAppForeground) {
+        get() = if (LifecycleUtils.getInstance().isAppForeground) {
             val topActivity = topActivity
             topActivity ?: Utils.app
         } else {

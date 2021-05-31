@@ -23,7 +23,7 @@
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             app:spanCount="4"
             tools:itemCount="80"
-            tools:listitem="@layout/item_image_picker"
+            tools:listitem="@layout/x_item_image_picker"
             android:padding="1dp" />
 
         <TextView
@@ -78,7 +78,7 @@
                     android:layout_marginEnd="6dp"
                     android:background="@drawable/image_picker_checked"
                     android:scaleType="center"
-                    android:src="@drawable/image_picker_preview_checked" />
+                    android:src="@drawable/x_image_picker_preview_checked" />
 
                 <TextView
                     android:id="@+id/tv_original_image"
@@ -107,7 +107,7 @@
                 android:layout_height="match_parent"
                 tools:itemCount="6"
                 android:overScrollMode="never"
-                tools:listitem="@layout/item_image_picker_folder" />
+                tools:listitem="@layout/x_item_image_picker_folder" />
 
         </LinearLayout>
 
@@ -131,7 +131,7 @@
                 android:layout_width="@dimen/image_picker_action_bar_height"
                 android:layout_height="@dimen/image_picker_action_bar_height"
                 android:scaleType="center"
-                android:src="@drawable/ic_image_picker_title_bar_close" />
+                android:src="@drawable/x_image_picker_title_bar_close" />
 
             <LinearLayout
                 android:id="@+id/ll_image_folder"
@@ -159,7 +159,7 @@
                     android:layout_marginStart="6dp"
                     android:background="@drawable/image_picker_folder_indicator_bg"
                     android:scaleType="center"
-                    android:src="@drawable/image_picker_folder_indicator" />
+                    android:src="@drawable/x_image_picker_folder_indicator" />
 
             </LinearLayout>
 

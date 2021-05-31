@@ -23,7 +23,7 @@
             android:layout_height="wrap_content"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:itemCount="6"
-            tools:listitem="@layout/item_dialog_list" />
+            tools:listitem="@layout/x_item_dialog_list" />
 
         <View
             android:layout_width="match_parent"
@@ -34,10 +34,10 @@
 
     <include
         android:id="@+id/title_bar"
-        layout="@layout/dialog_x_title_bar" />
+        layout="@layout/x_dialog_title_bar" />
 
     <include
         android:id="@+id/bottom_bar"
-        layout="@layout/dialog_x_bottom_bar" />
+        layout="@layout/x_dialog_bottom_bar" />
 
 </me.ibore.widget.RootLayout>

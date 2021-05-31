@@ -9,12 +9,12 @@ import kotlinx.parcelize.RawValue
 import me.ibore.R
 import me.ibore.base.XActivity
 import me.ibore.base.XDialog
-import me.ibore.databinding.DialogXRegionBinding
+import me.ibore.databinding.XDialogRegionBinding
 import me.ibore.ktx.dp2px
 import me.ibore.model.RegionModel
 import me.ibore.utils.ScreenUtils
 
-class XRegionDialog : XDialog<DialogXRegionBinding>() {
+class XRegionDialog : XDialog<XDialogRegionBinding>() {
 
     companion object {
         fun show(activity: XActivity<*>, title: CharSequence? = null, selectedProvinceCode: String? = null, selectedCityCode: String? = null, selectedCountyCode: String? = null,
@@ -31,7 +31,7 @@ class XRegionDialog : XDialog<DialogXRegionBinding>() {
         arguments?.getParcelable("builder") ?: Builder()
     }
 
-    override fun DialogXRegionBinding.onBindView(bundle: Bundle?, savedInstanceState: Bundle?) {
+    override fun XDialogRegionBinding.onBindView(bundle: Bundle?, savedInstanceState: Bundle?) {
         if (builder.showBottom) {
             tvNegative.visibility = View.VISIBLE
             tvPositive.visibility = View.VISIBLE

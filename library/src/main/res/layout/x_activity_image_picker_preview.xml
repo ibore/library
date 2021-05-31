@@ -26,7 +26,7 @@
             android:layout_width="@dimen/image_picker_action_bar_height"
             android:layout_height="@dimen/image_picker_action_bar_height"
             android:scaleType="center"
-            android:src="@drawable/ic_picker_image_title_bar_back"
+            android:src="@drawable/x_picker_image_title_bar_back"
             app:layout_titleType="start" />
 
         <TextView
@@ -80,7 +80,7 @@
             android:paddingBottom="15dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:itemCount="8"
-            tools:listitem="@layout/item_image_picker_preview_select" />
+            tools:listitem="@layout/x_item_image_picker_preview_select" />
 
         <View
             android:layout_width="match_parent"
@@ -109,7 +109,7 @@
                     android:layout_marginEnd="6dp"
                     android:background="@drawable/image_picker_checked"
                     android:scaleType="center"
-                    android:src="@drawable/image_picker_preview_checked" />
+                    android:src="@drawable/x_image_picker_preview_checked" />
 
                 <TextView
                     android:id="@+id/tv_original_image"
@@ -141,7 +141,7 @@
                     android:layout_marginEnd="6dp"
                     android:background="@drawable/image_picker_checked"
                     android:scaleType="center"
-                    android:src="@drawable/image_picker_preview_checked" />
+                    android:src="@drawable/x_image_picker_preview_checked" />
 
                 <TextView
                     android:layout_width="wrap_content"

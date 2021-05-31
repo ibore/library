@@ -1,11 +1,11 @@
 package me.ibore.base
 
 import android.os.Bundle
-import me.ibore.databinding.ActivityXQrcodeBinding
+import me.ibore.databinding.XActivityQrcodeBinding
 
-class XQrCodeActivity : XActivity<ActivityXQrcodeBinding>() {
+class XQrCodeActivity : XActivity<XActivityQrcodeBinding>() {
 
-    override fun ActivityXQrcodeBinding.onBindView(bundle: Bundle?, savedInstanceState: Bundle?) {
+    override fun XActivityQrcodeBinding.onBindView(bundle: Bundle?, savedInstanceState: Bundle?) {
 
     }
 

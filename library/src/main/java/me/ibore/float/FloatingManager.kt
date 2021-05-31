@@ -39,7 +39,7 @@ class FloatingManager private constructor() : IFloatingView {
     private var mLayoutId: Int = 0
 
     @DrawableRes
-    private var mIconRes: Int = R.drawable.ic_title_bar_back_normal
+    private var mIconRes: Int = R.drawable.x_title_bar_back_normal
     private var mLayoutParams: ViewGroup.LayoutParams = params
     override fun remove(): FloatingManager {
         Handler(Looper.getMainLooper()).post(object : Runnable {

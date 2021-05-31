@@ -198,7 +198,7 @@ class ScanBoxView(context: Context?) : View(context) {
             mOriginQRCodeGridScanLineBitmap = (mCustomGridScanLineDrawable as BitmapDrawable).bitmap
         }
         if (mOriginQRCodeGridScanLineBitmap == null) {
-            mOriginQRCodeGridScanLineBitmap = BitmapFactory.decodeResource(resources, R.drawable.qrcode_default_grid_scan_line)
+            mOriginQRCodeGridScanLineBitmap = BitmapFactory.decodeResource(resources, R.drawable.x_qrcode_default_grid_scan_line)
             mOriginQRCodeGridScanLineBitmap = makeTintBitmap(mOriginQRCodeGridScanLineBitmap, mScanLineColor)
         }
         mOriginBarCodeGridScanLineBitmap = adjustPhotoRotation(mOriginQRCodeGridScanLineBitmap, 90)
@@ -208,7 +208,7 @@ class ScanBoxView(context: Context?) : View(context) {
             mOriginQRCodeScanLineBitmap = (mCustomScanLineDrawable as BitmapDrawable).bitmap
         }
         if (mOriginQRCodeScanLineBitmap == null) {
-            mOriginQRCodeScanLineBitmap = BitmapFactory.decodeResource(resources, R.drawable.qrcode_default_scan_line)
+            mOriginQRCodeScanLineBitmap = BitmapFactory.decodeResource(resources, R.drawable.x_qrcode_default_scan_line)
             mOriginQRCodeScanLineBitmap = makeTintBitmap(mOriginQRCodeScanLineBitmap, mScanLineColor)
         }
         mOriginBarCodeScanLineBitmap = adjustPhotoRotation(mOriginQRCodeScanLineBitmap, 90)

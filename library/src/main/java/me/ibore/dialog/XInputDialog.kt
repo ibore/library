@@ -8,10 +8,10 @@ import kotlinx.parcelize.RawValue
 import me.ibore.R
 import me.ibore.base.XActivity
 import me.ibore.base.XDialog
-import me.ibore.databinding.DialogXInputBinding
+import me.ibore.databinding.XDialogInputBinding
 import me.ibore.ktx.dp2px
 
-class XInputDialog : XDialog<DialogXInputBinding>() {
+class XInputDialog : XDialog<XDialogInputBinding>() {
 
     companion object {
 
@@ -27,7 +27,7 @@ class XInputDialog : XDialog<DialogXInputBinding>() {
         arguments?.getParcelable("builder") ?: Builder()
     }
 
-    override fun DialogXInputBinding.onBindView(bundle: Bundle?, savedInstanceState: Bundle?) {
+    override fun XDialogInputBinding.onBindView(bundle: Bundle?, savedInstanceState: Bundle?) {
         tvTitle.text = builder.title
         if (builder.title.isNullOrEmpty()) {
             tvTitle.visibility = View.GONE

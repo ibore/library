@@ -60,7 +60,7 @@
         android:layout_alignParentBottom="true"
         android:layout_marginStart="6dp"
         android:scaleType="centerCrop"
-        android:src="@drawable/image_picker_gif"
+        android:src="@drawable/x_image_picker_gif"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -73,7 +73,7 @@
         android:text="@string/image_picker_take_photo"
         android:textColor="@color/image_picker_text_color"
         android:textSize="13sp"
-        app:drawableTopCompat="@drawable/ic_image_picker_take_photo"
+        app:drawableTopCompat="@drawable/x_image_picker_take_photo"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -87,7 +87,7 @@
         android:gravity="center_vertical"
         android:textColor="@color/image_picker_text_color"
         android:textSize="12sp"
-        app:drawableStartCompat="@drawable/ic_image_picker_video"
+        app:drawableStartCompat="@drawable/x_image_picker_video"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

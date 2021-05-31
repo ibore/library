@@ -29,11 +29,11 @@ class ImagePickerActivity : BaseActivity<ActivityImagePickerBinding>() {
     override fun onBindData() {
         adapter.addData(TitleItem("选择单张图片") {
             ImagePicker.start()
-//                    .showCamera() //设置是否显示拍照按钮
+                .showCamera() //设置是否显示拍照按钮
                 .showImage() //设置是否展示图片
-                .showVideo() //设置是否展示视频
+//                .showVideo() //设置是否展示视频
 //                    .filterGif() //设置是否过滤gif图片
-                .maxCount(1) //设置最大选择图片数目(默认为1，单选)
+                .maxCount(9) //设置最大选择图片数目(默认为1，单选)
 //                    .singleType() //设置图片视频不能同时选择
                 .imageQualityUser()
                 .imagePaths(mImagePaths) //设置历史选择记录

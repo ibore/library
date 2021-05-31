@@ -28,13 +28,13 @@ object Utils {
     fun init(app: Application) {
         if (sApp == null) {
             sApp = app
-            LifecycleUtils.INSTANCE.init(sApp!!)
+            LifecycleUtils.getInstance().init(sApp!!)
             return
         }
         if (sApp == app) return
-        LifecycleUtils.INSTANCE.unInit(sApp!!)
+        LifecycleUtils.getInstance().unInit(sApp!!)
         sApp = app
-        LifecycleUtils.INSTANCE.init(sApp!!)
+        LifecycleUtils.getInstance().init(sApp!!)
         CrashUtils.init("", object : CrashUtils.OnCrashListener {
             override fun onCrash(crashInfo: CrashUtils.CrashInfo) {
                 logD(crashInfo.toString())
@@ -54,7 +54,7 @@ object Utils {
     val app: Application
         get() {
             if (sApp != null) return sApp!!
-            init(LifecycleUtils.INSTANCE.applicationByReflect!!)
+            init(LifecycleUtils.getInstance().applicationByReflect!!)
             if (sApp == null) throw NullPointerException("reflect failed.")
             logD("${ProcessUtils.currentProcessName} reflect app success.")
             return sApp!!
@@ -85,7 +85,7 @@ object Utils {
         fun onBackground(activity: Activity)
     }
 
-    open class ActivityLifecycleCallbacks {
+    open class OnActivityCallbacks {
         open fun onActivityCreated(@NonNull activity: Activity) {
         }
 

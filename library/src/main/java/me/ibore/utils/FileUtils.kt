@@ -1138,8 +1138,8 @@ object FileUtils {
      * @param filePath The path of file.
      */
     @JvmStatic
-    fun notifySystemToScan(filePath: String) {
-        notifySystemToScan(getFileByPath(filePath))
+    fun notifySystemToScan(filePath: String?) {
+        notifySystemToScan(getFileByPath(filePath ?: return))
     }
 
     /**

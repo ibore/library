@@ -68,7 +68,7 @@ class WeChatHeader @JvmOverloads constructor(@NonNull context: Context, @Nullabl
     }
 
     init {
-        imgChat.setImageResource(R.drawable.refresh_wechat)
+        imgChat.setImageResource(R.drawable.x_refresh_wechat)
         val params = LayoutParams(dp2px(30F), dp2px(30F))
         params.leftMargin = dp2px(20F)
         addView(imgChat, params)

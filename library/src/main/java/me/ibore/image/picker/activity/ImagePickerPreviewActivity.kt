@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.widget.ViewPager2
 import me.ibore.R
 import me.ibore.base.XActivity
-import me.ibore.databinding.ActivityXImagePickerPreviewBinding
+import me.ibore.databinding.XActivityImagePickerPreviewBinding
 import me.ibore.image.picker.ImagePicker
 import me.ibore.image.picker.adapter.ImagePreviewAdapter
 import me.ibore.image.picker.adapter.ImageSelectAdapter
@@ -25,7 +25,7 @@ import me.ibore.utils.BarUtils
 import me.ibore.utils.ToastUtils
 
 
-class ImagePickerPreviewActivity : XActivity<ActivityXImagePickerPreviewBinding>() {
+class ImagePickerPreviewActivity : XActivity<XActivityImagePickerPreviewBinding>() {
 
     private var mPosition = 0
     private lateinit var mMediaFileList: MutableList<MediaFile>
@@ -37,7 +37,7 @@ class ImagePickerPreviewActivity : XActivity<ActivityXImagePickerPreviewBinding>
         BarUtils.setStatusBarLightMode(this, false)
     }
 
-    override fun ActivityXImagePickerPreviewBinding.onBindView(
+    override fun XActivityImagePickerPreviewBinding.onBindView(
         bundle: Bundle?,
         savedInstanceState: Bundle?
     ) {
@@ -154,7 +154,7 @@ class ImagePickerPreviewActivity : XActivity<ActivityXImagePickerPreviewBinding>
         mBinding.viewPager2.setCurrentItem(mPosition, false)
     }
 
-    private fun ActivityXImagePickerPreviewBinding.updateImageSelect() {
+    private fun XActivityImagePickerPreviewBinding.updateImageSelect() {
         updateCommitView()
         rvImageSelect.visibility =
             if (ImagePickerUtils.selectMedias.isNullOrEmpty()) View.GONE else View.VISIBLE
@@ -162,7 +162,7 @@ class ImagePickerPreviewActivity : XActivity<ActivityXImagePickerPreviewBinding>
             val index = ImagePickerUtils.selectMedias.indexOf(getCurrentMediaFile())
             mSelectAdapter.currentPosition = index
             rvImageSelect.smoothScrollToPosition(index)
-            ivImageCheck.setImageResource(R.drawable.image_picker_preview_checked)
+            ivImageCheck.setImageResource(R.drawable.x_image_picker_preview_checked)
             ivImageCheck.setBackgroundResource(R.drawable.image_picker_checked)
         } else {
             mSelectAdapter.currentPosition = -1
@@ -172,7 +172,7 @@ class ImagePickerPreviewActivity : XActivity<ActivityXImagePickerPreviewBinding>
         mSelectAdapter.notifyDataSetChanged()
     }
 
-    private fun ActivityXImagePickerPreviewBinding.updateCommitView() {
+    private fun XActivityImagePickerPreviewBinding.updateCommitView() {
         val selectCount = ImagePickerUtils.selectMedias.size
         if (selectCount == 0) {
             tvImageCommit.isEnabled = false
@@ -184,7 +184,7 @@ class ImagePickerPreviewActivity : XActivity<ActivityXImagePickerPreviewBinding>
         }
     }
 
-    private fun ActivityXImagePickerPreviewBinding.updateOriginalImageView(imageQuality: Int) {
+    private fun XActivityImagePickerPreviewBinding.updateOriginalImageView(imageQuality: Int) {
         if (imageQuality == 3) {
             ivOriginalImage.setImageDrawable(null)
             tvOriginalImage.isEnabled = false

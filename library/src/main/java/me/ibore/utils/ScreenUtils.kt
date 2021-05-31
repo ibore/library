@@ -28,61 +28,56 @@ import androidx.annotation.RequiresPermission
 </pre> *
  */
 object ScreenUtils {
+
     /**
      * Return the width of screen, in pixel.
      *
      * @return the width of screen, in pixel
      */
-    val screenWidth: Int
-        get() {
-            val wm = Utils.app.getSystemService(Context.WINDOW_SERVICE) as WindowManager?
-                ?: return -1
-            val point = Point()
-            wm.defaultDisplay.getRealSize(point)
-            return point.x
-        }
+    @JvmStatic
+    fun getScreenWidth(context: Context = Utils.app): Int {
+        val wm = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager? ?: return -1
+        val point = Point()
+        wm.defaultDisplay.getRealSize(point)
+        return point.x
+    }
 
     /**
      * Return the height of screen, in pixel.
      *
      * @return the height of screen, in pixel
      */
-    val screenHeight: Int
-        get() {
-            val wm = Utils.app.getSystemService(Context.WINDOW_SERVICE) as WindowManager?
-                ?: return -1
-            val point = Point()
-            wm.defaultDisplay.getRealSize(point)
-            return point.y
-        }
+    @JvmStatic
+    fun getScreenHeight(context: Context = Utils.app): Int {
+        val wm = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager? ?: return -1
+        val point = Point()
+        wm.defaultDisplay.getRealSize(point)
+        return point.y
+    }
 
     /**
      * Return the application's width of screen, in pixel.
      *
      * @return the application's width of screen, in pixel
      */
-    val appScreenWidth: Int
-        get() {
-            val wm = Utils.app.getSystemService(Context.WINDOW_SERVICE) as WindowManager?
-                ?: return -1
-            val point = Point()
-            wm.defaultDisplay.getSize(point)
-            return point.x
-        }
+    fun getAppScreenWidth(context: Context = Utils.app): Int {
+        val wm = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager? ?: return -1
+        val point = Point()
+        wm.defaultDisplay.getSize(point)
+        return point.x
+    }
 
     /**
      * Return the application's height of screen, in pixel.
      *
      * @return the application's height of screen, in pixel
      */
-    val appScreenHeight: Int
-        get() {
-            val wm = Utils.app.getSystemService(Context.WINDOW_SERVICE) as WindowManager?
-                ?: return -1
-            val point = Point()
-            wm.defaultDisplay.getSize(point)
-            return point.y
-        }
+    fun getAppScreenHeight(context: Context = Utils.app): Int {
+        val wm = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager? ?: return -1
+        val point = Point()
+        wm.defaultDisplay.getSize(point)
+        return point.y
+    }
 
     /**
      * Return the density of screen.

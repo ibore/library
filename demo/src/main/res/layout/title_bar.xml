@@ -38,7 +38,7 @@
         android:paddingStart="6dp"
         android:paddingEnd="6dp"
         android:scaleType="center"
-        android:src="@drawable/ic_title_bar_back"
+        android:src="@drawable/x_title_bar_back"
         app:layout_titleBackPress="true"
         app:layout_titleType="start" />
 

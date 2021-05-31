@@ -9,11 +9,11 @@ import kotlinx.parcelize.RawValue
 import me.ibore.R
 import me.ibore.base.XActivity
 import me.ibore.base.XDialog
-import me.ibore.databinding.DialogXTimerBinding
+import me.ibore.databinding.XDialogTimerBinding
 import me.ibore.ktx.dp2px
 import me.ibore.utils.ScreenUtils
 
-class XTimerDialog : XDialog<DialogXTimerBinding>() {
+class XTimerDialog : XDialog<XDialogTimerBinding>() {
 
     companion object {
         fun show(activity: XActivity<*>, title: CharSequence? = null, selectedTimer: String? = null,
@@ -31,7 +31,7 @@ class XTimerDialog : XDialog<DialogXTimerBinding>() {
         arguments?.getParcelable("builder") ?: Builder()
     }
 
-    override fun DialogXTimerBinding.onBindView(bundle: Bundle?, savedInstanceState: Bundle?) {
+    override fun XDialogTimerBinding.onBindView(bundle: Bundle?, savedInstanceState: Bundle?) {
         if (builder.showBottom) {
             tvNegative.visibility = View.VISIBLE
             tvPositive.visibility = View.VISIBLE

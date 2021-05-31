@@ -1,7 +1,9 @@
 package me.ibore.demo.utils
 
 import android.os.Bundle
+import android.view.Gravity
 import androidx.recyclerview.widget.GridLayoutManager
+import me.ibore.demo.R
 import me.ibore.demo.adapter.TitleAdapter
 import me.ibore.demo.base.BaseActivity
 import me.ibore.demo.databinding.ActivityListBinding
@@ -23,10 +25,16 @@ class ToastActivity : BaseActivity<ActivityListBinding>() {
 
 
         adapter.addData(TitleItem("打印普通字符串") {
+            ToastUtils.setDefault(
+                ToastUtils.make().setMode(ToastUtils.MODE.DARK).setGravity(Gravity.CENTER, 0, 0)
+            )
             ToastUtils.showShort("你好")
         })
 
         adapter.addData(TitleItem("打印普通字符串") {
+            ToastUtils.setDefault(
+                ToastUtils.make().setMode(ToastUtils.MODE.LIGHT).setGravity(Gravity.CENTER, 0, 0)
+            )
             ToastUtils.showLong("你好")
         })
 

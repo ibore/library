@@ -51,12 +51,10 @@ class DialogActivity : BaseActivity<ActivityDialogBinding>() {
                 title = "退出登录",
                 content = "您确定要退出登录吗？",
                 negativeListener = {
-                    Toast.makeText(getXActivity(), "取消", Toast.LENGTH_SHORT).show()
-                    //ToastUtils.showShort("取消")
+                    ToastUtils.showShort("取消")
                 },
                 positiveListener = {
-                    Toast.makeText(getXActivity(), "确认", Toast.LENGTH_SHORT).show()
-                    //ToastUtils.showShort("确认")
+                    ToastUtils.showShort("确认")
                 })
         })
 

@@ -18,7 +18,7 @@ import android.webkit.JsPromptResult
 import android.webkit.JsResult
 import android.webkit.WebChromeClient
 import kotlinx.parcelize.Parcelize
-import me.ibore.databinding.ActivityXWebBinding
+import me.ibore.databinding.XActivityWebBinding
 import me.ibore.permissions.OnPermissionListener
 import me.ibore.permissions.Permission
 import me.ibore.permissions.XPermissions
@@ -28,7 +28,7 @@ import me.ibore.utils.LogUtils
 import me.ibore.webview.XWebView
 import me.ibore.webview.XWebViewListener
 
-class XWebActivity : XActivity<ActivityXWebBinding>(), XWebViewListener {
+class XWebActivity : XActivity<XActivityWebBinding>(), XWebViewListener {
     companion object {
 
         const val REQUEST_CODE = 1118
@@ -43,7 +43,7 @@ class XWebActivity : XActivity<ActivityXWebBinding>(), XWebViewListener {
     private lateinit var builder: Builder
     private var mCustomViewCallback: WebChromeClient.CustomViewCallback? = null
 
-    override fun ActivityXWebBinding.onBindView(bundle: Bundle?, savedInstanceState: Bundle?) {
+    override fun XActivityWebBinding.onBindView(bundle: Bundle?, savedInstanceState: Bundle?) {
         builder = Builder()
         builder = bundle?.getParcelable("builder") ?: Builder()
         ivTitleBarBack.setOnClickListener {

@@ -24,13 +24,11 @@ object Permission {
     /**
      * 读取外部存储
      */
-    @Deprecated("在 Android 11 已经过时，请使用 {@link Permission#MANAGE_EXTERNAL_STORAGE}")
     const val READ_EXTERNAL_STORAGE = "android.permission.READ_EXTERNAL_STORAGE"
 
     /**
      * 写入外部存储
      */
-    @Deprecated("在 Android 11 已经过时，请使用 {@link Permission#MANAGE_EXTERNAL_STORAGE}")
     const val WRITE_EXTERNAL_STORAGE = "android.permission.WRITE_EXTERNAL_STORAGE"
 
     /** 读取日历  */

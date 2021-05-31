@@ -8,7 +8,7 @@ import androidx.annotation.NonNull
 import androidx.appcompat.widget.AppCompatImageView
 import me.ibore.R
 
-class FloatingIconView @JvmOverloads constructor(@NonNull context: Context, @DrawableRes resId: Int = R.drawable.ic_title_bar_back) :
+class FloatingIconView @JvmOverloads constructor(@NonNull context: Context, @DrawableRes resId: Int = R.drawable.x_title_bar_back) :
         FloatingView(context, null) {
 
     private val mIcon: ImageView

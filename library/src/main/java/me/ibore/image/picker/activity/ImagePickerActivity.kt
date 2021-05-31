@@ -28,7 +28,7 @@ import io.reactivex.Observable
 import me.ibore.R
 import me.ibore.base.XActivity
 import me.ibore.base.XObserver
-import me.ibore.databinding.ActivityXImagePickerBinding
+import me.ibore.databinding.XActivityImagePickerBinding
 import me.ibore.image.picker.ImagePicker
 import me.ibore.image.picker.adapter.ImageFoldersAdapter
 import me.ibore.image.picker.adapter.ImagePickerAdapter
@@ -39,12 +39,15 @@ import me.ibore.image.picker.utils.ImagePickerUtils
 import me.ibore.image.picker.utils.MediaFileUtil
 import me.ibore.ktx.color
 import me.ibore.loading.XLoading
+import me.ibore.permissions.OnPermissionListener
+import me.ibore.permissions.Permission
+import me.ibore.permissions.XPermissions
 import me.ibore.recycler.holder.RecyclerHolder
 import me.ibore.recycler.listener.OnItemClickListener
 import me.ibore.utils.*
 import java.io.File
 
-class ImagePickerActivity : XActivity<ActivityXImagePickerBinding>(),
+class ImagePickerActivity : XActivity<XActivityImagePickerBinding>(),
     ImagePickerAdapter.OnMediaListener {
 
     companion object {
@@ -93,7 +96,7 @@ class ImagePickerActivity : XActivity<ActivityXImagePickerBinding>(),
         BarUtils.setStatusBarLightMode(this, false)
     }
 
-    override fun ActivityXImagePickerBinding.onBindView(
+    override fun XActivityImagePickerBinding.onBindView(
         bundle: Bundle?, savedInstanceState: Bundle?
     ) {
         val timeBgColor = ColorUtils.alpha(color(R.color.image_picker_bar_color), 0.8F)
@@ -157,6 +160,15 @@ class ImagePickerActivity : XActivity<ActivityXImagePickerBinding>(),
 
     override fun onBindData() {
         ImagePickerUtils.restSelect()
+        XPermissions.with(this).permission(
+            Permission.CAMERA,
+            Permission.READ_EXTERNAL_STORAGE,
+            Permission.WRITE_EXTERNAL_STORAGE
+        ).request(object : OnPermissionListener {
+            override fun onGranted(permissions: List<String>, all: Boolean) {
+                startScannerTask()
+            }
+        })
         //进行权限的判断
         val hasPermission = (
                 ContextCompat.checkSelfPermission(
@@ -172,7 +184,7 @@ class ImagePickerActivity : XActivity<ActivityXImagePickerBinding>(),
                 ), REQUEST_PERMISSION_CAMERA_CODE
             )
         } else {
-            startScannerTask()
+
         }
     }
 
@@ -220,7 +232,7 @@ class ImagePickerActivity : XActivity<ActivityXImagePickerBinding>(),
         }
     }
 
-    private fun ActivityXImagePickerBinding.showOrHideFolderView(data: MediaFolder?) {
+    private fun XActivityImagePickerBinding.showOrHideFolderView(data: MediaFolder?) {
         val isShow = !llFolder.isVisible
         val animator = ValueAnimator.ofInt(0, mFolderHeight).setDuration(300)
         animator.interpolator = LinearInterpolator()
@@ -250,7 +262,7 @@ class ImagePickerActivity : XActivity<ActivityXImagePickerBinding>(),
     }
 
     // 更新时间
-    private fun ActivityXImagePickerBinding.updateImageTime() {
+    private fun XActivityImagePickerBinding.updateImageTime() {
         val position = gridLayoutManager.findFirstVisibleItemPosition()
         if (position == RecyclerView.NO_POSITION) return
         if (ImagePicker.getConfig().showCamera && position == 0) return
@@ -317,8 +329,7 @@ class ImagePickerActivity : XActivity<ActivityXImagePickerBinding>(),
             if (ImagePickerUtils.selectMedias.isNotEmpty()) {
                 //判断选中集合中第一项是否为视频
                 if (!ImagePickerUtils.isCanAddSelectionPaths(
-                        data,
-                        ImagePickerUtils.selectMedias.first()
+                        data, ImagePickerUtils.selectMedias.first()
                     )
                 ) {
                     //类型不同
@@ -361,16 +372,8 @@ class ImagePickerActivity : XActivity<ActivityXImagePickerBinding>(),
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == RESULT_OK) {
             if (requestCode == REQUEST_CODE_CAPTURE) {
-                MediaScannerConnection.scanFile(
-                    getXActivity(), arrayOf("file://$mFilePath"),
-                    null, null
-                )
-//                sendBroadcast(
-//                    Intent(
-//                        Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
-//                        Uri.parse("file://$mFilePath")
-//                    )
-//                )
+                MediaScannerConnection.scanFile(getXActivity(), arrayOf("file://$mFilePath"), null, null)
+//                FileUtils.notifySystemToScan(mFilePath)
                 commitSelection(arrayListOf(mFilePath!!))
             }
             if (requestCode == REQUEST_SELECT_IMAGES_CODE) {
@@ -403,7 +406,7 @@ class ImagePickerActivity : XActivity<ActivityXImagePickerBinding>(),
         super.onBackPressed()
     }
 
-    private fun ActivityXImagePickerBinding.updateCommitPreviewView() {
+    private fun XActivityImagePickerBinding.updateCommitPreviewView() {
         val selectCount = ImagePickerUtils.selectMedias.size
         if (selectCount == 0) {
             tvImageCommit.isEnabled = false
@@ -419,7 +422,7 @@ class ImagePickerActivity : XActivity<ActivityXImagePickerBinding>(),
         }
     }
 
-    private fun ActivityXImagePickerBinding.updateOriginalImageView(imageQuality: Int) {
+    private fun XActivityImagePickerBinding.updateOriginalImageView(imageQuality: Int) {
         if (imageQuality == 3) {
             ivOriginalImage.setImageDrawable(null)
             tvOriginalImage.isEnabled = false

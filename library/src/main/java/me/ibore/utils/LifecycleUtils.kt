@@ -1,6 +1,7 @@
 package me.ibore.utils
 
 import android.animation.ValueAnimator
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Application
 import android.os.Build
@@ -9,9 +10,8 @@ import android.util.Log
 import android.view.Window
 import android.view.WindowManager
 import androidx.annotation.NonNull
-import androidx.annotation.Nullable
 import androidx.lifecycle.Lifecycle
-import me.ibore.utils.LanguageUtils.applyLanguage
+import me.ibore.ktx.logD
 import me.ibore.utils.Utils.OnAppStatusChangedListener
 import java.lang.reflect.Field
 import java.lang.reflect.InvocationTargetException
@@ -20,11 +20,12 @@ import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.CopyOnWriteArrayList
 
 
+@SuppressLint("StaticFieldLeak")
 internal class LifecycleUtils : Application.ActivityLifecycleCallbacks {
 
     private val mActivityList: LinkedList<Activity> = LinkedList()
     private val mStatusListeners: MutableList<OnAppStatusChangedListener> = CopyOnWriteArrayList()
-    private val mActivityLifecycleCallbacksMap: MutableMap<Activity, MutableList<Utils.ActivityLifecycleCallbacks>?> =
+    private val mOnActivityCallbacksMap: MutableMap<Activity, MutableList<Utils.OnActivityCallbacks>?> =
         ConcurrentHashMap()
     private var mForegroundCount = 0
     private var mConfigCount = 0
@@ -67,14 +68,11 @@ internal class LifecycleUtils : Application.ActivityLifecycleCallbacks {
         mStatusListeners.remove(listener)
     }
 
-    fun addActivityLifecycleCallbacks(listener: Utils.ActivityLifecycleCallbacks?) {
+    fun addActivityLifecycleCallbacks(listener: Utils.OnActivityCallbacks?) {
         addActivityLifecycleCallbacks(STUB, listener)
     }
 
-    fun addActivityLifecycleCallbacks(
-        activity: Activity?,
-        listener: Utils.ActivityLifecycleCallbacks?
-    ) {
+    fun addActivityLifecycleCallbacks(activity: Activity?, listener: Utils.OnActivityCallbacks?) {
         if (activity == null || listener == null) return
         ThreadUtils.runOnUiThread {
             addActivityLifecycleCallbacksInner(activity, listener)
@@ -85,60 +83,54 @@ internal class LifecycleUtils : Application.ActivityLifecycleCallbacks {
         get() = !mIsBackground
 
     private fun addActivityLifecycleCallbacksInner(
-        activity: Activity,
-        callbacks: Utils.ActivityLifecycleCallbacks
+        activity: Activity, callbacks: Utils.OnActivityCallbacks
     ) {
-        var callbacksList = mActivityLifecycleCallbacksMap[activity]
+        var callbacksList = mOnActivityCallbacksMap[activity]
         if (callbacksList == null) {
             callbacksList = CopyOnWriteArrayList()
-            mActivityLifecycleCallbacksMap[activity] = callbacksList
+            mOnActivityCallbacksMap[activity] = callbacksList
         } else {
             if (callbacksList.contains(callbacks)) return
         }
         callbacksList.add(callbacks)
     }
 
-    fun removeActivityLifecycleCallbacks(callbacks: Utils.ActivityLifecycleCallbacks?) {
-        removeActivityLifecycleCallbacks(STUB, callbacks)
+    fun removeActivityLifecycleCallbacks(callbacksOn: Utils.OnActivityCallbacks?) {
+        removeActivityLifecycleCallbacks(STUB, callbacksOn)
     }
 
     fun removeActivityLifecycleCallbacks(activity: Activity?) {
         if (activity == null) return
-        ThreadUtils.runOnUiThread { mActivityLifecycleCallbacksMap.remove(activity) }
+        ThreadUtils.runOnUiThread { mOnActivityCallbacksMap.remove(activity) }
     }
 
     fun removeActivityLifecycleCallbacks(
         activity: Activity?,
-        callbacks: Utils.ActivityLifecycleCallbacks?
+        callbacksOn: Utils.OnActivityCallbacks?
     ) {
-        if (activity == null || callbacks == null) return
+        if (activity == null || callbacksOn == null) return
         ThreadUtils.runOnUiThread {
-            removeActivityLifecycleCallbacksInner(activity, callbacks)
+            removeActivityLifecycleCallbacksInner(activity, callbacksOn)
         }
     }
 
     private fun removeActivityLifecycleCallbacksInner(
         activity: Activity,
-        callbacks: Utils.ActivityLifecycleCallbacks
+        callbacksOn: Utils.OnActivityCallbacks
     ) {
-        val callbacksList = mActivityLifecycleCallbacksMap[activity]
+        val callbacksList = mOnActivityCallbacksMap[activity]
         if (callbacksList != null && callbacksList.isNotEmpty()) {
-            callbacksList.remove(callbacks)
+            callbacksList.remove(callbacksOn)
         }
     }
 
     private fun consumeActivityLifecycleCallbacks(activity: Activity, event: Lifecycle.Event) {
-        consumeLifecycle(activity, event, mActivityLifecycleCallbacksMap[activity])
-        consumeLifecycle(
-            activity, event,
-            mActivityLifecycleCallbacksMap[STUB]
-        )
+        consumeLifecycle(activity, event, mOnActivityCallbacksMap[activity])
+        consumeLifecycle(activity, event, mOnActivityCallbacksMap[STUB])
     }
 
     private fun consumeLifecycle(
-        activity: Activity,
-        event: Lifecycle.Event,
-        listeners: List<Utils.ActivityLifecycleCallbacks>?
+        activity: Activity, event: Lifecycle.Event, listeners: List<Utils.OnActivityCallbacks>?
     ) {
         if (listeners == null) return
         for (listener in listeners) {
@@ -165,7 +157,7 @@ internal class LifecycleUtils : Application.ActivityLifecycleCallbacks {
             }
         }
         if (event == Lifecycle.Event.ON_DESTROY) {
-            mActivityLifecycleCallbacksMap.remove(activity)
+            mOnActivityCallbacksMap.remove(activity)
         }
     }
 
@@ -189,29 +181,14 @@ internal class LifecycleUtils : Application.ActivityLifecycleCallbacks {
             return null
         }
 
-    ///////////////////////////////////////////////////////////////////////////
-    // lifecycle start
-    ///////////////////////////////////////////////////////////////////////////
-    override fun onActivityPreCreated(
-        @NonNull activity: Activity,
-        @Nullable savedInstanceState: Bundle?
-    ) { 
-    }
-
     override fun onActivityCreated(@NonNull activity: Activity, savedInstanceState: Bundle?) {
         if (mActivityList.isEmpty()) {
             postStatus(activity, true)
         }
-        applyLanguage(activity)
+        LanguageUtils.applyLanguage(activity)
         setAnimatorsEnabled()
         setTopActivity(activity)
         consumeActivityLifecycleCallbacks(activity, Lifecycle.Event.ON_CREATE)
-    }
-
-    override fun onActivityPostCreated(@NonNull activity: Activity, @Nullable savedInstanceState: Bundle?) {
-    }
-
-    override fun onActivityPreStarted(@NonNull activity: Activity) { 
     }
 
     override fun onActivityStarted(@NonNull activity: Activity) {
@@ -226,12 +203,6 @@ internal class LifecycleUtils : Application.ActivityLifecycleCallbacks {
         consumeActivityLifecycleCallbacks(activity, Lifecycle.Event.ON_START)
     }
 
-    override fun onActivityPostStarted(@NonNull activity: Activity) { 
-    }
-
-    override fun onActivityPreResumed(@NonNull activity: Activity) { 
-    }
-
     override fun onActivityResumed(@NonNull activity: Activity) {
         setTopActivity(activity)
         if (mIsBackground) {
@@ -242,20 +213,8 @@ internal class LifecycleUtils : Application.ActivityLifecycleCallbacks {
         consumeActivityLifecycleCallbacks(activity, Lifecycle.Event.ON_RESUME)
     }
 
-    override fun onActivityPostResumed(@NonNull activity: Activity) { 
-    }
-
-    override fun onActivityPrePaused(@NonNull activity: Activity) { 
-    }
-
     override fun onActivityPaused(@NonNull activity: Activity) {
         consumeActivityLifecycleCallbacks(activity, Lifecycle.Event.ON_PAUSE)
-    }
-
-    override fun onActivityPostPaused(@NonNull activity: Activity) { 
-    }
-
-    override fun onActivityPreStopped(@NonNull activity: Activity) { 
     }
 
     override fun onActivityStopped(activity: Activity) {
@@ -272,28 +231,10 @@ internal class LifecycleUtils : Application.ActivityLifecycleCallbacks {
         consumeActivityLifecycleCallbacks(activity, Lifecycle.Event.ON_STOP)
     }
 
-    override fun onActivityPostStopped(@NonNull activity: Activity) { 
-    }
-
-    override fun onActivityPreSaveInstanceState(
-        @NonNull activity: Activity,
-        @NonNull outState: Bundle
-    ) { 
-    }
-
     override fun onActivitySaveInstanceState(
         @NonNull activity: Activity,
         @NonNull outState: Bundle
-    ) { 
-    }
-
-    override fun onActivityPostSaveInstanceState(
-        @NonNull activity: Activity,
-        @NonNull outState: Bundle
-    ) { 
-    }
-
-    override fun onActivityPreDestroyed(@NonNull activity: Activity) { 
+    ) {
     }
 
     override fun onActivityDestroyed(@NonNull activity: Activity) {
@@ -302,11 +243,9 @@ internal class LifecycleUtils : Application.ActivityLifecycleCallbacks {
         consumeActivityLifecycleCallbacks(activity, Lifecycle.Event.ON_DESTROY)
     }
 
-    override fun onActivityPostDestroyed(@NonNull activity: Activity) { 
+    override fun onActivityPostDestroyed(@NonNull activity: Activity) {
     }
-    ///////////////////////////////////////////////////////////////////////////
-    // lifecycle end
-    ///////////////////////////////////////////////////////////////////////////
+
     /**
      * To solve close keyboard when activity onDestroy.
      * The preActivity set windowSoftInputMode will prevent
@@ -402,41 +341,45 @@ internal class LifecycleUtils : Application.ActivityLifecycleCallbacks {
             return list
         }
     private val activityThread: Any?
-        private get() {
-            val activityThread = activityThreadInActivityThreadStaticField
-            return if (activityThread != null) activityThread else activityThreadInActivityThreadStaticMethod
+        get() {
+            return activityThreadInActivityThreadStaticField
+                ?: activityThreadInActivityThreadStaticMethod
         }
+
     private val activityThreadInActivityThreadStaticField: Any?
-        private get() = try {
+        get() = try {
             val activityThreadClass = Class.forName("android.app.ActivityThread")
             val sCurrentActivityThreadField: Field =
                 activityThreadClass.getDeclaredField("sCurrentActivityThread")
-            sCurrentActivityThreadField.setAccessible(true)
+            sCurrentActivityThreadField.isAccessible = true
             sCurrentActivityThreadField.get(null)
         } catch (e: Exception) {
-            Log.e(
-                "UtilsActivityLifecycle",
-                "getActivityThreadInActivityThreadStaticField: " + e.message
-            )
+            logD("getActivityThreadInActivityThreadStaticField: " + e.message)
             null
         }
     private val activityThreadInActivityThreadStaticMethod: Any?
-        private get() {
+        get() {
             return try {
                 val activityThreadClass = Class.forName("android.app.ActivityThread")
                 activityThreadClass.getMethod("currentActivityThread").invoke(null)
             } catch (e: Exception) {
-                Log.e(
-                    "UtilsActivityLifecycle",
-                    "getActivityThreadInActivityThreadStaticMethod: " + e.message
-                )
+                logD("getActivityThreadInActivityThreadStaticMethod: " + e.message)
                 null
             }
         }
 
     companion object {
 
-        val INSTANCE = LifecycleUtils()
+        private var sInstance: LifecycleUtils? = null
+
+        @Synchronized
+        fun getInstance(): LifecycleUtils {
+            if (sInstance == null) {
+                sInstance = LifecycleUtils()
+            }
+            return sInstance!!
+        }
+
         private val STUB = Activity()
 
         /**
@@ -449,14 +392,11 @@ internal class LifecycleUtils : Application.ActivityLifecycleCallbacks {
             try {
                 val sDurationScaleField: Field =
                     ValueAnimator::class.java.getDeclaredField("sDurationScale")
-                sDurationScaleField.setAccessible(true)
+                sDurationScaleField.isAccessible = true
                 val sDurationScale = sDurationScaleField.get(null) as Float
                 if (sDurationScale == 0f) {
                     sDurationScaleField.set(null, 1f)
-                    Log.i(
-                        "UtilsActivityLifecycle",
-                        "setAnimatorsEnabled: Animators are enabled now!"
-                    )
+                    logD("setAnimatorsEnabled: Animators are enabled now!")
                 }
             } catch (e: NoSuchFieldException) {
                 e.printStackTrace()

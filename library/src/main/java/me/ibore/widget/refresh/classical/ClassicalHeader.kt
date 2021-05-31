@@ -35,7 +35,7 @@ class ClassicalHeader @JvmOverloads constructor(@NonNull context: Context, @Null
         addView(root, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
         (root.layoutParams as LayoutParams).gravity = Gravity.CENTER
         arrowImage = ImageView(context)
-        arrowImage.setImageResource(R.drawable.refresh_arrow_down)
+        arrowImage.setImageResource(R.drawable.x_refresh_arrow_down)
         arrowImage.scaleType = ImageView.ScaleType.CENTER
         root.addView(arrowImage)
         textTitle = TextView(context)
@@ -63,19 +63,19 @@ class ClassicalHeader @JvmOverloads constructor(@NonNull context: Context, @Null
     var isReset = true
 
     override fun onReset(refreshLayout: RefreshLayout) {
-        arrowImage.setImageResource(R.drawable.refresh_arrow_down)
+        arrowImage.setImageResource(R.drawable.x_refresh_arrow_down)
         textTitle.setText(R.string.refresh_pull_down_to_refresh)
         isReset = true
         arrowImage.visibility = View.VISIBLE
     }
 
     override fun onPrepare(refreshLayout: RefreshLayout) {
-        arrowImage.setImageResource(R.drawable.refresh_arrow_down)
+        arrowImage.setImageResource(R.drawable.x_refresh_arrow_down)
         textTitle.setText(R.string.refresh_pull_down_to_refresh)
     }
 
     override fun onRefresh(refreshLayout: RefreshLayout) {
-        arrowImage.setImageResource(R.drawable.refresh_loading)
+        arrowImage.setImageResource(R.drawable.x_refresh_loading)
         arrowImage.startAnimation(rotateAnimation)
         textTitle.setText(R.string.refresh_loading)
         isReset = false
