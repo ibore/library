@@ -600,6 +600,14 @@
             <enum name="empty" value="5" />
             <enum name="error" value="6" />
         </attr>
+        <attr name="layout_noneTop">
+            <enum name="title" value="1" />
+            <enum name="content" value="2" />
+        </attr>
+        <attr name="layout_noneBottom">
+            <enum name="content" value="2" />
+            <enum name="bottom" value="3" />
+        </attr>
     </declare-styleable>
 
     <declare-styleable name="TitleBar_Layout">

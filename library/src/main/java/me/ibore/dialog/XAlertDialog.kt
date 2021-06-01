@@ -49,9 +49,9 @@ class XAlertDialog : XDialog<XDialogAlertBinding>() {
                 scrollView.viewTreeObserver.removeOnGlobalLayoutListener(this)
                 val layoutParams = scrollView.layoutParams
                 val maxHeight = if (tvTitle.visibility == View.GONE) {
-                    ScreenUtils.appScreenHeight / 2 + dp2px(48F)
+                    ScreenUtils.getAppScreenHeight() / 2 + dp2px(48F)
                 } else {
-                    ScreenUtils.appScreenHeight / 2
+                    ScreenUtils.getAppScreenHeight() / 2
                 }
                 if (scrollView.height > maxHeight) {
                     layoutParams.height = maxHeight

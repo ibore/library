@@ -26,7 +26,7 @@ class ImagePickerAdapter : BindingAdapter<XItemImagePickerBinding, MediaFile>() 
     override fun onCreateHolder(parent: ViewGroup, dataType: Int): RecyclerHolder {
         val holder = super.onCreateHolder(parent, dataType)
         holder.itemView.updateLayoutParams<RecyclerView.LayoutParams> {
-            height = (ScreenUtils.appScreenHeight - dp2px(10F)) / 4
+            height = (ScreenUtils.getAppScreenHeight() - dp2px(10F)) / 4
         }
         return holder
     }

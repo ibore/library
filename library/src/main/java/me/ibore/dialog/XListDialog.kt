@@ -81,16 +81,16 @@ class XListDialog : XDialog<XDialogListBinding>() {
         mBinding.recyclerView.adapter = adapter
         val layoutParams = mBinding.recyclerView.layoutParams
         if (builder.datas.size >= 6) {
-            if ((context.resources.getDimensionPixelOffset(R.dimen.dialog_view_list_content_height) * 6) >= (ScreenUtils.appScreenHeight / 2)) {
-                layoutParams.height = ScreenUtils.appScreenHeight / 2
+            if ((context.resources.getDimensionPixelOffset(R.dimen.dialog_view_list_content_height) * 6) >= (ScreenUtils.getAppScreenHeight() / 2)) {
+                layoutParams.height = ScreenUtils.getAppScreenHeight() / 2
             } else {
                 layoutParams.height =
                     context.resources.getDimensionPixelOffset(R.dimen.dialog_view_list_content_height) * 6
             }
         } else {
             for (index in 0..4) {
-                if ((context.resources.getDimensionPixelOffset(R.dimen.dialog_view_list_content_height) * index) >= (ScreenUtils.appScreenHeight / 2)) {
-                    layoutParams.height = ScreenUtils.appScreenHeight / 2
+                if ((context.resources.getDimensionPixelOffset(R.dimen.dialog_view_list_content_height) * index) >= (ScreenUtils.getAppScreenHeight() / 2)) {
+                    layoutParams.height = ScreenUtils.getAppScreenHeight() / 2
                     break
                 }
             }
@@ -115,7 +115,7 @@ class XListDialog : XDialog<XDialogListBinding>() {
     override fun onBindDialogConfig(): DialogConfig {
         return if (builder.showBottom) {
             DialogConfig(
-                ScreenUtils.appScreenWidth, DialogConfig.WRAP_CONTENT, gravity = Gravity.BOTTOM,
+                ScreenUtils.getAppScreenWidth(), DialogConfig.WRAP_CONTENT, gravity = Gravity.BOTTOM,
                 touchBack = builder.touchBack, touchOutside = builder.touchOutside
             )
         } else {

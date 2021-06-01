@@ -89,7 +89,7 @@ class ImagePickerActivity : XActivity<XActivityImagePickerBinding>(),
     private var mFilePath: String? = null
     private var mImageFoldersAdapter = ImageFoldersAdapter()
     private var mFolderHeight =
-        ScreenUtils.appScreenHeight - Utils.app.resources.getDimensionPixelSize(R.dimen.image_picker_action_bar_height) * 3
+        ScreenUtils.getAppScreenHeight() - Utils.app.resources.getDimensionPixelSize(R.dimen.image_picker_action_bar_height) * 3
 
     override fun onBindConfig() {
         super.onBindConfig()

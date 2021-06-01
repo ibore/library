@@ -86,8 +86,8 @@ open class FloatingView @JvmOverloads constructor(context: Context, attrs: Attri
     }
 
     protected fun updateSize() {
-        mScreenWidth = ScreenUtils.screenWidth - this.width
-        mScreenHeight = ScreenUtils.screenHeight
+        mScreenWidth = ScreenUtils.getAppScreenWidth() - this.width
+        mScreenHeight = ScreenUtils.getAppScreenHeight()
     }
 
     @JvmOverloads

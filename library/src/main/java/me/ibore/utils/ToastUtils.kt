@@ -24,17 +24,12 @@ import androidx.annotation.*
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
+import com.google.android.material.imageview.ShapeableImageView
 import me.ibore.R
 import me.ibore.ktx.dp2px
-import me.ibore.ktx.layoutInflater
 
 /**
- * <pre>
- * author: Blankj
- * blog  : http://blankj.com
- * time  : 2016/09/29
- * desc  : utils about toast
-</pre> *
+ *  utils about toast
  */
 class ToastUtils private constructor() {
 
@@ -266,7 +261,7 @@ class ToastUtils private constructor() {
      * @param args   The args.
      */
     fun show(format: String?, vararg args: Any?) {
-        show(StringUtils.format(format!!, *args), duration, this)
+        show(StringUtils.format(format, *args), duration, this)
     }
 
     /**
@@ -526,9 +521,11 @@ class ToastUtils private constructor() {
     }
 
     internal abstract class AbsToast(toastUtils: ToastUtils) : IToast {
+
         var mToast: Toast?
         protected var mToastUtils: ToastUtils
         protected var mToastView: View? = null
+
         override fun setToastView(view: View?) {
             mToastView = view
             mToast!!.view = mToastView
@@ -612,11 +609,8 @@ class ToastUtils private constructor() {
     ) : RelativeLayout(context, attrs, defStyleAttr) {
 
         override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-            val widthMaxSpec =
-                MeasureSpec.makeMeasureSpec(
-                    ScreenUtils.screenWidth - dp2px(80F),
-                    MeasureSpec.AT_MOST
-                )
+            val size = ScreenUtils.getAppScreenWidth(context) - dp2px(80F)
+            val widthMaxSpec = MeasureSpec.makeMeasureSpec(size, MeasureSpec.AT_MOST)
             super.onMeasure(widthMaxSpec, heightMeasureSpec)
         }
 

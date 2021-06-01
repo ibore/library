@@ -6,9 +6,10 @@ import android.view.View
 import android.view.ViewDebug.ExportedProperty
 import android.view.ViewGroup
 import androidx.annotation.IntDef
-import androidx.core.view.marginBottom
-import androidx.core.view.marginTop
+import androidx.core.view.*
 import me.ibore.R
+import me.ibore.ktx.marginAndMeasureHeight
+import me.ibore.ktx.marginAndMeasureWidth
 
 class RootLayout @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : ViewGroup(context, attrs, defStyleAttr) {
 
@@ -44,6 +45,10 @@ class RootLayout @JvmOverloads constructor(context: Context, attrs: AttributeSet
     private var emptyView: View? = null
     private var errorView: View? = null
 
+    private var titleHeight = 0
+    private var contentHeight = 0
+    private var bottomHeight = 0
+
     init {
         val ta = context.obtainStyledAttributes(attrs, R.styleable.RootLayout, defStyleAttr, 0)
         showType = ta.getInt(R.styleable.RootLayout_rootShowType, CONTENT)
@@ -60,18 +65,6 @@ class RootLayout @JvmOverloads constructor(context: Context, attrs: AttributeSet
             }
         }
         return false
-    }
-
-    fun getChildView(@RootType layoutType: Int): View? {
-        val count = childCount
-        for (i in 0 until count) {
-            val child = getChildAt(i)
-            val pl = child.layoutParams as LayoutParams
-            if (pl.rootType == layoutType) {
-                return child
-            }
-        }
-        return null
     }
 
     private fun bindView() {
@@ -119,34 +112,33 @@ class RootLayout @JvmOverloads constructor(context: Context, attrs: AttributeSet
 
     }
 
-    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+    override fun onMeasure(widthMS: Int, heightMS: Int) {
         bindView()
-        val widthMode = MeasureSpec.getMode(widthMeasureSpec)
-        val heightMode = MeasureSpec.getMode(heightMeasureSpec)
-        val sizeWidth = MeasureSpec.getSize(widthMeasureSpec)
-        val sizeHeight = MeasureSpec.getSize(heightMeasureSpec)
+        val widthMode = MeasureSpec.getMode(widthMS)
+        val heightMode = MeasureSpec.getMode(heightMS)
+        val sizeWidth = MeasureSpec.getSize(widthMS)
+        val sizeHeight = MeasureSpec.getSize(heightMS)
         var layoutWidth = paddingLeft + paddingEnd
         var layoutHeight = paddingTop + paddingBottom
-        var heightUsed = 0
-
         titleView?.let {
             if (it.visibility == View.GONE) return@let
-            measureChildWithMargins(it, widthMeasureSpec, 0, heightMeasureSpec, 0)
-            heightUsed += it.measuredHeight + it.marginTop + it.marginBottom
+            measureChildWithMargins(it, widthMS, 0, heightMS, 0)
+            titleHeight = it.marginAndMeasureHeight
         }
         bottomView?.let {
             if (it.visibility == View.GONE) return@let
-            measureChildWithMargins(it, widthMeasureSpec, 0, heightMeasureSpec, 0)
-            heightUsed += it.measuredHeight + it.marginTop + it.marginBottom
+            measureChildWithMargins(it, widthMS, 0, heightMS, 0)
+            bottomHeight = it.marginAndMeasureHeight
         }
         var contentWMS: Int = MeasureSpec.makeMeasureSpec(0, MeasureSpec.EXACTLY)
         var contentHMS: Int = MeasureSpec.makeMeasureSpec(0, MeasureSpec.EXACTLY)
         contentView?.let {
-            val heightMS =
+            val contentHeightMS =
                 MeasureSpec.makeMeasureSpec(sizeHeight - layoutHeight, MeasureSpec.EXACTLY)
-            measureChildWithMargins(it, widthMeasureSpec, 0, heightMS, heightUsed)
-            contentWMS = MeasureSpec.makeMeasureSpec(it.measuredWidth, MeasureSpec.EXACTLY)
-            contentHMS = MeasureSpec.makeMeasureSpec(it.measuredHeight, MeasureSpec.EXACTLY)
+            measureChildWithMargins(it, widthMS, 0, contentHeightMS, titleHeight + bottomHeight)
+            contentHeight = it.marginAndMeasureHeight
+            contentWMS = MeasureSpec.makeMeasureSpec(it.marginAndMeasureWidth, MeasureSpec.EXACTLY)
+            contentHMS = MeasureSpec.makeMeasureSpec(it.marginAndMeasureHeight, MeasureSpec.EXACTLY)
         }
         loadingView?.let {
             if (it.visibility == View.GONE) return@let
@@ -163,108 +155,68 @@ class RootLayout @JvmOverloads constructor(context: Context, attrs: AttributeSet
         val count = childCount
         for (i in 0 until count) {
             val child = getChildAt(i)
-            if (child.visibility != View.GONE && (child.layoutParams as LayoutParams).rootType == NONE) {
-                measureChildWithMargins(child, widthMeasureSpec, 0, heightMeasureSpec, 0)
+            val childLp = child.layoutParams as LayoutParams
+            if (!child.isGone && childLp.rootType == NONE) {
+                var childHeightUsed = 0
+                if (childLp.noneTop == CONTENT) childHeightUsed += titleHeight
+                if (childLp.noneBottom == CONTENT) childHeightUsed += bottomHeight
+                measureChildWithMargins(child, widthMS, 0, heightMS, childHeightUsed)
             }
         }
-        var params: LayoutParams
-        if (widthMode == MeasureSpec.EXACTLY) {
-            //如果布局容器的宽度模式时确定的（具体的size或者match_parent）
-            layoutWidth = sizeWidth
-        } else {
-            if (null != contentView) {
-                val child: View = contentView!!
-                params = child.layoutParams as LayoutParams
-                layoutWidth = child.measuredWidth + params.leftMargin + params.rightMargin
-            } else {
+        when {
+            widthMode == MeasureSpec.EXACTLY -> layoutWidth = sizeWidth
+            null != contentView -> layoutWidth = contentView!!.marginAndMeasureWidth
+            else -> {
                 for (i in 0 until count) {
                     val child: View = getChildAt(i)
-                    params = child.layoutParams as LayoutParams
-                    val marginWidth = child.measuredWidth + params.leftMargin + params.rightMargin
+                    val marginWidth = child.marginAndMeasureWidth
                     layoutWidth = if (marginWidth > layoutWidth) marginWidth else layoutWidth
                 }
             }
         }
         if (heightMode == MeasureSpec.EXACTLY) {
-            //如果布局容器的宽度模式时确定的（具体的size或者match_parent）
             layoutHeight = sizeHeight
         } else {
-            var titleContentBottomHeight = 0
+            val tcbHeight = titleHeight + contentHeight + bottomHeight
             for (i in 0 until count) {
                 val child: View = getChildAt(i)
-                if (child.visibility != GONE) {
-                    params = child.layoutParams as LayoutParams
-                    val marginHeight = child.measuredHeight + params.topMargin + params.bottomMargin
+                val rootType = (child.layoutParams as LayoutParams).rootType
+                if (!child.isGone && rootType != TITLE && rootType != CONTENT && rootType != BOTTOM) {
+                    val marginHeight = child.marginAndMeasureHeight
                     layoutHeight = if (marginHeight > layoutHeight) marginHeight else layoutHeight
-                    if ((params.rootType == TITLE || params.rootType == CONTENT || params.rootType == BOTTOM)) {
-                        titleContentBottomHeight += child.measuredHeight + params.topMargin + params.bottomMargin
-                    }
                 }
             }
-            layoutHeight = if (titleContentBottomHeight > layoutHeight) titleContentBottomHeight else layoutHeight
+            layoutHeight = if (tcbHeight > layoutHeight) tcbHeight else layoutHeight
         }
-        // 测量并保存layout的宽高
         setMeasuredDimension(layoutWidth, layoutHeight)
     }
 
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
-        val tempLeft = left + paddingLeft
-        var tempTop = top + paddingTop
-        val tempRight = right - paddingRight
-        var tempBottom = bottom - paddingBottom
-        val count = childCount
-        for (i in 0 until count) {
+        for (i in 0 until childCount) {
             val child: View = getChildAt(i)
             val lp = child.layoutParams as LayoutParams
-            if (lp.rootType != TITLE && lp.rootType != CONTENT && lp.rootType != BOTTOM &&
-                lp.rootType != LOADING && lp.rootType != EMPTY && lp.rootType != ERROR && child.visibility != GONE
-            ) {
-                child.layout(
-                    tempLeft + lp.leftMargin,
-                    tempTop + lp.topMargin,
-                    tempRight - lp.rightMargin,
-                    tempBottom - lp.bottomMargin
-                )
+            if (lp.rootType == NONE) {
+                val t = if (lp.noneTop == CONTENT) top + titleHeight else top
+                val b = if (lp.noneBottom == CONTENT) top + bottomHeight else top
+                onChildLayout(child, left, t, right, b)
             }
         }
-        titleView?.let {
-            if (it.visibility == View.GONE) return@let
-            val lp = it.layoutParams as LayoutParams
-            tempTop += lp.topMargin
-            it.layout(
-                tempLeft + lp.leftMargin,
-                tempTop,
-                tempRight - lp.rightMargin,
-                tempTop + it.measuredHeight
-            )
-            tempTop += it.measuredHeight + lp.bottomMargin
-        }
-        bottomView?.let {
-            if (it.visibility == View.GONE) return@let
-            val lp = it.layoutParams as LayoutParams
-            tempBottom -= lp.bottomMargin
-            it.layout(
-                tempLeft + lp.leftMargin,
-                tempBottom - it.measuredHeight,
-                tempRight - lp.rightMargin,
-                tempBottom
-            )
-            tempBottom -= it.measuredHeight + lp.topMargin
-        }
-        contentView?.let {
-            val lp = it.layoutParams as LayoutParams
-            val childTop = tempTop + lp.topMargin
-            val childBottom = tempBottom - lp.bottomMargin
-            it.layout(tempLeft + lp.leftMargin, childTop, tempRight - lp.rightMargin, childBottom)
-            loadingView?.layout(
-                tempLeft + lp.leftMargin,
-                childTop,
-                tempRight - lp.rightMargin,
-                childBottom
-            )
-            emptyView?.layout(tempLeft + lp.leftMargin, childTop, tempRight - lp.rightMargin, childBottom)
-            errorView?.layout(tempLeft + lp.leftMargin, childTop, tempRight - lp.rightMargin, childBottom)
-        }
+        onChildLayout(titleView, left, top, right, top + titleHeight)
+        onChildLayout(bottomView, left, bottom - bottomHeight, right, bottom)
+        onChildLayout(contentView, left, top + titleHeight, right, bottom - bottomHeight)
+        onChildLayout(loadingView, left, top + titleHeight, right, bottom - bottomHeight)
+        onChildLayout(emptyView, left, top + titleHeight, right, bottom - bottomHeight)
+        onChildLayout(errorView, left, top + titleHeight, right, bottom - bottomHeight)
+    }
+
+    private fun onChildLayout(child: View?, left: Int, top: Int, right: Int, bottom: Int) {
+        if (null == child || child.isGone) return
+        val lp = child.layoutParams as LayoutParams
+        val l = left + paddingLeft + lp.leftMargin
+        val t = top + paddingTop + lp.topMargin
+        val r = right - paddingRight - lp.rightMargin
+        val b = bottom - paddingBottom - lp.bottomMargin
+        child.layout(l, t, r, b)
     }
 
     override fun generateLayoutParams(attrs: AttributeSet): ViewGroup.LayoutParams {
@@ -276,7 +228,7 @@ class RootLayout @JvmOverloads constructor(context: Context, attrs: AttributeSet
     }
 
     override fun generateDefaultLayoutParams(): ViewGroup.LayoutParams {
-        return LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+        return LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
     }
 
     override fun checkLayoutParams(p: ViewGroup.LayoutParams): Boolean {
@@ -300,10 +252,20 @@ class RootLayout @JvmOverloads constructor(context: Context, attrs: AttributeSet
     }
 
     open class LayoutParams : MarginLayoutParams {
+        companion object {
+            const val MATCH_PARENT = ViewGroup.LayoutParams.MATCH_PARENT
+            const val WRAP_CONTENT = ViewGroup.LayoutParams.WRAP_CONTENT
+        }
 
         @RootType
         @ExportedProperty(category = "layout")
         var rootType: Int = NONE
+
+        @ExportedProperty(category = "layout")
+        var noneTop: Int = TITLE
+
+        @ExportedProperty(category = "layout")
+        var noneBottom: Int = BOTTOM
 
         constructor(c: Context, attrs: AttributeSet?) : super(c, attrs) {
             val a = c.obtainStyledAttributes(attrs, R.styleable.RootLayout_Layout)

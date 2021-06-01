@@ -65,7 +65,7 @@ abstract class XDialog<VB : ViewBinding> : AppCompatDialogFragment(), XView<VB> 
     override fun onResume() {
         super.onResume()
         if (mDialogConfig.isFullScreen) {
-            dialog?.window?.setLayout(ScreenUtils.appScreenWidth, MATCH_PARENT)
+            dialog?.window?.setLayout(ScreenUtils.getAppScreenWidth(), MATCH_PARENT)
         } else {
             dialog?.window?.setLayout(mDialogConfig.width, mDialogConfig.height)
         }

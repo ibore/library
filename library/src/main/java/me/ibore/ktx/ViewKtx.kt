@@ -11,6 +11,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import androidx.core.view.marginBottom
+import androidx.core.view.marginTop
 import me.ibore.ktx.ViewClickDelay.SPACE_TIME
 import me.ibore.ktx.ViewClickDelay.hash
 import me.ibore.ktx.ViewClickDelay.lastClickTime
@@ -60,6 +62,12 @@ fun View.widthAndHeight(width: Int, height: Int): View {
     layoutParams = params
     return this
 }
+
+val View.marginAndMeasureHeight: Int
+    get() = this.measuredHeight + this.marginTop + this.marginBottom
+
+val View.marginAndMeasureWidth: Int
+    get() = this.measuredWidth + this.marginTop + this.marginBottom
 
 /**
  * 隐藏键盘

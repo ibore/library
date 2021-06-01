@@ -54,7 +54,7 @@ class StoreHouseHeader : View, RefreshHeader {
     private fun initView() {
         mLineWidth = dp2px(1F)
         mDropHeight = dp2px(40F)
-        mHorizontalRandomness = ScreenUtils.appScreenWidth / 2
+        mHorizontalRandomness = ScreenUtils.getAppScreenWidth() / 2
         initWithString("REFRESHLAYOUT", 25)
         setPadding(0, 20, 0, 20)
     }

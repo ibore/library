@@ -63,7 +63,7 @@ class XRegionDialog : XDialog<XDialogRegionBinding>() {
     override fun onBindDialogConfig(): DialogConfig {
         return if (builder.showBottom) {
             DialogConfig(
-                ScreenUtils.appScreenWidth, DialogConfig.WRAP_CONTENT, gravity = Gravity.BOTTOM,
+                ScreenUtils.getAppScreenWidth(), DialogConfig.WRAP_CONTENT, gravity = Gravity.BOTTOM,
                 touchBack = builder.touchBack, touchOutside = builder.touchOutside
             )
         } else {
