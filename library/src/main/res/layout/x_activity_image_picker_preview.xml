@@ -13,7 +13,7 @@
         android:layout_height="match_parent" />
 
     <me.ibore.widget.TitleBar
-        app:layout_rootType="title"
+        app:layout_rootType="title_bar"
         android:id="@+id/title_bar"
         app:tbCenterMiddle="false"
         android:layout_width="match_parent"
@@ -60,7 +60,7 @@
     </me.ibore.widget.TitleBar>
 
     <LinearLayout
-        app:layout_rootType="bottom"
+        app:layout_rootType="bottom_bar"
         android:id="@+id/bottom_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -92,6 +92,7 @@
             android:layout_height="@dimen/image_picker_action_bar_height">
 
             <LinearLayout
+                android:visibility="gone"
                 android:id="@+id/ll_original_image"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"

@@ -8,9 +8,7 @@ import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import androidx.annotation.IntDef
 import androidx.core.view.*
 import me.ibore.R
-import me.ibore.ktx.dp2px
-import me.ibore.ktx.getActivity
-import me.ibore.ktx.isLayoutRtl
+import me.ibore.ktx.*
 import me.ibore.utils.BarUtils
 import java.util.*
 import kotlin.collections.ArrayList
@@ -80,50 +78,46 @@ class TitleBar @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
     private var bottomHeight: Int = 0
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        startViews.clear()
-        topViews.clear()
-        endViews.clear()
-        bottomViews.clear()
-        startWidth = 0
-        endWidth = 0
-        topHeight = 0
-        bottomHeight = 0
+        resetData()
         if (MeasureSpec.getMode(heightMeasureSpec) == MeasureSpec.EXACTLY) {
-            throw RuntimeException("不能设置成MATH_PARENT或者具体高度")
+            throw RuntimeException("高度不能设置成MATH_PARENT或者具体值")
         }
         val parentHMS = MeasureSpec.makeMeasureSpec(barHeight, MeasureSpec.EXACTLY)
         for (i in 0 until childCount) {
             val child = getChildAt(i)
+            if (child.isGone) continue
             val childLp = child.layoutParams as LayoutParams
             val titleBackPress = childLp.titleBackPress
-            if (titleBackPress ) {
+            if (titleBackPress) {
                 context.getActivity()?.apply { child.setOnClickListener { onBackPressed() } }
             }
-            val titleType = childLp.titleType
-            if (titleType == TITLE) {
-                titleView = child
-            } else if (titleType == SUBTITLE) {
-                subTitleView = child
-            } else if (titleType == CENTER) {
-                centerView = child
-            } else if (titleType == START) {
-                startViews.add(child)
-                measureChildWithMargins(child, widthMeasureSpec, 0, parentHMS, 0)
-                startWidth += measureWidthMargin(child)
-            } else if (titleType == TOP) {
-                topViews.add(child)
-                measureChildWithMargins(child, widthMeasureSpec, 0, heightMeasureSpec, 0)
-                topHeight += measureHeightMargin(child)
-            } else if (titleType == END) {
-                endViews.add(child)
-                measureChildWithMargins(child, widthMeasureSpec, 0, parentHMS, 0)
-                endWidth += measureWidthMargin(child)
-            } else if (titleType == BOTTOM) {
-                bottomViews.add(child)
-                measureChildWithMargins(child, widthMeasureSpec, 0, heightMeasureSpec, 0)
-                bottomHeight += measureHeightMargin(child)
-            } else if (titleType == NONE) {
-                measureChildWithMargins(child, widthMeasureSpec, 0, parentHMS, 0)
+            when (childLp.titleType) {
+                TITLE -> titleView = child
+                SUBTITLE -> subTitleView = child
+                CENTER -> centerView = child
+                START -> {
+                    startViews.add(child)
+                    measureChildWithMargins(child, widthMeasureSpec, 0, parentHMS, 0)
+                    startWidth += child.marginAndMeasureWidth
+                }
+                TOP -> {
+                    topViews.add(child)
+                    measureChildWithMargins(child, widthMeasureSpec, 0, heightMeasureSpec, 0)
+                    topHeight += child.marginAndMeasureHeight
+                }
+                END -> {
+                    endViews.add(child)
+                    measureChildWithMargins(child, widthMeasureSpec, 0, parentHMS, 0)
+                    endWidth += child.marginAndMeasureWidth
+                }
+                BOTTOM -> {
+                    bottomViews.add(child)
+                    measureChildWithMargins(child, widthMeasureSpec, 0, heightMeasureSpec, 0)
+                    bottomHeight += child.marginAndMeasureHeight
+                }
+                NONE -> {
+                    measureChildWithMargins(child, widthMeasureSpec, 0, parentHMS, 0)
+                }
             }
         }
         if (centerMiddle) {
@@ -145,18 +139,6 @@ class TitleBar @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
         setMeasuredDimension(measuredWidth, measuredHeight)
     }
 
-    private fun measureWidthMargin(child: View): Int {
-        return if (child.visibility != GONE) {
-            child.marginLeft + child.measuredWidth + child.marginRight
-        } else 0
-    }
-
-    private fun measureHeightMargin(child: View): Int {
-        return if (child.visibility != GONE) {
-            child.marginTop + child.measuredHeight + child.marginBottom
-        } else 0
-    }
-
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
         val left = paddingLeft
         var top = paddingTop + statusBarHeight
@@ -170,37 +152,30 @@ class TitleBar @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
                 child.layout(left, top, right, bottom)
             }
         }
-        onLayoutTopBottomViews(topViews, left, top, right, top + topHeight)
-        onLayoutTopBottomViews(bottomViews, left, bottom - bottomHeight, right, bottom)
+        onTopBottomLayout(true, left, top, right, top + topHeight)
+        onTopBottomLayout(false, left, bottom - bottomHeight, right, bottom)
         top += topHeight
         bottom -= bottomHeight
-        if (isLayoutRtl) {
-            onLayoutLeftRightViews(endViews, true, left, top, right, bottom)
-            onLayoutLeftRightViews(startViews, false, left, top, right, bottom)
-        } else {
-            onLayoutLeftRightViews(startViews, true, left, top, right, bottom)
-            onLayoutLeftRightViews(endViews, false, left, top, right, bottom)
-        }
-        onLayoutCenterViews(left, top, right, bottom)
+        onLeftRightLayout(true, left, top, right, bottom)
+        onLeftRightLayout(false, left, top, right, bottom)
+        onCenterLayout(left, top, right, bottom)
     }
 
 
-    private fun onLayoutTopBottomViews(
-        views: MutableList<View>, left: Int, top: Int, right: Int, bottom: Int
-    ) {
+    private fun onTopBottomLayout(isTop: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
+        val views: MutableList<View> = if (isTop) topViews else bottomViews
         var temp = top
         for (child in views) {
             if (child.isGone) continue
             temp += child.marginTop
-            child.layout(left + child.marginLeft, temp,
-                right - child.marginRight, temp + child.measuredHeight
-            )
+            val l = left + child.marginLeft
+            val r = right - child.marginRight
+            child.layout(l, temp, r, temp + child.measuredHeight)
             temp += child.measuredHeight + child.marginBottom
         }
     }
 
-
-    private fun onLayoutCenterViews(left: Int, top: Int, right: Int, bottom: Int) {
+    private fun onCenterLayout(left: Int, top: Int, right: Int, bottom: Int) {
         centerView?.run {
             if (isGone) return
             val diffHeight = getDiffHeight(this, top, bottom)
@@ -247,9 +222,9 @@ class TitleBar @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
         }
     }
 
-    private fun onLayoutLeftRightViews(
-        views: MutableList<View>, isLeft: Boolean, left: Int, top: Int, right: Int, bottom: Int
-    ) {
+    private fun onLeftRightLayout(isLeft: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
+        val views =
+            if ((isLeft && !isLayoutRtl) || (!isLeft && isLayoutRtl)) startViews else endViews
         var temp = if (isLeft) left else right
         for (i in 0 until views.size) {
             val child: View = views[i]
@@ -276,6 +251,17 @@ class TitleBar @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
     private fun getDiffWidth(view: View, start: Int, end: Int, startEndWidth: Int): Int {
         return if (view.layoutParams.width == MATCH_PARENT) 0
         else abs((end - start - view.measuredWidth - view.marginLeft - view.marginRight - startEndWidth) / 2)
+    }
+
+    private fun resetData() {
+        startViews.clear()
+        topViews.clear()
+        endViews.clear()
+        bottomViews.clear()
+        startWidth = 0
+        endWidth = 0
+        topHeight = 0
+        bottomHeight = 0
     }
 
     override fun generateLayoutParams(attrs: AttributeSet): ViewGroup.LayoutParams {

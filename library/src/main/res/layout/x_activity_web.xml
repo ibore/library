@@ -35,7 +35,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
-        app:layout_rootType="title">
+        app:layout_rootType="title_bar">
 
         <ImageView
             android:id="@+id/iv_title_bar_back"

@@ -9,6 +9,7 @@ import me.ibore.demo.databinding.ActivityImagePickerBinding
 import me.ibore.demo.databinding.TitleBarBinding
 import me.ibore.demo.model.TitleItem
 import me.ibore.image.picker.ImagePicker
+import me.ibore.utils.LogUtils
 import me.ibore.utils.ToastUtils
 
 class ImagePickerActivity : BaseActivity<ActivityImagePickerBinding>() {
@@ -65,6 +66,7 @@ class ImagePickerActivity : BaseActivity<ActivityImagePickerBinding>() {
             for (i in mImagePaths!!.indices) {
                 stringBuffer.append(mImagePaths!![i].trimIndent())
             }
+            LogUtils.d(stringBuffer.toString())
             ToastUtils.showShort(stringBuffer.toString())
         }
     }

@@ -155,9 +155,7 @@ class XListDialog : XDialog<XDialogListBinding>() {
         }
 
         override fun XItemDialogListBinding.onBindHolder(
-            holder: RecyclerHolder,
-            data: CharSequence,
-            dataPosition: Int
+            holder: RecyclerHolder, data: CharSequence, dataPosition: Int
         ) {
             tvContent.text = data
             viewBottomLine.visibility =
@@ -179,12 +177,7 @@ class XListDialog : XDialog<XDialogListBinding>() {
                 } else if (builder.selectedDatas.size == builder.maxCount && isSelected(data)) {
                     removeSelected(data)
                 } else {
-                    ToastUtils.showShort(
-                        dialog.getString(
-                            R.string.dialog_list_max_count,
-                            builder.maxCount
-                        )
-                    )
+                    ToastUtils.showShort(dialog.getString(R.string.dialog_list_max_count, builder.maxCount))
                 }
                 notifyDataSetChanged()
             }

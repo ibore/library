@@ -3,8 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="48dp"
-    app:layout_rootType="title"
+    android:layout_height="wrap_content"
+    app:tbHeight="48dp"
+    app:layout_rootType="title_bar"
     app:tbStatusBar="false">
 
     <TextView
