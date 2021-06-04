@@ -1,4 +1,4 @@
-package me.ibore.webview
+package me.ibore.xweb
 
 import android.annotation.TargetApi
 import android.graphics.Bitmap

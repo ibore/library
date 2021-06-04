@@ -1,4 +1,4 @@
-package me.ibore.base
+package me.ibore.xweb
 
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -11,13 +11,13 @@ import android.os.Bundle
 import android.os.Message
 import android.os.Parcelable
 import android.view.View
-import android.view.ViewGroup
 import android.view.WindowManager
 import android.webkit.GeolocationPermissions
 import android.webkit.JsPromptResult
 import android.webkit.JsResult
 import android.webkit.WebChromeClient
 import kotlinx.parcelize.Parcelize
+import me.ibore.base.XActivity
 import me.ibore.databinding.XActivityWebBinding
 import me.ibore.permissions.OnPermissionListener
 import me.ibore.permissions.Permission
@@ -25,8 +25,6 @@ import me.ibore.permissions.XPermissions
 import me.ibore.utils.ActivityUtils
 import me.ibore.utils.DialogUtils
 import me.ibore.utils.LogUtils
-import me.ibore.webview.XWebView
-import me.ibore.webview.XWebViewListener
 
 class XWebActivity : XActivity<XActivityWebBinding>(), XWebViewListener {
     companion object {
@@ -41,6 +39,7 @@ class XWebActivity : XActivity<XActivityWebBinding>(), XWebViewListener {
     }
 
     private lateinit var builder: Builder
+
     private var mCustomViewCallback: WebChromeClient.CustomViewCallback? = null
 
     override fun XActivityWebBinding.onBindView(bundle: Bundle?, savedInstanceState: Bundle?) {
@@ -61,7 +60,7 @@ class XWebActivity : XActivity<XActivityWebBinding>(), XWebViewListener {
         if (builder.url.isNotBlank()) {
             mBinding.webView.loadUrl(builder.url)
         } else {
-            mBinding.webView.loadData(builder.url, "text/html", "UTF-8")
+            mBinding.webView.loadData(builder.data, "text/html", "UTF-8")
         }
         mBinding.tvTitleBarTitle.text = builder.title
     }

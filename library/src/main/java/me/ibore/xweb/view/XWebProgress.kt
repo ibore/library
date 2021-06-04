@@ -1,4 +1,4 @@
-package me.ibore.webview.view
+package me.ibore.xweb.view
 
 import android.animation.*
 import android.content.Context
@@ -39,14 +39,17 @@ class XWebProgress @JvmOverloads constructor(context: Context, @Nullable attrs: 
      * 控件的宽度
      */
     private var mTargetWidth = 0
+
     /**
      * 控件的高度
      */
     private var mTargetHeight: Int = 0
+
     /**
      * 标志当前进度条的状态
      */
-    private var TAG = 0
+    private var mTAG = 0
+
     /**
      * 第一次过来进度show，后面就是setProgress
      */
@@ -134,7 +137,7 @@ class XWebProgress @JvmOverloads constructor(context: Context, @Nullable attrs: 
             CURRENT_MAX_UNIFORM_SPEED_DURATION = MAX_UNIFORM_SPEED_DURATION
         } else {
             //取比值
-            val rate = this.mTargetWidth / java.lang.Float.valueOf(screenWidth.toFloat())
+            val rate = this.mTargetWidth / screenWidth.toFloat()
             CURRENT_MAX_UNIFORM_SPEED_DURATION = (MAX_UNIFORM_SPEED_DURATION * rate).toInt()
             CURRENT_MAX_DECELERATE_SPEED_DURATION = (MAX_DECELERATE_SPEED_DURATION * rate).toInt()
         }
@@ -142,7 +145,7 @@ class XWebProgress @JvmOverloads constructor(context: Context, @Nullable attrs: 
 
     private fun setFinish() {
         isShow = false
-        TAG = FINISH
+        mTAG = FINISH
     }
 
     private fun startAnim(isFinished: Boolean) {
@@ -193,7 +196,7 @@ class XWebProgress @JvmOverloads constructor(context: Context, @Nullable attrs: 
             mAnimator = mAnimatorSet
         }
 
-        TAG = STARTED
+        mTAG = STARTED
     }
 
     override fun onDetachedFromWindow() {
@@ -208,12 +211,12 @@ class XWebProgress @JvmOverloads constructor(context: Context, @Nullable attrs: 
     }
 
     private fun doEnd() {
-        if (TAG == FINISH && mCurrentProgress == 100f) {
+        if (mTAG == FINISH && mCurrentProgress == 100f) {
             visibility = GONE
             mCurrentProgress = 0f
             this.alpha = 1f
         }
-        TAG = UN_START
+        mTAG = UN_START
     }
 
     fun reset() {
@@ -234,7 +237,7 @@ class XWebProgress @JvmOverloads constructor(context: Context, @Nullable attrs: 
 
     fun setProgress(progress: Float) {
         // fix 同时返回两个 100，产生两次进度条的问题；
-        if (TAG == UN_START && progress == 100f) {
+        if (mTAG == UN_START && progress == 100f) {
             visibility = GONE
             return
         }
@@ -245,7 +248,7 @@ class XWebProgress @JvmOverloads constructor(context: Context, @Nullable attrs: 
         if (progress < 95f) {
             return
         }
-        if (TAG != FINISH) {
+        if (mTAG != FINISH) {
             startAnim(true)
         }
     }
@@ -288,37 +291,44 @@ class XWebProgress @JvmOverloads constructor(context: Context, @Nullable attrs: 
         /**
          * 默认匀速动画最大的时长
          */
-        val MAX_UNIFORM_SPEED_DURATION = 8 * 1000
+        const val MAX_UNIFORM_SPEED_DURATION = 8 * 1000
+
         /**
          * 默认加速后减速动画最大时长
          */
-        val MAX_DECELERATE_SPEED_DURATION = 450
+        const val MAX_DECELERATE_SPEED_DURATION = 450
+
         /**
          * 95f-100f时，透明度1f-0f时长
          */
-        val DO_END_ALPHA_DURATION = 630
+        const val DO_END_ALPHA_DURATION = 630
+
         /**
          * 95f - 100f动画时长
          */
-        val DO_END_PROGRESS_DURATION = 500
+        const val DO_END_PROGRESS_DURATION = 500
+
         /**
          * 当前匀速动画最大的时长
          */
         private var CURRENT_MAX_UNIFORM_SPEED_DURATION = MAX_UNIFORM_SPEED_DURATION
+
         /**
          * 当前加速后减速动画最大时长
          */
         private var CURRENT_MAX_DECELERATE_SPEED_DURATION = MAX_DECELERATE_SPEED_DURATION
+
         /**
          * 默认的高度(dp)
          */
-        var WEB_PROGRESS_DEFAULT_HEIGHT = 2
+        const val WEB_PROGRESS_DEFAULT_HEIGHT = 2
+
         /**
          * 进度条颜色默认
          */
-        var WEB_PROGRESS_COLOR = "#2483D9"
-        val UN_START = 0
-        val STARTED = 1
-        val FINISH = 2
+        const val WEB_PROGRESS_COLOR = "#2483D9"
+        const val UN_START = 0
+        const val STARTED = 1
+        const val FINISH = 2
     }
 }

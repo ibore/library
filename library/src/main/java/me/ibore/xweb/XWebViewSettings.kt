@@ -1,4 +1,4 @@
-package me.ibore.webview
+package me.ibore.xweb
 
 import android.annotation.SuppressLint
 import android.content.Context

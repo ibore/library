@@ -18,13 +18,13 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-        <me.ibore.webview.XWebView
+        <me.ibore.xweb.XWebView
             android:id="@+id/web_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/bg_page" />
 
-        <me.ibore.webview.view.XWebProgress
+        <me.ibore.xweb.view.XWebProgress
             android:id="@+id/web_progress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />

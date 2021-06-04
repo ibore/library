@@ -1,66 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <me.ibore.widget.RootLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_f4f5f7">
+    android:background="@color/bg_page">
 
-    <androidx.core.widget.NestedScrollView
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_rootType="content">
-
-        <LinearLayout
-            android:padding="5dp"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="5dp">
-
-                <TextView
-                    android:id="@+id/btn_common_web"
-                    style="@style/Item_Small"
-                    android:text="普通网页" />
-
-                <TextView
-                    android:id="@+id/btn_sogou_map"
-                    style="@style/Item_Small"
-                    android:text="搜狗地图" />
-
-                <TextView
-                    android:id="@+id/btn_web_dialog"
-                    style="@style/Item_Small"
-                    android:text="H5弹框" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="5dp">
-
-                <TextView
-                    android:id="@+id/btn_video_web"
-                    style="@style/Item_Small"
-                    android:text="视频网站" />
-
-                <TextView
-                    style="@style/Item_Small"
-                    android:text="" />
-
-                <TextView
-                    style="@style/Item_Small"
-                    android:text="" />
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-    </androidx.core.widget.NestedScrollView>
+        android:clipToPadding="false"
+        android:padding="5dp"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        app:layout_rootType="content"
+        app:spanCount="3"
+        tools:itemCount="11"
+        tools:listitem="@layout/item_activity" />
 
     <me.ibore.widget.TitleBar
         android:id="@+id/title_bar"

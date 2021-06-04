@@ -1,4 +1,4 @@
-package me.ibore.webview
+package me.ibore.xweb
 
 import android.app.Activity
 import android.content.Context
@@ -8,7 +8,6 @@ import android.util.AttributeSet
 import android.view.ViewGroup
 import android.webkit.*
 import androidx.fragment.app.Fragment
-import me.ibore.ktx.getActivity
 import java.lang.ref.WeakReference
 
 class XWebView : WebView {
@@ -33,11 +32,11 @@ class XWebView : WebView {
 
     init {
         XWebViewSettings.setSettings(this, context)
-        mActivity = WeakReference(context.getActivity()!!)
-        setDownloadListener { url, userAgent, contentDisposition, mimeType, contentLength ->
-            val suggestedFilename = URLUtil.guessFileName(url, contentDisposition, mimeType)
-            mXWebViewListener?.onDownload(url, suggestedFilename, userAgent, contentDisposition, mimeType, contentLength)
-        }
+    }
+
+    fun setXWebViewListener(activity: Activity, xWebViewListener: XWebViewListener) {
+        this.mActivity = WeakReference(activity)
+        setXWebViewListener(xWebViewListener)
     }
 
     fun setXWebViewListener(fragment: Fragment, xWebViewListener: XWebViewListener) {
@@ -49,6 +48,10 @@ class XWebView : WebView {
         this.mXWebViewListener = xWebViewListener
         webChromeClient = XWebChromeClient(xWebViewListener)
         webViewClient = XWebViewClient(xWebViewListener)
+        setDownloadListener { url, userAgent, contentDisposition, mimeType, contentLength ->
+            val suggestedFilename = URLUtil.guessFileName(url, contentDisposition, mimeType)
+            mXWebViewListener?.onDownload(url, suggestedFilename, userAgent, contentDisposition, mimeType, contentLength)
+        }
     }
 
     fun addHttpHeader(name: String, value: String) {

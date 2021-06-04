@@ -12,7 +12,7 @@
         <activity android:name=".image.picker.activity.ImagePickerActivity" />
         <activity android:name=".image.picker.activity.ImagePickerPreviewActivity" />
 
-        <activity android:name=".base.XWebActivity"
+        <activity android:name=".xweb.XWebActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:hardwareAccelerated="true"/>
 
