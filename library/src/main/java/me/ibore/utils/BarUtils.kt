@@ -206,7 +206,7 @@ object BarUtils {
      * @param color    The status bar's color.
      */
     @JvmStatic
-    fun setStatusBarColor(activity: Activity, @ColorInt color: Int): View? {
+    fun setStatusBarColor(activity: Activity, @ColorInt color: Int): View {
         return setStatusBarColor(activity, color, false)
     }
 
@@ -219,7 +219,7 @@ object BarUtils {
      * false to add fake status bar in ContentView.
      */
     @JvmStatic
-    fun setStatusBarColor(activity: Activity, @ColorInt color: Int, isDecor: Boolean): View? {
+    fun setStatusBarColor(activity: Activity, @ColorInt color: Int, isDecor: Boolean): View {
         transparentStatusBar(activity)
         return applyStatusBarColor(activity, color, isDecor)
     }

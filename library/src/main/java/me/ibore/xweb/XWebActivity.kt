@@ -12,24 +12,24 @@ import android.os.Message
 import android.os.Parcelable
 import android.view.View
 import android.view.WindowManager
-import android.webkit.GeolocationPermissions
-import android.webkit.JsPromptResult
-import android.webkit.JsResult
-import android.webkit.WebChromeClient
+import android.webkit.*
 import kotlinx.parcelize.Parcelize
+import me.ibore.R
 import me.ibore.base.XActivity
 import me.ibore.databinding.XActivityWebBinding
 import me.ibore.permissions.OnPermissionListener
 import me.ibore.permissions.Permission
 import me.ibore.permissions.XPermissions
 import me.ibore.utils.ActivityUtils
+import me.ibore.utils.BarUtils
 import me.ibore.utils.DialogUtils
 import me.ibore.utils.LogUtils
 
 class XWebActivity : XActivity<XActivityWebBinding>(), XWebViewListener {
     companion object {
 
-        const val REQUEST_CODE = 1118
+        private const val REQUEST_CODE = 1200
+        private const val REQUEST_CODE_FILE_CHOOSER = 1201
 
         fun startActivity(activity: Activity, builder: Builder, requestCode: Int = REQUEST_CODE) {
             val bundle = Bundle()
@@ -39,7 +39,7 @@ class XWebActivity : XActivity<XActivityWebBinding>(), XWebViewListener {
     }
 
     private lateinit var builder: Builder
-
+    private var mFilePathCallback: ValueCallback<Array<Uri>?>? = null
     private var mCustomViewCallback: WebChromeClient.CustomViewCallback? = null
 
     override fun XActivityWebBinding.onBindView(bundle: Bundle?, savedInstanceState: Bundle?) {
@@ -54,6 +54,11 @@ class XWebActivity : XActivity<XActivityWebBinding>(), XWebViewListener {
         ivTitleBarClose.visibility = View.GONE
         tvTitleBarTitle.text = builder.title
         webView.setXWebViewListener(this@XWebActivity)
+    }
+
+    override fun onBindConfig() {
+        super.onBindConfig()
+        BarUtils.setStatusBarLightMode(this, true)
     }
 
     override fun onBindData() {
@@ -124,18 +129,19 @@ class XWebActivity : XActivity<XActivityWebBinding>(), XWebViewListener {
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
     }
 
-    override fun onGeolocationPermissionsShowPrompt(origin: String?, callback: GeolocationPermissions.Callback?) {
-        DialogUtils.showAlert(getXActivity(), "地理位置授权", "允许${origin}你当前的地理位置信息吗？", negativeListener = {
-            callback?.invoke(origin, false, false)
-        }, positiveListener = {
-            XPermissions.with(getXActivity())
-                .permission(*Permission.GROUP_LOCATION)
-                .request(object : OnPermissionListener {
-                    override fun onGranted(permissions: List<String>, all: Boolean) {
-                        if (all) {
-                            callback?.invoke(origin, true, true)
-                        } else{
-                            callback?.invoke(origin, true, false)
+    override fun onGeolocationPermissionsShowPrompt(origin: String, callback: GeolocationPermissions.Callback) {
+        DialogUtils.showAlert(getXActivity(), getString(R.string.location_authorization),
+            getString(R.string.location_authorization_prompt, origin ?: ""), negativeListener = {
+                callback.invoke(origin, false, false)
+            }, positiveListener = {
+                XPermissions.with(getXActivity())
+                    .permission(*Permission.GROUP_LOCATION)
+                    .request(object : OnPermissionListener {
+                        override fun onGranted(permissions: List<String>, all: Boolean) {
+                            if (all) {
+                                callback.invoke(origin, true, true)
+                            } else {
+                                callback.invoke(origin, true, false)
                         }
                     }
                 })
@@ -194,6 +200,29 @@ class XWebActivity : XActivity<XActivityWebBinding>(), XWebViewListener {
         webView.isFocusableInTouchMode = true
     }
 
+    override fun onPermissionRequest(request: PermissionRequest) {
+
+    }
+
+    override fun onPermissionRequestCanceled(request: PermissionRequest) {
+
+    }
+
+    override fun onShowFileChooser(
+        webView: XWebView, filePathCallback: ValueCallback<Array<Uri>?>,
+        fileChooserParams: WebChromeClient.FileChooserParams
+    ): Boolean {
+        mFilePathCallback?.onReceiveValue(null)
+        mFilePathCallback = filePathCallback
+        startActivityForResult(fileChooserParams.createIntent(), REQUEST_CODE_FILE_CHOOSER)
+        return true
+    }
+
+    override fun onConsoleMessage(consoleMessage: ConsoleMessage?): Boolean {
+        LogUtils.d(consoleMessage?.message())
+        return true
+    }
+
     override fun onResume() {
         super.onResume()
         mBinding.webView.onResume()
@@ -222,7 +251,12 @@ class XWebActivity : XActivity<XActivityWebBinding>(), XWebViewListener {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        mBinding.webView.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_CODE_FILE_CHOOSER) {
+            mFilePathCallback?.onReceiveValue(WebChromeClient.FileChooserParams.parseResult(resultCode, data))
+            mFilePathCallback = null
+        } else {
+            mFilePathCallback?.onReceiveValue(null)
+        }
     }
 
     @SuppressLint("SwitchIntDef")

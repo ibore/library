@@ -1,6 +1,5 @@
 package me.ibore.base
 
-import android.graphics.Color
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewbinding.ViewBinding
@@ -36,7 +35,7 @@ abstract class XActivity<VB : ViewBinding> : AppCompatActivity(), XStatusView<VB
     override fun getXActivity(): XActivity<VB> = this
 
     override fun onBindConfig() {
-        BarUtils.setStatusBarColor(this, Color.TRANSPARENT, true)
+        BarUtils.transparentStatusBar(this)
     }
 
     override fun onUnBindConfig() {

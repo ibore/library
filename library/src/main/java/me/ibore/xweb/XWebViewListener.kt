@@ -4,10 +4,7 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Message
 import android.view.View
-import android.webkit.GeolocationPermissions
-import android.webkit.JsPromptResult
-import android.webkit.JsResult
-import android.webkit.WebChromeClient
+import android.webkit.*
 
 interface XWebViewListener {
 
@@ -29,7 +26,7 @@ interface XWebViewListener {
 
     fun onHideCustomView()
 
-    fun onGeolocationPermissionsShowPrompt(origin: String?, callback: GeolocationPermissions.Callback?)
+    fun onGeolocationPermissionsShowPrompt(origin: String, callback: GeolocationPermissions.Callback)
 
     fun onGeolocationPermissionsHidePrompt()
 
@@ -46,5 +43,16 @@ interface XWebViewListener {
     fun onCloseWindow(webView: XWebView)
 
     fun onRequestFocus(webView: XWebView)
+
+    fun onPermissionRequest(request: PermissionRequest)
+
+    fun onPermissionRequestCanceled(request: PermissionRequest)
+
+    fun onShowFileChooser(
+        webView: XWebView, filePathCallback: ValueCallback<Array<Uri>?>,
+        fileChooserParams: WebChromeClient.FileChooserParams
+    ): Boolean
+
+    fun onConsoleMessage(consoleMessage: ConsoleMessage?): Boolean
 
 }

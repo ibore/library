@@ -7,6 +7,7 @@ import android.os.Build
 import android.os.Message
 import android.view.View
 import android.webkit.*
+import me.ibore.ktx.logD
 import me.ibore.utils.LogUtils
 
 
@@ -79,58 +80,59 @@ class XWebChromeClient(private val xWebViewListener: XWebViewListener) : WebChro
 
     // 指定源的网页内容在没有设置权限状态下尝试使用地理位置API。
     // 从API24开始，此方法只为安全的源(https)调用，非安全的源会被自动拒绝
-    override fun onGeolocationPermissionsShowPrompt(origin: String?, callback: GeolocationPermissions.Callback?) {
-        LogUtils.d("onGeolocationPermissionsShowPrompt")
+    override fun onGeolocationPermissionsShowPrompt(origin: String, callback: GeolocationPermissions.Callback) {
+        logD("onGeolocationPermissionsShowPrompt")
         xWebViewListener.onGeolocationPermissionsShowPrompt(origin, callback)
     }
 
     // 当前一个调用 onGeolocationPermissionsShowPrompt() 取消时，隐藏相关的UI。
     override fun onGeolocationPermissionsHidePrompt() {
-        LogUtils.d("onGeolocationPermissionsHidePrompt")
+        logD("onGeolocationPermissionsHidePrompt")
         xWebViewListener.onGeolocationPermissionsHidePrompt()
     }
 
     // 通知应用打开新窗口
-    override fun onCreateWindow(view: WebView?, isDialog: Boolean, isUserGesture: Boolean, resultMsg: Message?): Boolean {
-        LogUtils.d("onCreateWindow:", isDialog, isUserGesture, resultMsg)
+    override fun onCreateWindow(view: WebView, isDialog: Boolean, isUserGesture: Boolean, resultMsg: Message?): Boolean {
+        logD("onCreateWindow:isDialog:${isDialog}isUserGesture:${isUserGesture}resultMsg:${resultMsg}")
         return xWebViewListener.onCreateWindow(view as XWebView, isDialog, isUserGesture, resultMsg)
     }
 
     // 通知应用关闭窗口
-    override fun onCloseWindow(window: WebView?) {
-        LogUtils.d("onCloseWindow")
+    override fun onCloseWindow(window: WebView) {
+        logD("onCloseWindow")
         return xWebViewListener.onCloseWindow(window as XWebView)
     }
 
     // 请求获取取焦点
-    override fun onRequestFocus(view: WebView?) {
-        LogUtils.d("onRequestFocus")
+    override fun onRequestFocus(view: WebView) {
+        logD("onRequestFocus")
         xWebViewListener.onRequestFocus(view as XWebView)
     }
 
     // 通知应用网页内容申请访问指定资源的权限(该权限未被授权或拒绝)
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onPermissionRequest(request: PermissionRequest) {
-        LogUtils.d("onPermissionRequest")
-        request.deny()
+        logD("onPermissionRequest")
+        xWebViewListener.onPermissionRequest(request)
     }
 
     // 通知应用权限的申请被取消，隐藏相关的UI。
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    override fun onPermissionRequestCanceled(request: PermissionRequest?) {
-        LogUtils.d("onPermissionRequestCanceled")
+    override fun onPermissionRequestCanceled(request: PermissionRequest) {
+        logD("onPermissionRequestCanceled")
+        xWebViewListener.onPermissionRequestCanceled(request)
     }
 
     // 为'<input type="file" />'显示文件选择器，返回false使用默认处理
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onShowFileChooser(webView: WebView, filePathCallback: ValueCallback<Array<Uri>?>, fileChooserParams: FileChooserParams): Boolean {
-        (webView as XWebView).onShowFileChooser(filePathCallback, fileChooserParams)
-        return true
+        logD("onShowFileChooser")
+        return xWebViewListener.onShowFileChooser(webView as XWebView, filePathCallback, fileChooserParams)
     }
 
     // 接收JavaScript控制台消息
     override fun onConsoleMessage(consoleMessage: ConsoleMessage?): Boolean {
-        LogUtils.d(consoleMessage?.message())
-        return true
+        logD("onConsoleMessage")
+        return xWebViewListener.onConsoleMessage(consoleMessage)
     }
 }

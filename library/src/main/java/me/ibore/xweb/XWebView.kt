@@ -12,16 +12,10 @@ import java.lang.ref.WeakReference
 
 class XWebView : WebView {
 
-    companion object {
-        private const val REQUEST_CODE_FILE_CHOOSER = 1246
-    }
-
     private var mActivity: WeakReference<Activity>? = null
     private var mFragment: WeakReference<Fragment>? = null
     private val mHttpHeaders: MutableMap<String, String> = HashMap()
-    private var mFilePathCallback: ValueCallback<Array<Uri>?>? = null
     private var mXWebViewListener: XWebViewListener? = null
-    private var mRequestCodeFileChooser = REQUEST_CODE_FILE_CHOOSER
     private var mPermitSchemes = LinkedHashSet<String>()
 
     constructor(context: Context) : super(context)
@@ -138,25 +132,6 @@ class XWebView : WebView {
         } else if (mPermitSchemes.contains(uri.scheme)) {
             val intent = Intent(Intent.ACTION_VIEW, uri)
             context.startActivity(intent)
-        }
-    }
-
-    internal fun onShowFileChooser(filePathCallback: ValueCallback<Array<Uri>?>, fileChooserParams: WebChromeClient.FileChooserParams) {
-        mFilePathCallback?.onReceiveValue(null)
-        mFilePathCallback = filePathCallback
-        if (null != mFragment) {
-            mFragment?.get()?.startActivityForResult(fileChooserParams.createIntent(), mRequestCodeFileChooser)
-        } else {
-            mActivity?.get()?.startActivityForResult(fileChooserParams.createIntent(), mRequestCodeFileChooser)
-        }
-    }
-
-    fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == mRequestCodeFileChooser) {
-            mFilePathCallback?.onReceiveValue(WebChromeClient.FileChooserParams.parseResult(resultCode, data))
-            mFilePathCallback = null
-        } else {
-            mFilePathCallback?.onReceiveValue(null)
         }
     }
 

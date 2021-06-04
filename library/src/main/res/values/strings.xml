@@ -64,5 +64,7 @@
     <string name="today">今天</string>
     <string name="this_week">本周</string>
     <string name="this_month">本月</string>
+    <string name="location_authorization">地理位置授权</string>
+    <string name="location_authorization_prompt">允许%1$s获取你当前的地理位置信息吗？</string>
 
 </resources>
